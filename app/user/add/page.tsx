@@ -6,6 +6,7 @@ import { Role } from '@/app/lib/type';
 import { FormInput } from '@/app/components/FormInput';
 import { SelectInput } from '@/app/components/SelectInput';
 import { Button } from '@/app/components/Button';
+import { LinkButton } from '@/app/components/LinkButton';
 
 export default function AddUser() {
   const [username, setUsername] = useState<string>('');
@@ -54,7 +55,7 @@ export default function AddUser() {
   };
 
   return (
-    <div className="p-5">
+    <div className="mt-30 p-5 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-5">Tambah Pengguna</h1>
       {error && <div className="text-red-600 mb-4">Error: {error}</div>}
       <form onSubmit={handleSubmit}>
@@ -69,7 +70,14 @@ export default function AddUser() {
           optionLabel="nama_role"
           placeholder="Pilih Peran (Opsional)"
         />
-        <Button type="submit">Simpan</Button>
+        <div className="flex">
+          <div className="flex gap-2">
+                  <LinkButton href="/user" variant="primary" size="medium">
+                  Kembali
+                  </LinkButton>
+                </div>
+          <Button type="submit">Simpan</Button>
+        </div>
       </form>
     </div>
   );

@@ -1,16 +1,15 @@
 import { getDbConnection } from "@/app/lib/services/db";
-import { Role, ApiResponse, PaginatedResponse, User } from "@/app/lib/type";
-import { paginationSchema, roleSchema } from "@/app/lib/utils/validation";
+import { Role, ApiResponse } from "@/app/lib/type";
+import { roleSchema } from "@/app/lib/utils/validation";
 import { sanitizeInput } from "../utils/sanitization";
 import mysql from 'mysql2/promise';
+
 
 export async function getRoles(): Promise<ApiResponse<Role[]>> {
   const db = await getDbConnection();
   try {
-    const [roles] = await db.execute(
-      'SELECT idrole, nama_role FROM role LIMIT 10',
-      []
-    );
+  const [roles] = await db.execute(
+    'SELECT idrole, nama_role FROM role');
 
     return {
       status: 200,
@@ -43,7 +42,8 @@ export async function getRoleById(id: number): Promise<ApiResponse<Role>> {
 }
 
 export async function createRole(data: Omit<Role, 'idrole' | 'created_at'>): Promise<ApiResponse<{ message: string }>> {
-  const parsed = roleSchema.safeParse({ nama_role: sanitizeInput(data.nama_role) });
+  const parsed = roleSchema.safeParse({ nama_role: data.nama_role });
+  console.log(parsed);
     if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -97,7 +97,7 @@ export async function deleteRole(id: number): Promise<ApiResponse<{ message: str
   }
   const db = await getDbConnection();
   try {
-    const [users] = await db.execute('SELECT COUNT(*) as count FROM users WHERE idrole = ?', [id]);
+    const [users] = await db.execute('SELECT COUNT(*) as count FROM user WHERE idrole = ?', [id]);
     if ((users as any)[0].count > 0) {
       return { status: 400, error: 'Cannot delete role with associated users' };
     }

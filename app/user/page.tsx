@@ -1,11 +1,11 @@
 // app/users/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { User, PaginatedResponse } from '@/app/lib/type';
+import { User} from '@/app/lib/type';
 import { Table } from '@/app/components/Table';
 import { FormInput } from '@/app/components/FormInput';
 import { Button } from '@/app/components/Button';
+import { LinkButton } from '../components/LinkButton';
 
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
@@ -66,12 +66,19 @@ export default function Users() {
   ];
 
   return (
-    <div className="p-5">
+    <div className="p-5 max-w-7xl mx-auto">
       <h1 className="text-2xl font-bold mb-5">Daftar Pengguna</h1>
       <div className="mb-5 flex gap-4">
-        <Link href="/user/add" className="px-4 py-2 bg-blue-600 text-white rounded">Tambah Pengguna</Link>
-        <Link href="/role" className="px-4 py-2 bg-green-600 text-white rounded">Kelola Peran</Link>
-        <FormInput
+        <div className="flex items-center">
+        <LinkButton href="/user/add" variant="primary" size="medium">
+        Tambah Pengguna
+        </LinkButton>
+        <LinkButton href="/role" variant="success" size="medium">
+          Kelola Peran
+        </LinkButton>
+
+        </div>
+      <FormInput
           label="Cari"
           type="text"
           value={search}
@@ -86,9 +93,9 @@ export default function Users() {
         editPath="/user/edit"
       />
       <div className="mt-4 flex gap-2">
-        <Button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
-        <span>Page {page} of {Math.ceil(total / pageSize)}</span>
-        <Button onClick={() => setPage(p => p + 1)} disabled={page * pageSize >= total}>Next</Button>
+        <LinkButton href="/" variant="primary" size="medium">
+        Kembali
+        </LinkButton>
       </div>
     </div>
   );
