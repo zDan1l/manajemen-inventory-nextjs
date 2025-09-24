@@ -2,13 +2,9 @@ import { createRole, deleteRole, getRoles, updateRole } from "@/app/lib/models/r
 import { Role } from "@/app/lib/type";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request){
-    const {searchParams} = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const pageSize = parseInt(searchParams.get('pageSize') || '10');
-    const search = searchParams.get('search') || '';
-    const result = await getRoles({page, pageSize, search});
-    return NextResponse.json(result.error || result.data, {status: result.status})
+export async function GET() {
+  const result = await getRoles();
+  return NextResponse.json(result.error || result.data, { status: result.status });
 }
 
 export async function POST(request: Request){

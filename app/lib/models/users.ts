@@ -10,50 +10,23 @@ import mysql from 'mysql2/promise';
 const SALT_ROUNDS = 10;
 
 
-export async function getUsers({page = 1, pageSize = 10, search = ''}) : Promise<ApiResponse<PaginatedResponse<User>>> {
-    const parsed = paginationSchema.safeParse({page, pageSize, search});
-    if (!parsed.success){
-        const errorMessage = parsed.error.flatten().fieldErrors;
-        const formattedErrors = Object.values(errorMessage).flat().join(',');
-        return {
-            status : 400,
-            error : formattedErrors || 'Invalid pagination parameters'
-        }
-    }
+export async function getUsers(): Promise<ApiResponse<User[]>> {
+  const db = await getDbConnection();
+  try {
+    const [users] = await db.execute(
+      'SELECT u.iduser, u.username, u.idrole, r.nama_role AS role_name FROM user u JOIN role r ON u.idrole = r.idrole;',
+      []
+    );
 
-    const {page : parsedPage, pageSize: parsedPageSize, search: parsedSearch} = parsed.data;
-    const db = await getDbConnection();
-    try{
-        const offset = (parsedPage - 1) * parsedPageSize;
-        let query = 'SELECT u.iduser, u.username, u.idrole, r.nama_role as role_name FROM user u JOIN role r ON u.idrole = r.idrole';
-        let countQuery = 'SELECT COUNT(*) as total FROM user';
-        const params: (string | number)[] = [];
-        if(parsedSearch){
-            const sanitizeSearch = sanitizeInput(parsedSearch);
-            query += ' WHERE u.username LIKE ?';
-            countQuery += ' WHERE u.username LIKE ?';
-            params.push(`%${sanitizeSearch}%`);
-        }
-
-        query += ' LIMIT ? OFFSET ?';
-        params.push(pageSize, offset);
-
-        const [users] = await db.execute(query, params);
-        const [countResult] = await db.execute(countQuery, params.slice(0, search ? 1 : 0));
-        const total = (countResult as any)[0].total;
-
-        return {
-            status : 200,
-            data: {data: users as User[], total, page, pageSize}
-        };
-    }catch(error){
-        return {
-            status : 500,
-            error : `Internal to fetch User : ${error instanceof Error ? error.message : 'Unkown error'}`
-        }
-    }finally{
-        db.release();
-    }
+    return {
+      status: 200,
+      data: users as User[],
+    };
+  } catch (error) {
+    return { status: 500, error: `Failed to fetch users: ${error instanceof Error ? error.message : 'Unknown error'}` };
+  } finally {
+    db.release();
+  }
 }
 
 export async function getUserById(id:number): Promise<ApiResponse<User>>{

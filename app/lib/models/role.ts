@@ -4,41 +4,17 @@ import { paginationSchema, roleSchema } from "@/app/lib/utils/validation";
 import { sanitizeInput } from "../utils/sanitization";
 import mysql from 'mysql2/promise';
 
-export async function getRoles({ page = 1, pageSize = 10, search = '' }): Promise<ApiResponse<PaginatedResponse<Role>>> {
-  const parsed = paginationSchema.safeParse({page, pageSize, search});
-    if (!parsed.success){
-        const errorMessage = parsed.error.flatten().fieldErrors;
-        const formattedErrors = Object.values(errorMessage).flat().join(',');
-        return {
-            status : 400,
-            error : formattedErrors || 'Invalid pagination parameters'
-        }
-    }
-
+export async function getRoles(): Promise<ApiResponse<Role[]>> {
   const db = await getDbConnection();
   try {
-    const offset = (page - 1) * pageSize;
-    let query = 'SELECT * FROM role';
-    let countQuery = 'SELECT COUNT(*) as total FROM role';
-    const params: (string | number)[] = [];
-
-    if (search) {
-      const sanitizedSearch = sanitizeInput(search);
-      query += ' WHERE nama_role LIKE ?';
-      countQuery += ' WHERE nama_role LIKE ?';
-      params.push(`%${sanitizedSearch}%`);
-    }
-
-    query += ' LIMIT ? OFFSET ?';
-    params.push(pageSize, offset);
-
-    const [roles] = await db.execute(query, params);
-    const [countResult] = await db.execute(countQuery, params.slice(0, search ? 1 : 0));
-    const total = (countResult as any)[0].total;
+    const [roles] = await db.execute(
+      'SELECT idrole, nama_role FROM role LIMIT 10',
+      []
+    );
 
     return {
       status: 200,
-      data: { data: roles as Role[], total, page, pageSize },
+      data: roles as Role[],
     };
   } catch (error) {
     return { status: 500, error: `Failed to fetch roles: ${error instanceof Error ? error.message : 'Unknown error'}` };

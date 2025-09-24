@@ -1,31 +1,13 @@
-<div>
-  import React from "react";
-  const LoginPage = () =&gt; {'{'}
+import Link from "next/link";
+
+export default function Home() {
   return (
-      <div className="relative flex flex-col items-center justify-center h-screen overflow-hidden">
-        <div className="w-full p-6 bg-white border-t-4 border-gray-600 rounded-md shadow-md border-top lg:max-w-lg">
-          <h1 className="text-3xl font-semibold text-center text-gray-700">
-            DaisyUI
-          </h1>
-          <form className="space-y-4">
-            <div>
-              <label className="label">
-                <span className="text-base label-text">Email</span>
-              </label>
-              <input type="text" placeholder="Email Address" className="w-full input input-bordered" />
-            </div>
-            <div>
-              <label className="label">
-                <span className="text-base label-text">Password</span>
-              </label>
-              <input type="password" placeholder="Enter Password" className="w-full input input-bordered" />
-            </div>
-            <div>
-              <button className="btn btn-block btn-neutral">Login</button>
-            </div>
-          </form>
+     <div className="p-5">
+        <h1 className="text-2xl font-bold mb-5">Sistem Inventori</h1>
+        <div className="flex gap-4">
+          <Link href="/user" className="px-4 py-2 bg-blue-600 text-white rounded">Kelola Pengguna</Link>
+          <Link href="/role" className="px-4 py-2 bg-green-600 text-white rounded">Kelola Peran</Link>
         </div>
       </div>
-  );
-  export default LoginPage;
-</div>
+  )
+}
