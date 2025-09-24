@@ -2,12 +2,12 @@ export interface User {
     iduser : number;
     username : string;
     password? : string;
-    idorle? : number;
+    idrole? : number;
     role_name? : string;
 }
 
 export interface Role {
-    idorle : number;
+    idrole : number;
     nama_role : string;
 }
 

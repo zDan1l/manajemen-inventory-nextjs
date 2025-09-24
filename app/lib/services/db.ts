@@ -3,7 +3,7 @@ import {parse } from 'url';
 
 let pool : mysql.Pool | null = null;
 
-export async function getDBConnection() : Promise<mysql.PoolConnection> {
+export async function getDbConnection() : Promise<mysql.PoolConnection> {
     if (!pool) {
         const databaseUrl = process.env.DATABASE_URL;
         if (!databaseUrl) {

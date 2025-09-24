@@ -4,10 +4,11 @@ export const userSchema = z.object({
     iduser: z.number().int().optional(),
     username: z.string().min(6, 'Username terlalu pendek').max(50, 'Username terlalu panjang'),
     password: z.string().min(6, 'Password terlalu pendek').max(50, 'Password terlalu panjang'),
-    idorle: z.number().int().nullable().optional(),
+    idrole: z.number().int().nullable().optional(),
 })
 
 export const roleSchema = z.object({
+    idrole : z.number().int().optional(),
     nama_role : z.string().min(3, 'Nama role terlalu pendek').max(100, 'Nama role terlalu panjang'),
 })
 
