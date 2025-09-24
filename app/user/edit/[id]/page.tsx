@@ -1,13 +1,14 @@
 // app/users/edit/[id]/page.tsx
-'use client';
-import { useState, useEffect } from 'react';
+'use client'; // Tetap menggunakan client-side rendering
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Role } from '@/app/lib/type';
+import { Role } from '@/app/lib/type'; // Pastikan path sesuai
 import { FormInput } from '@/app/components/FormInput';
 import { SelectInput } from '@/app/components/SelectInput';
 import { Button } from '@/app/components/Button';
 
-export default function EditUser({ params }: { params: { id: string } }) {
+export default function EditUser({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params); // Unwrap params menggunakan React.use()
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [idrole, setIdrole] = useState<string>('');
@@ -18,7 +19,8 @@ export default function EditUser({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(`/api/users/${params.id}`);
+        const res = await fetch(`/api/users/${id}`); 
+        // Sesuaikan dengan rute dinamis [id]
         const data = await res.json();
         if (res.ok) {
           setUsername(data.username);
@@ -33,10 +35,10 @@ export default function EditUser({ params }: { params: { id: string } }) {
 
     const fetchRoles = async () => {
       try {
-        const res = await fetch('/api/role');
+        const res = await fetch('/api/roles');
         const data = await res.json();
         if (res.ok) {
-          setRoles(data.data);
+          setRoles(data);
         } else {
           setError(data.error || 'Failed to fetch roles');
         }
@@ -47,18 +49,23 @@ export default function EditUser({ params }: { params: { id: string } }) {
 
     fetchUser();
     fetchRoles();
-  }, [params.id]);
+  }, [id]); // Dependency diubah ke id yang sudah di-unwrap
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/users', {
+      const res = await fetch(`/api/users`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ iduser: Number(params.id), username, password: password || undefined, idrole: idrole ? parseInt(idrole) : null }),
+        body: JSON.stringify({
+          iduser: Number(id),
+          username,
+          password: password || undefined,
+          idrole: idrole ? parseInt(idrole) : null,
+        }),
       });
       if (res.ok) {
-        router.push('/users');
+        router.push('/user');
       } else {
         const data = await res.json();
         setError(data.error || 'Failed to update user');
@@ -75,7 +82,13 @@ export default function EditUser({ params }: { params: { id: string } }) {
       <h1 className="text-2xl font-bold mb-5">Edit Pengguna</h1>
       <form onSubmit={handleSubmit}>
         <FormInput label="Username" type="text" value={username} onChange={setUsername} required />
-        <FormInput label="Password (Kosongkan jika tidak diubah)" type="password" value={password} onChange={setPassword} required={false} />
+        <FormInput
+          label="Password (Kosongkan jika tidak diubah)"
+          type="password"
+          value={password}
+          onChange={setPassword}
+          required={false}
+        />
         <SelectInput
           label="Peran"
           value={idrole}

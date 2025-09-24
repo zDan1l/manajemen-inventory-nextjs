@@ -10,6 +10,7 @@ export async function GET() {
 
 export async function POST(request: Request){
     const body = await request.json();
+    console.log("BODY RECEIVED:", body);
     const result = await createUser(body as Omit<User, 'iduser' | 'role.name'>);
     return NextResponse.json(result.error || result.data, {status: result.status})
 }

@@ -83,7 +83,7 @@ export default function Users() {
         data={users}
         columns={columns}
         onDelete={handleDelete}
-        editPath="/users/edit"
+        editPath="/user/edit"
       />
       <div className="mt-4 flex gap-2">
         <Button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>

@@ -1,6 +1,6 @@
 import { getDbConnection } from "@/app/lib/services/db";
-import { ApiResponse, PaginatedResponse, User } from "@/app/lib/type";
-import { paginationSchema, userSchema } from "@/app/lib/utils/validation";
+import { ApiResponse, User } from "@/app/lib/type";
+import { userSchema } from "@/app/lib/utils/validation";
 import { sanitizeInput } from "../utils/sanitization";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
@@ -13,9 +13,8 @@ const SALT_ROUNDS = 10;
 export async function getUsers(): Promise<ApiResponse<User[]>> {
   const db = await getDbConnection();
   try {
-    const [users] = await db.execute(
-      'SELECT u.iduser, u.username, u.idrole, r.nama_role AS role_name FROM user u JOIN role r ON u.idrole = r.idrole;',
-      []
+  const [users] = await db.execute(
+    'SELECT u.iduser, u.username, u.idrole, r.nama_role AS role_name FROM `user` u JOIN role r ON u.idrole = r.idrole ORDER BY u.iduser ASC'
     );
 
     return {
@@ -29,37 +28,43 @@ export async function getUsers(): Promise<ApiResponse<User[]>> {
   }
 }
 
-export async function getUserById(id:number): Promise<ApiResponse<User>>{
-    if(!id){
-        return {
-            status : 400,
-            error: 'Missid ID'
-        }
-    }
-    const db = await getDbConnection();
-    try{
-        const [users] = await db.execute('SELECT u.idrole, r.nama_role as role_name, FROM user u JOIN role r ON u.idrole = r.idrole WHERE u.iduser = ?', [id]);
+export async function getUserById(id: number):Promise<ApiResponse<User>> {
+  if (!id) {
+    return {
+      status: 400,
+      error: 'Missing ID',
+    };
+  }
 
-        const userArray = users as User[];
-        if(userArray.length === 0){
-            return {
-                status : 404,
-                error : 'User not found'
-            }
-        }
-        return {
-            status : 200,
-            data : userArray[0]
-        }
-    }catch(error){
-        return {
-            status : 500,
-            error : `Failed to fetch user : ${error instanceof Error ? error.message : 'Unknown error'}`
-        }
-    }finally{
-        db.release();
+  const db = await getDbConnection();
+  try {
+    const [users] = await db.execute(
+      'SELECT u.iduser, u.username, u.idrole, r.nama_role as role_name FROM `user` u JOIN role r ON u.idrole = r.idrole WHERE u.iduser = ?',
+      [id]  // ✅ gunakan parameter id
+    );
+
+    const userArray = users as User[];
+    if (userArray.length === 0) {
+      return {
+        status: 404,
+        error: 'User not found',
+      };
     }
+
+    return {
+      status: 200,
+      data: userArray[0],
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      error: `Failed to fetch user: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    };
+  } finally {
+    db.release();
+  }
 }
+
 
 
 export async function createUser(data: Omit<User, 'iduser'>) : Promise<ApiResponse<{ message : string }>>{
@@ -102,45 +107,70 @@ export async function createUser(data: Omit<User, 'iduser'>) : Promise<ApiRespon
     }
 }
 
-export async function updateUser(data: User): Promise<ApiResponse<{ message : string }>>{
-    const parsed = userSchema.omit({password : true}).extend({password: z.string().min(6, 'Password terlalu pendek').max(50, 'Password terlalu panjang').optional(), })
-    .safeParse({...data, username : sanitizeInput(data.username)});
+export async function updateUser(data: User): Promise<ApiResponse<{ message: string }>> {
+    // Validasi dengan skema yang diperbarui
+    const parsed = userSchema
+        .omit({ password: true })
+        .extend({
+            password: z.string().min(6, { message: 'Password terlalu pendek' }).max(50, { message: 'Password terlalu panjang' }).optional(),
+        })
+        .safeParse({ ...data, username: sanitizeInput(data.username) });
 
-    if(!parsed.success || !data.iduser){
-        const errorMessage = !parsed.success ? parsed.error.flatten().fieldErrors : {iduser : ['Missing ID']};
-
-        const formattedErrors = Object.values(errorMessage).flat().join(',');
-
+    if (!parsed.success || !data.iduser) {
+        const errorMessage = !parsed.success
+            ? parsed.error.flatten().fieldErrors
+            : { iduser: ['Missing ID'] };
+        const formattedErrors = Object.values(errorMessage)
+            .flat()
+            .filter((msg): msg is string => typeof msg === 'string')
+            .join(', ');
         return {
-            status : 400,
-            error : formattedErrors || 'Invalid user data or missing ID'
-        }
+            status: 400,
+            error: formattedErrors || 'Invalid user data or missing ID',
+        };
     }
 
     const { iduser, username, password, idrole } = parsed.data;
+
+    // Pastikan iduser adalah number
+    if (typeof iduser !== 'number' || isNaN(iduser)) {
+        return { status: 400, error: 'Invalid ID format' };
+    }
+
     const db = await getDbConnection();
     try {
-        // Cek username unik (kecuali untuk user yang sama)
-        const [existing] = await db.execute('SELECT iduser FROM users WHERE username = ? AND iduser != ?', [username, iduser]);
-        if ((existing as any).length > 0) {
-        return { status: 400, error: 'Username already exists' };
+        // Cek username unik dengan transaksi untuk konsistensi
+        await db.beginTransaction();
+        const [existing] = await db.execute(
+            'SELECT iduser FROM user WHERE username = ? AND iduser != ?',
+            [username, iduser]
+        );
+        if ((existing as any[]).length > 0) {
+            await db.rollback();
+            return { status: 400, error: 'Username already exists' };
         }
 
         if (password) {
-        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-        await db.execute('UPDATE users SET username = ?, password = ?, idrole = ? WHERE iduser = ?', [
-            username,
-            hashedPassword,
-            idrole || null,
-            iduser,
-        ]);
+            const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+            await db.execute(
+                'UPDATE user SET username = ?, password = ?, idrole = ? WHERE iduser = ?',
+                [username, hashedPassword, idrole || null, iduser]
+            );
         } else {
-        await db.execute('UPDATE users SET username = ?, idrole = ? WHERE iduser = ?', [username, idrole || null, iduser]);
+            await db.execute(
+                'UPDATE user SET username = ?, idrole = ? WHERE iduser = ?',
+                [username, idrole || null, iduser]
+            );
         }
 
+        await db.commit();
         return { status: 200, data: { message: 'User updated' } };
     } catch (error) {
-        return { status: 500, error: `Failed to update user: ${error instanceof Error ? error.message : 'Unknown error'}` };
+        await db.rollback(); // Rollback jika ada error
+        return {
+            status: 500,
+            error: `Failed to update user: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        };
     } finally {
         db.release();
     }
@@ -154,7 +184,7 @@ export async function deleteUser(id: number): Promise<ApiResponse<{ message: str
 
     const db = await getDbConnection();
     try {
-        const [result] = await db.execute('DELETE FROM users WHERE iduser = ?', [id]);
+        const [result] = await db.execute('DELETE FROM user WHERE iduser = ?', [id]);
         if((result as mysql.ResultSetHeader).affectedRows === 0){
             return {
                 status : 404,

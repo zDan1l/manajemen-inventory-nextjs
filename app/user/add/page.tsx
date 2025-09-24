@@ -18,10 +18,10 @@ export default function AddUser() {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const res = await fetch('/api/role');
+        const res = await fetch('/api/roles');
         const data = await res.json();
         if (res.ok) {
-          setRoles(data.data);
+          setRoles(data);
         } else {
           setError(data.error || 'Failed to fetch roles');
         }
@@ -32,6 +32,8 @@ export default function AddUser() {
     fetchRoles();
   }, []);
 
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -41,7 +43,7 @@ export default function AddUser() {
         body: JSON.stringify({ username, password, idrole: idrole ? parseInt(idrole) : null }),
       });
       if (res.ok) {
-        router.push('/users');
+        router.push('/user');
       } else {
         const data = await res.json();
         setError(data.error || 'Failed to add user');
@@ -62,7 +64,7 @@ export default function AddUser() {
           label="Peran"
           value={idrole}
           onChange={setIdrole}
-          options={roles}
+          options={roles || []}
           optionKey="idrole"
           optionLabel="nama_role"
           placeholder="Pilih Peran (Opsional)"
