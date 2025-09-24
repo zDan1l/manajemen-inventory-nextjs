@@ -41,6 +41,7 @@ export async function getRoleById(id: number): Promise<ApiResponse<Role>> {
   }
 }
 
+
 export async function createRole(data: Omit<Role, 'idrole' | 'created_at'>): Promise<ApiResponse<{ message: string }>> {
   const parsed = roleSchema.safeParse({ nama_role: data.nama_role });
   console.log(parsed);
@@ -66,7 +67,7 @@ export async function createRole(data: Omit<Role, 'idrole' | 'created_at'>): Pro
 }
 
 export async function updateRole(data: Role): Promise<ApiResponse<{ message: string }>> {
-  const parsed = roleSchema.safeParse({...data, nama_role: sanitizeInput(data.nama_role) });
+  const parsed = roleSchema.safeParse({...data, nama_role: data.nama_role });
   if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
