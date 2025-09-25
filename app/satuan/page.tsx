@@ -40,7 +40,7 @@ export default function Satuans() {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this role?')) {
+    if (confirm('Are you sure you want to delete this Satuan?')) {
       try {
         const res = await fetch('/api/satuans', {
           method: 'DELETE',
@@ -51,10 +51,10 @@ export default function Satuans() {
           fetchSatuan();
         } else {
           const data = await res.json();
-          alert(data.error || 'Failed to delete role');
+          alert(data.error || 'Failed to delete Satuan');
         }
       } catch (err) {
-        alert('Failed to delete role');
+        alert('Failed to delete Satuan');
       }
     }
   };

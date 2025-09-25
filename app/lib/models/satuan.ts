@@ -75,17 +75,16 @@ export async function updateSatuan(data: Satuan): Promise<ApiResponse<{ message:
             error : formattedErrors || 'Invalid pagination parameters'
         }
     }
-
   const { nama_satuan, status, idsatuan} = parsed.data;
   const db = await getDbConnection();
   try {
     const [result] = await db.execute('UPDATE satuan SET nama_satuan = ?, status = ? WHERE idsatuan = ?', [nama_satuan, status, idsatuan]);
     if ((result as mysql.ResultSetHeader).affectedRows === 0) {
-      return { status: 404, error: 'Role not found' };
+      return { status: 404, error: 'Satuan not found' };
     }
-    return { status: 200, data: { message: 'Role updated' } };
+    return { status: 200, data: { message: 'Satuan updated' } };
   } catch (error) {
-    return { status: 500, error: `Failed to update role: ${error instanceof Error ? error.message : 'Unknown error'}` };
+    return { status: 500, error: `Failed to update Satuan: ${error instanceof Error ? error.message : 'Unknown error'}` };
   } finally {
     db.release();
   }
