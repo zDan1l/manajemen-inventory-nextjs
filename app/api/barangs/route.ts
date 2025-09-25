@@ -1,26 +1,27 @@
-import { createSatuan, deleteSatuan, getSatuan, updateSatuan } from "@/app/lib/models/satuan";
-import { Satuan } from "@/app/lib/type";
+
+import { createBarang, deleteBarang, getBarang, updateBarang } from "@/app/lib/models/barang";
+import { Barang } from "@/app/lib/type";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const result = await getSatuan();
+  const result = await getBarang();
   return NextResponse.json(result.error || result.data, { status: result.status });
 }
 
 export async function POST(request: Request){
     const body = await request.json();
-    const result = await createSatuan(body as Omit<Satuan, 'idsatuan'>);
+    const result = await createBarang(body as Omit<Barang, 'idbarang'>);
     return NextResponse.json(result.error || result.data, {status: result.status})
 }
 
 export async function PUT(request: Request){
     const body = await request.json();
-    const result = await updateSatuan(body as Satuan);
+    const result = await updateBarang(body as Barang);
     return NextResponse.json(result.error || result.data, {status: result.status})
 }
 
 export async function DELETE(request: Request){
-    const { idsatuan } = await request.json();
-    const result = await deleteSatuan(idsatuan);
+    const { idbarang } = await request.json();
+    const result = await deleteBarang(idbarang);
     return NextResponse.json(result.error || result.data, {status: result.status})
 }
