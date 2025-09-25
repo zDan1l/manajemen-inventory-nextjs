@@ -11,6 +11,28 @@ export interface Role {
     nama_role : string;
 }
 
+export interface Satuan {
+    idsatuan : number;
+    nama_satuan : string;
+    status : string;
+}
+
+export interface Barang {
+    idbarang : number;
+    idsatuan? : number;
+    jenis : string;
+    nama : string;
+    status : string;
+    created_at : string | Date;
+}
+
+export interface Vendor {
+    idvendor : number;
+    nama_vendor : string;
+    badan_hukum : string;
+    status : string;
+}
+
 export interface ApiResponse<T>{
     status: number;
     data?: T;

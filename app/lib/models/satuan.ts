@@ -1,18 +1,18 @@
 import { getDbConnection } from "@/app/lib/services/db";
-import { Role, ApiResponse } from "@/app/lib/type";
+import { Role, ApiResponse, Satuan } from "@/app/lib/type";
 import { roleSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
 
-export async function getRoles(): Promise<ApiResponse<Role[]>> {
+export async function getRoles(): Promise<ApiResponse<Satuan[]>> {
   const db = await getDbConnection();
   try {
-  const [roles] = await db.execute(
-    'SELECT idrole, nama_role FROM role');
+  const [satuans] = await db.execute(
+    'SELECT * FROM satuan');
 
     return {
       status: 200,
-      data: roles as Role[],
+      data: satuans as Satuan[],
     };
   } catch (error) {
     return { status: 500, error: `Failed to fetch roles: ${error instanceof Error ? error.message : 'Unknown error'}` };
@@ -21,14 +21,14 @@ export async function getRoles(): Promise<ApiResponse<Role[]>> {
   }
 }
 
-export async function getRoleById(id: number): Promise<ApiResponse<Role>> {
+export async function getSatuanById(id: number): Promise<ApiResponse<Satuan>> {
   if (!id) {
     return { status: 400, error: 'Missing ID' };
   }
   const db = await getDbConnection();
   try {
-    const [roles] = await db.execute('SELECT * FROM role WHERE idrole = ?', [id]);
-    const roleArray = roles as Role[];
+    const [satuans] = await db.execute('SELECT * FROM satuan WHERE idsatuan = ?', [id]);
+    const roleArray = satuans as Satuan[];
     if (roleArray.length === 0) {
       return { status: 404, error: 'Role not found' };
     }
@@ -41,9 +41,8 @@ export async function getRoleById(id: number): Promise<ApiResponse<Role>> {
 }
 
 
-export async function createRole(data: Omit<Role, 'idrole' | 'created_at'>): Promise<ApiResponse<{ message: string }>> {
-  const parsed = roleSchema.safeParse({ nama_role: data.nama_role });
-  console.log(parsed);
+export async function createSatuan(data: Omit<Satuan, 'idsatuan'>): Promise<ApiResponse<{ message: string }>> {
+  const parsed = .safeParse({ nama_satuan: data.nama_satuan });
     if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -53,10 +52,10 @@ export async function createRole(data: Omit<Role, 'idrole' | 'created_at'>): Pro
         }
     }
 
-  const { nama_role } = parsed.data;
+  const { nama_satuan, status } = parsed.data;
   const db = await getDbConnection();
   try {
-    await db.execute('INSERT INTO role (nama_role) VALUES (?)', [nama_role]);
+    await db.execute('INSERT INTO role (nama_satuan, status) VALUES (?, ?)', [nama_satuan, status]);
     return { status: 201, data: { message: 'Role created' } };
   } catch (error) {
     return { status: 500, error: `Failed to create role: ${error instanceof Error ? error.message : 'Unknown error'}` };
