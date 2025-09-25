@@ -1,10 +1,10 @@
 import { getDbConnection } from "@/app/lib/services/db";
 import { Role, ApiResponse, Satuan } from "@/app/lib/type";
-import { roleSchema } from "@/app/lib/utils/validation";
+import { satuanSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
 
-export async function getRoles(): Promise<ApiResponse<Satuan[]>> {
+export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
   const db = await getDbConnection();
   try {
   const [satuans] = await db.execute(
@@ -42,7 +42,8 @@ export async function getSatuanById(id: number): Promise<ApiResponse<Satuan>> {
 
 
 export async function createSatuan(data: Omit<Satuan, 'idsatuan'>): Promise<ApiResponse<{ message: string }>> {
-  const parsed = .safeParse({ nama_satuan: data.nama_satuan });
+  const parsed = satuanSchema.safeParse({ nama_satuan: data.nama_satuan, status : Number(data.status)});
+  console.log(parsed);
     if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -55,7 +56,7 @@ export async function createSatuan(data: Omit<Satuan, 'idsatuan'>): Promise<ApiR
   const { nama_satuan, status } = parsed.data;
   const db = await getDbConnection();
   try {
-    await db.execute('INSERT INTO role (nama_satuan, status) VALUES (?, ?)', [nama_satuan, status]);
+    await db.execute('INSERT INTO satuan (nama_satuan, status) VALUES (?, ?)', [nama_satuan, status]);
     return { status: 201, data: { message: 'Role created' } };
   } catch (error) {
     return { status: 500, error: `Failed to create role: ${error instanceof Error ? error.message : 'Unknown error'}` };
@@ -64,8 +65,8 @@ export async function createSatuan(data: Omit<Satuan, 'idsatuan'>): Promise<ApiR
   }
 }
 
-export async function updateRole(data: Role): Promise<ApiResponse<{ message: string }>> {
-  const parsed = roleSchema.safeParse({...data, nama_role: data.nama_role });
+export async function updateSatuan(data: Satuan): Promise<ApiResponse<{ message: string }>> {
+  const parsed = satuanSchema.safeParse({...data, nama_satuan: data.nama_satuan, status : data.status});
   if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -75,10 +76,10 @@ export async function updateRole(data: Role): Promise<ApiResponse<{ message: str
         }
     }
 
-  const { nama_role, idrole } = parsed.data;
+  const { nama_satuan, status, idsatuan} = parsed.data;
   const db = await getDbConnection();
   try {
-    const [result] = await db.execute('UPDATE role SET nama_role = ? WHERE idrole = ?', [nama_role, idrole]);
+    const [result] = await db.execute('UPDATE satuan SET nama_satuan = ?, status = ? WHERE idsatuan = ?', [nama_satuan, status, idsatuan]);
     if ((result as mysql.ResultSetHeader).affectedRows === 0) {
       return { status: 404, error: 'Role not found' };
     }
@@ -90,23 +91,23 @@ export async function updateRole(data: Role): Promise<ApiResponse<{ message: str
   }
 }
 
-export async function deleteRole(id: number): Promise<ApiResponse<{ message: string }>> {
+export async function deleteSatuan(id: number): Promise<ApiResponse<{ message: string }>> {
   if (!id) {
     return { status: 400, error: 'Missing ID' };
   }
   const db = await getDbConnection();
   try {
-    const [users] = await db.execute('SELECT COUNT(*) as count FROM user WHERE idrole = ?', [id]);
-    if ((users as any)[0].count > 0) {
-      return { status: 400, error: 'Cannot delete role with associated users' };
+    const [barangs] = await db.execute('SELECT COUNT(*) as count FROM barang WHERE idsatuan = ?', [id]);
+    if ((barangs as any)[0].count > 0) {
+      return { status: 400, error: 'Tidak dapat menghapus satuan yang masih terkait dengan barang' };
     }
-    const [result] = await db.execute('DELETE FROM role WHERE idrole = ?', [id]);
+    const [result] = await db.execute('DELETE FROM satuan WHERE idsatuan = ?', [id]);
     if ((result as mysql.ResultSetHeader).affectedRows === 0) {
-      return { status: 404, error: 'Role not found' };
+      return { status: 404, error: 'Satuan Tidak ditemukan' };
     }
-    return { status: 200, data: { message: 'Role deleted' } };
+    return { status: 200, data: { message: 'Satuan Berhasil Dihapus' } };
   } catch (error) {
-    return { status: 500, error: `Failed to delete role: ${error instanceof Error ? error.message : 'Unknown error'}` };
+    return { status: 500, error: `Gagal menghapus satuan: ${error instanceof Error ? error.message : 'Unknown error'}` };
   } finally {
     db.release();
   }

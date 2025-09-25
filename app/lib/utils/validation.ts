@@ -16,7 +16,7 @@ export const roleSchema = z.object({
 export const satuanSchema = z.object({
     idsatuan : z.number().int().optional(),
     nama_satuan : z.string().max(40, 'Nama satuan terlalu panjang'),
-    status : z.string().max(1),
+    status : z.number().max(1),
 })
 
 export const barangSchema = z.object({

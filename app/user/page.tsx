@@ -4,14 +4,10 @@ import { useEffect, useState } from 'react';
 import { User} from '@/app/lib/type';
 import { Table } from '@/app/components/Table';
 import { FormInput } from '@/app/components/FormInput';
-import { Button } from '@/app/components/Button';
 import { LinkButton } from '../components/LinkButton';
 
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
-  const [total, setTotal] = useState<number>(0);
-  const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(10);
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +50,7 @@ export default function Users() {
 
   useEffect(() => {
     fetchUsers();
-  }, [page, search]);
+  });
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;

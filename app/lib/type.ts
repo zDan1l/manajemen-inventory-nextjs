@@ -14,7 +14,7 @@ export interface Role {
 export interface Satuan {
     idsatuan : number;
     nama_satuan : string;
-    status : string;
+    status : number | string;
 }
 
 export interface Barang {
