@@ -15,7 +15,7 @@ export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
       data: satuans as Satuan[],
     };
   } catch (error) {
-    return { status: 500, error: `Failed to fetch roles: ${error instanceof Error ? error.message : 'Unknown error'}` };
+    return { status: 500, error: `Failed to fetch satuan: ${error instanceof Error ? error.message : 'Unknown error'}` };
   } finally {
     db.release();
   }
@@ -28,11 +28,11 @@ export async function getSatuanById(id: number): Promise<ApiResponse<Satuan>> {
   const db = await getDbConnection();
   try {
     const [satuans] = await db.execute('SELECT * FROM satuan WHERE idsatuan = ?', [id]);
-    const roleArray = satuans as Satuan[];
-    if (roleArray.length === 0) {
+    const satuanArray = satuans as Satuan[];
+    if (satuanArray.length === 0) {
       return { status: 404, error: 'Role not found' };
     }
-    return { status: 200, data: roleArray[0] };
+    return { status: 200, data: satuanArray[0] };
   } catch (error) {
     return { status: 500, error: `Failed to fetch role: ${error instanceof Error ? error.message : 'Unknown error'}` };
   } finally {
