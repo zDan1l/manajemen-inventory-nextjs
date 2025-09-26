@@ -87,6 +87,7 @@ export default function Satuans() {
         columns={columns}
         onDelete={handleDelete}
         editPath="/satuan/edit"
+        idKey="idsatuan"
       />
       <div className="mt-4 flex gap-2">
         <LinkButton href="/" variant="primary" size="medium">

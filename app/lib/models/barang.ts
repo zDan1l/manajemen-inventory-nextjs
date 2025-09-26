@@ -8,7 +8,7 @@ export async function getBarang(): Promise<ApiResponse<Barang[]>> {
   const db = await getDbConnection();
   try {
   const [barangs] = await db.execute(
-    'SELECT * FROM barang');
+    'SELECT b.idbarang, b.idsatuan, b.jenis, b.nama, b.status, s.nama_satuan FROM barang b join satuan s on b.idsatuan = s.idsatuan');
 
     return {
       status: 200,
@@ -42,7 +42,7 @@ export async function getBarangById(id: number): Promise<ApiResponse<Barang>> {
 
 
 export async function createBarang(data: Omit<Barang, 'idbarang'>): Promise<ApiResponse<{ message: string }>> {
-  const parsed = barangSchema.safeParse({ jenis: data.jenis, nama : data.nama, status : data.status });
+  const parsed = barangSchema.safeParse({ jenis: data.jenis, nama : data.nama, status : data.status, idsatuan : data.idsatuan});
     if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -55,7 +55,7 @@ export async function createBarang(data: Omit<Barang, 'idbarang'>): Promise<ApiR
   const { idsatuan, jenis, nama, status } = parsed.data;
   const db = await getDbConnection();
   try {
-    await db.execute('INSERT INTO barang (idsatuan, jenis, nama, status) VALUES (?, ?, ?, ?, now())', [idsatuan, jenis, nama, status]);
+    await db.execute('INSERT INTO barang (idsatuan, jenis, nama, status, created_at) VALUES (?, ?, ?, ?, now())', [idsatuan, jenis, nama, status]);
     return { status: 201, data: { message: 'Barang created' } };
   } catch (error) {
     return { status: 500, error: `Failed to create Barang: ${error instanceof Error ? error.message : 'Unknown error'}` };

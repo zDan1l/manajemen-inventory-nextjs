@@ -8,6 +8,7 @@ interface TableProps<T> {
   editPath: string;
   title?: string;
   variant?: 'red' | 'blue' | 'yellow' | 'green' | 'purple' | 'pink';
+  idKey: keyof T;
 }
 
 export function Table<T>({
@@ -17,6 +18,7 @@ export function Table<T>({
   editPath,
   title,
   variant = 'blue',
+  idKey,
 }: TableProps<T>) {
   const variants = {
     red: {
@@ -121,13 +123,13 @@ export function Table<T>({
                     <td className="p-4">
                       <div className="flex gap-3 items-center">
                         <Link
-                          href={`${editPath}/${item.iduser || item.idrole || item.idsatuan}`}
+                          href={`${editPath}/${item[idKey]}`}
                           className="px-4 py-2 bg-yellow-300 border-3 border-black font-black text-black uppercase text-sm hover:bg-yellow-200 transition-all duration-200 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1"
                         >
                           EDIT
                         </Link>
                         <Button
-                          onClick={() => onDelete(item.iduser || item.idrole || item.idsatuan)}
+                          onClick={() => onDelete(item[idKey])}
                           variant="danger"
                           size="small"
                           className="px-4 py-2 border-3 border-black font-black text-white uppercase text-sm hover:bg-red-600 transition-all duration-200 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1"

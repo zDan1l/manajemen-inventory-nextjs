@@ -87,6 +87,7 @@ export default function Users() {
         columns={columns}
         onDelete={handleDelete}
         editPath="/user/edit"
+        idKey="iduser"
       />
       <div className="mt-4 flex gap-2">
         <LinkButton href="/" variant="primary" size="medium">

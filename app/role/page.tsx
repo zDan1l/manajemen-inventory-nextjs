@@ -85,6 +85,7 @@ export default function Roles() {
         columns={columns}
         onDelete={handleDelete}
         editPath="/role/edit"
+        idKey="idrole"
       />
       <div className="mt-4 flex gap-2">
         <LinkButton href="/" variant="primary" size="medium">
