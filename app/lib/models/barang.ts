@@ -65,7 +65,7 @@ export async function createBarang(data: Omit<Barang, 'idbarang'>): Promise<ApiR
 }
 
 export async function updateBarang(data: Barang): Promise<ApiResponse<{ message: string }>> {
-  const parsed = barangSchema.safeParse({jenis: data.jenis, nama : data.nama, status : data.status});
+  const parsed = barangSchema.safeParse({...data, jenis: data.jenis, nama : data.nama, status : Number(data.status)});
   if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -77,7 +77,7 @@ export async function updateBarang(data: Barang): Promise<ApiResponse<{ message:
   const { idbarang, idsatuan, jenis, nama, status } = parsed.data;
   const db = await getDbConnection();
   try {
-    const [result] = await db.execute('UPDATE barang SET idsatuan = ?, jenis = ?, nama = ?, status = ?, WHERE idbarang = ?', [idsatuan, jenis, nama, status, idbarang]);
+    const [result] = await db.execute('UPDATE barang SET idsatuan = ?, jenis = ?, nama = ?, status = ? WHERE idbarang = ?', [idsatuan, jenis, nama, status, idbarang]);
     if ((result as mysql.ResultSetHeader).affectedRows === 0) {
       return { status: 404, error: 'Barang not found' };
     }
