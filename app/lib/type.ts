@@ -33,6 +33,15 @@ export interface Vendor {
     status : string;
 }
 
+export interface Margin {
+    idmargin_penjualan : number;
+    iuser? : number;
+    created_at : string | Date;
+    persen : number;
+    status : number;
+    updated_at : string | Date;
+}
+
 export interface ApiResponse<T>{
     status: number;
     data?: T;
