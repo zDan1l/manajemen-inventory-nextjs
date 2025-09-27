@@ -125,8 +125,8 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Reports */}
-          <Link href="/reports" className="group">
+          {/* vendor */}
+          <Link href="/vendor" className="group">
             <div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-6 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:-translate-x-1 hover:-translate-y-1">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-purple-400 border-3 border-black flex items-center justify-center">

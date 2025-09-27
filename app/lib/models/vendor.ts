@@ -55,7 +55,7 @@ export async function createVendor(data: Omit<Vendor, 'idvendor'>): Promise<ApiR
   const { nama_vendor, badan_hukum, status } = parsed.data;
   const db = await getDbConnection();
   try {
-    await db.execute('INSERT INTO satuan (nama_vendor, badan_hukum, status) VALUES (?, ?, ?)', [nama_vendor, badan_hukum, status]);
+    await db.execute('INSERT INTO vendor (nama_vendor, badan_hukum, status) VALUES (?, ?, ?)', [nama_vendor, badan_hukum, status]);
     return { status: 201, data: { message: 'Vendor created' } };
   } catch (error) {
     return { status: 500, error: `Failed to create Vendor: ${error instanceof Error ? error.message : 'Unknown error'}` };
@@ -77,7 +77,7 @@ export async function updateVendor(data: Vendor): Promise<ApiResponse<{ message:
   const { idvendor, nama_vendor, badan_hukum, status} = parsed.data;
   const db = await getDbConnection();
   try {
-    const [result] = await db.execute('UPDATE satuan SET nama_vendor = ?, badan_hukum = ? , status = ? WHERE idvendor = ?', [nama_vendor, badan_hukum , status, idvendor]);
+    const [result] = await db.execute('UPDATE vendor SET nama_vendor = ?, badan_hukum = ? , status = ? WHERE idvendor = ?', [nama_vendor, badan_hukum , status, idvendor]);
     if ((result as mysql.ResultSetHeader).affectedRows === 0) {
       return { status: 404, error: 'Vendor not found' };
     }
@@ -95,9 +95,9 @@ export async function deleteVendor(id: number): Promise<ApiResponse<{ message: s
   }
   const db = await getDbConnection();
   try {
-    const [vendors] = await db.execute('SELECT COUNT(*) as count FROM vendor WHERE idvendor = ?', [id]);
-    if ((vendors as any)[0].count > 0) {
-      return { status: 400, error: 'Tidak dapat menghapus satuan yang masih terkait dengan barang' };
+    const [pengadaans] = await db.execute('SELECT COUNT(*) as count FROM pengadaan WHERE vendor_idvendor = ?', [id]);
+    if ((pengadaans as any)[0].count > 0) {
+      return { status: 400, error: 'Tidak dapat menghapus vendor yang masih terkait dengan pengadaan' };
     }
     const [result] = await db.execute('DELETE FROM vendor WHERE idvendor = ?', [id]);
     if ((result as mysql.ResultSetHeader).affectedRows === 0) {
