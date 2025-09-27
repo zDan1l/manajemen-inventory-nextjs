@@ -39,9 +39,9 @@ export const vendorSchema = z.object({
 export const marginSchema = z.object({
     idmargin_penjualan : z.number().int().optional(),
     iduser : z.number().int().optional(),
-    created_at : z.string(),
+    created_at : z.string().optional(),
     persen : z.number(),
-    updated_at : z.string(),
+    updated_at : z.string().optional(),
     status : z.number().max(1),
 })
 

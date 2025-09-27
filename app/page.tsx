@@ -140,6 +140,22 @@ export default function Home() {
               <div className="w-full h-3 bg-purple-400 border-2 border-black"></div>
             </div>
           </Link>
+
+          {/* margin */}
+          <Link href="/margin" className="group">
+            <div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-6 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:-translate-x-1 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-green-400 border-3 border-black flex items-center justify-center">
+                  <span className="text-black text-xl font-black">📈</span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-black text-xl font-black uppercase">Margin Penjualan</h3>
+                  <p className="text-gray-700 font-bold">Statistic Profit</p>
+                </div>
+              </div>
+              <div className="w-full h-3 bg-green-400 border-2 border-black"></div>
+            </div>
+          </Link>
         </div>
 
         {/* Feature Highlights */}

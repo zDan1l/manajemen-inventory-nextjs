@@ -8,7 +8,7 @@ export async function getMargin(): Promise<ApiResponse<Margin[]>> {
   const db = await getDbConnection();
   try {
   const [margins] = await db.execute(
-    'SELECT * FROM margin_penjualan');
+    'SELECT m.idmargin_penjualan, m.iduser, date_format(m.created_at, "%Y-%m-%d") as created_at, m.persen, m.status, u.username FROM margin_penjualan m join user u on m.iduser = u.iduser order by m.idmargin_penjualan');
 
     return {
       status: 200,
@@ -42,7 +42,7 @@ export async function getMarginById(id: number): Promise<ApiResponse<Margin>> {
 
 
 export async function createMargin(data: Omit<Margin, 'idmargin_penjualan'>): Promise<ApiResponse<{ message: string }>> {
-  const parsed = marginSchema.safeParse({ created_at:data.created_at, persen : Number(data.persen), status : Number(data.status), updated_at : data.updated_at});
+  const parsed = marginSchema.safeParse({ ...data,persen : Number(data.persen), status : Number(data.status)});
     if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -52,10 +52,10 @@ export async function createMargin(data: Omit<Margin, 'idmargin_penjualan'>): Pr
         }
     }
 
-  const { iduser, created_at, persen, status, updated_at} = parsed.data;
+  const { iduser, persen, status} = parsed.data;
   const db = await getDbConnection();
   try {
-    await db.execute('INSERT INTO margin_penjualan (iduser, created_at, persen, status, updated_at) VALUES (?, ?, ? , now(), now())', [iduser, created_at, persen, status, updated_at]);
+    await db.execute('INSERT INTO margin_penjualan (iduser, persen, status, updated_at, created_at) VALUES (?, ?, ? , now(), now())', [iduser, persen, status]);
     return { status: 201, data: { message: 'Margin Penjualan created' } };
   } catch (error) {
     return { status: 500, error: `Failed to create Margin: ${error instanceof Error ? error.message : 'Unknown error'}` };

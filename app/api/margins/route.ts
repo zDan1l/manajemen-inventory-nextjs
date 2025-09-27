@@ -11,7 +11,8 @@ export async function GET() {
 
 export async function POST(request: Request){
     const body = await request.json();
-    const result = await createMargin(body as Omit<Margin, 'idbarang'>);
+    const result = await createMargin(body as Omit<Margin, 'idmargin_penjualan'>);
+    console.log(result);
     return NextResponse.json(result.error || result.data, {status: result.status})
 }
 
