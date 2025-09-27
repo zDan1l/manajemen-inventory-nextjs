@@ -1,7 +1,6 @@
 // app/role/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { Role, PaginatedResponse } from '@/app/lib/type';
 import { Table } from '../components/Table';
 import { FormInput } from '../components/FormInput';
