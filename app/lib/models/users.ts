@@ -14,9 +14,8 @@ export async function getUsers(): Promise<ApiResponse<User[]>> {
   const db = await getDbConnection();
   try {
   const [users] = await db.execute(
-    'SELECT u.iduser, u.username, u.idrole, r.nama_role AS role_name FROM `user` u JOIN role r ON u.idrole = r.idrole ORDER BY u.iduser ASC'
+    'SELECT * from view_users'
     );
-
     return {
       status: 200,
       data: users as User[],

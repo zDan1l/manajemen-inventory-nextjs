@@ -8,7 +8,7 @@ export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
   const db = await getDbConnection();
   try {
   const [satuans] = await db.execute(
-    'SELECT * FROM satuan');
+    'SELECT * FROM view_satuan');
 
     return {
       status: 200,

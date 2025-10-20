@@ -8,7 +8,7 @@ export async function getVendor(): Promise<ApiResponse<Vendor[]>> {
   const db = await getDbConnection();
   try {
   const [vendors] = await db.execute(
-    'SELECT * FROM vendor');
+    'SELECT * FROM view_vendor');
 
     return {
       status: 200,

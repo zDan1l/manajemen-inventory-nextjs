@@ -1,6 +1,6 @@
 import { getDbConnection } from "@/app/lib/services/db";
 import { ApiResponse, Barang } from "@/app/lib/type";
-import { barangSchema, satuanSchema } from "@/app/lib/utils/validation";
+import { barangSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
 
@@ -8,7 +8,7 @@ export async function getBarang(): Promise<ApiResponse<Barang[]>> {
   const db = await getDbConnection();
   try {
   const [barangs] = await db.execute(
-    'SELECT b.idbarang, b.idsatuan, b.jenis, b.nama, b.status, s.nama_satuan FROM barang b join satuan s on b.idsatuan = s.idsatuan');
+    'SELECT * from view_barang');
 
     return {
       status: 200,

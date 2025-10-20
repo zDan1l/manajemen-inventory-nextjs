@@ -8,7 +8,7 @@ export async function getRoles(): Promise<ApiResponse<Role[]>> {
   const db = await getDbConnection();
   try {
   const [roles] = await db.execute(
-    'SELECT idrole, nama_role FROM role');
+    'SELECT * from view_role');
 
     return {
       status: 200,

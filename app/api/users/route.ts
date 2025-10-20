@@ -5,6 +5,7 @@ import { createUser, deleteUser, getUsers, updateUser } from "@/app/lib/models/u
 
 export async function GET() {
   const result = await getUsers();
+    console.log(result);
   return NextResponse.json(result.error || result.data, { status: result.status });
 }
 

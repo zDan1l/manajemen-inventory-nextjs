@@ -8,7 +8,7 @@ export async function getMargin(): Promise<ApiResponse<Margin[]>> {
   const db = await getDbConnection();
   try {
   const [margins] = await db.execute(
-    'SELECT m.idmargin_penjualan, m.iduser, date_format(m.created_at, "%Y-%m-%d") as created_at, m.persen, m.status, u.username FROM margin_penjualan m join user u on m.iduser = u.iduser order by m.idmargin_penjualan');
+    'select * from view_margin');
 
     return {
       status: 200,
