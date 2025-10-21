@@ -53,6 +53,14 @@ export interface Pengadaan {
     total_nilai : number
 }
 
+export interface Penerimaan {
+    idpenerimaan : number,
+    created_at : string | Date;
+    status : string,
+    idpengadaan : number,
+    iduser : number
+}
+
 export interface ApiResponse<T>{
     status: number;
     data?: T;

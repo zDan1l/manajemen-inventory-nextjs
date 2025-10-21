@@ -1,13 +1,13 @@
 // app/users/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { Pengadaan } from '@/app/lib/type';
+import { Penerimaan } from '@/app/lib/type';
 import { Table } from '@/app/components/Table';
 import { LinkButton } from '../components/LinkButton';
 
 export default function Margins() {
-  const [pengadaans, setPengadaans] = useState<Pengadaan[]>([]);
-  const [filteredPengadaans, setFilteredPengadaans] = useState<Pengadaan[]>([]);
+  const [penerimaans, setPenerimaans] = useState<Penerimaan[]>([]);
+  const [filteredPenerimaans, setFilteredPenerimaans] = useState<Penerimaan[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,28 +15,27 @@ export default function Margins() {
   // Fungsi untuk memetakan status numerik ke string
   const mapStatusToString = (status: string): string => {
     const statusMap: { [key: string]: string } = {
-      'A': 'Diproses',
-      'B': 'Pengiriman',
-      'C': 'Selesai',
-      'D': 'Ditolak',
+      'A': 'Dikirim',
+      'B': 'Diterima',
+      'C': 'Ditolak',
     };
     return statusMap[status] || 'Unknown'; 
   };
 
-  const fetchPengadaans = async () => {
+  const fetchPenerimaans = async () => {
     try {
-      const res = await fetch('/api/pengadaans');
+      const res = await fetch('/api/penerimaans');
       console.log(res);
-      const data: Pengadaan[] | { error: string } = await res.json();
+      const data: Penerimaan[] | { error: string } = await res.json();
       if (res.ok && Array.isArray(data)) {
         // Store original data for filtering
-        setPengadaans(data);
-        setFilteredPengadaans(data);
+        setPenerimaans(data);
+        setFilteredPenerimaans(data);
       } else {
-        setError((data as { error: string }).error || 'Failed to fetch pengadaan');
+        setError((data as { error: string }).error || 'Failed to fetch penerimaan');
       }
     } catch (err) {
-      setError('Failed to fetch pengadaan');
+      setError('Failed to fetch penerimaan');
     } finally {
       setLoading(false);
     }
@@ -51,7 +50,7 @@ export default function Margins() {
           body: JSON.stringify({ idmargin_penjualan: id }),
         });
         if (res.ok) {
-          fetchPengadaans();
+          fetchPenerimaans();
         } else {
           const data = await res.json();
           alert(data.error || 'Failed to delete margins');
@@ -66,52 +65,47 @@ export default function Margins() {
   const filterByStatus = (statusValue: string) => {
     setStatusFilter(statusValue);
     if (statusValue === 'all') {
-      setFilteredPengadaans(pengadaans);
+      setFilteredPenerimaans(penerimaans);
     } else {
       let targetStatus : string;
       if (statusValue === 'A') {
-        targetStatus = 'Diproses';
+        targetStatus = 'Dikirim';
       } else if (statusValue === 'B') {
-        targetStatus = 'Pengiriman';
+        targetStatus = 'Diterima';
       } else if (statusValue === 'C') {
-        targetStatus = 'Selesai';
-      } else if (statusValue === 'D') {
         targetStatus = 'Ditolak';
-      }
-      const filtered = pengadaans.filter(pengadaan => {
-        const mappedStatus = mapStatusToString(pengadaan.status);
+      } 
+      const filtered = penerimaans.filter(penerimaan => {
+        const mappedStatus = mapStatusToString(penerimaan.status);
         return mappedStatus === targetStatus;
       });
-      setFilteredPengadaans(filtered);
+      setFilteredPenerimaans(filtered);
     }
   };
 
   useEffect(() => {
-    fetchPengadaans();
+    fetchPenerimaans();
   }, []);
 
   // Update filtered data when margins or statusFilter changes
   useEffect(() => {
     filterByStatus(statusFilter);
-  }, [pengadaans]);
+  }, [penerimaans]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;
 
   const columns = [
-    { key: 'idpengadaan', label: 'ID' },
-    { key: 'timestamp', label: 'Tanggal Pengadaan' },
-    { key: 'status', label: 'Status Pengadaan' },
-    { key: 'subtotal_nilai', label: 'Sub Total Nilai' },
-    { key: 'ppn', label: 'PPN' },
-    { key: 'total_nilai', label: 'Total' },
+    { key: 'idpenerimaan', label: 'ID' },
+    { key: 'created_at', label: 'Tanggal Penerimaan' },
+    { key: 'status', label: 'Status Pengadaan' }
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-blue-200 border-2 border-black p-4">
-        <h1 className="text-xl font-bold uppercase text-black">Daftar Pengadaan</h1>
+        <h1 className="text-xl font-bold uppercase text-black">Daftar Penerimaan</h1>
       </div>
 
       {/* Controls */}
@@ -119,7 +113,7 @@ export default function Margins() {
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
           <div className="flex gap-2">
             <LinkButton href="/pengadaan/add" variant="primary" size="medium">
-              Tambah Pengadaan
+              Tambah Penerimaan
             </LinkButton>
           </div>
           
@@ -134,10 +128,9 @@ export default function Margins() {
                 className="w-full p-3 border-2 border-black bg-white font-medium text-sm text-black focus:outline-none transition-colors duration-200 appearance-none cursor-pointer pr-10"
               >
                 <option value="all" className="bg-white text-black font-medium">Semua Status</option>
-                <option value="A" className="bg-white text-black font-medium">Diproses</option>
-                <option value="B" className="bg-white text-black font-medium">Pengiriman</option>
-                <option value="C" className="bg-white text-black font-medium">Selesai</option>
-                <option value="D" className="bg-white text-black font-medium">Ditolak</option>
+                <option value="A" className="bg-white text-black font-medium">Dikirim</option>
+                <option value="B" className="bg-white text-black font-medium">Diterima</option>
+                <option value="C" className="bg-white text-black font-medium">Ditolak</option>
               </select>
               {/* Custom dropdown arrow */}
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
@@ -150,14 +143,14 @@ export default function Margins() {
 
       {/* Table */}
       <Table
-        data={filteredPengadaans.map(pengadaan => ({
-          ...pengadaan,
-          status: mapStatusToString(pengadaan.status),
+        data={filteredPenerimaans.map(penerimaan => ({
+          ...penerimaan,
+          status: mapStatusToString(penerimaan.status),
         }))}
         columns={columns}
         onDelete={handleDelete}
-        editPath="/pengadaan/edit"
-        idKey="idpengadaan"
+        editPath="/penerimaan/edit"
+        idKey="idpenerimaan"
         variant="blue"
       />
     </div>

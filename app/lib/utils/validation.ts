@@ -62,3 +62,28 @@ export const pengadaanSchema = z.object({
     ppn : z.number(),
     total_nilai : z.number()
 })
+
+export const penerimaanSchema = z.object({
+    idpenerimaan : z.number().int().optional(),
+    created_at : z.string().optional(),
+    status : z.number().max(1),
+    idpengadaan : z.number().int().optional(),
+    iduser : z.number().int().optional()
+})
+
+export const returSchema = z.object({
+    idretur : z.number().int().optional(),
+    created_at : z.string().optional(),
+    idpenerimaan : z.number().int().optional(),
+    iduser : z.number().int().optional()
+})
+
+export const penjualanSchema = z.object({
+    idpenjualan : z.number().int().optional(),
+    created_at : z.string().optional(),
+    subtotal_nilai : z.number().int().optional(),
+    ppn : z.number().int().optional(),
+    total_nilai : z.number().int().optional(),
+    iduser : z.number().int().optional(),
+    idmargin_penjualan : z.number().int().optional()
+})
