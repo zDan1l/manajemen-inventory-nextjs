@@ -63,22 +63,29 @@ export default function Roles() {
   ];
 
   return (
-    <div className="p-5 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-5">Daftar Peran</h1>
-      <div className="mb-5 flex gap-4">
-        <div className="flex items-center">
-          <LinkButton href="/role/add" variant="primary" size="medium">
-            Tambah Peran
-          </LinkButton>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-blue-200 border-2 border-black p-4">
+        <h1 className="text-xl font-bold uppercase text-black">Daftar Pengguna</h1>
+      </div>
+
+        {/* Controls */}
+      <div className="bg-white border-2 border-black p-4">
+        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+          <div className="flex gap-2">
+            <LinkButton href="/role/add" variant="primary" size="medium">
+              Tambah Pengguna
+            </LinkButton>
+          </div>
         </div>
       </div>
-      <Table
-        data={roles}
-        columns={columns}
-        onDelete={handleDelete}
-        editPath="/role/edit"
-        idKey="idrole"
-      />
-    </div>
+        <Table
+          data={roles}
+          columns={columns}
+          onDelete={handleDelete}
+          editPath="/role/edit"
+          idKey="idrole"
+        />
+      </div>
   );
 }

@@ -75,19 +75,6 @@ export default function Users() {
             <LinkButton href="/user/add" variant="primary" size="medium">
               Tambah Pengguna
             </LinkButton>
-            <LinkButton href="/role" variant="success" size="medium">
-              Kelola Peran
-            </LinkButton>
-          </div>
-          
-          <div className="w-full md:w-64">
-            <FormInput
-              label="Cari"
-              type="text"
-              value={search}
-              onChange={setSearch}
-              required={false}
-            />
           </div>
         </div>
       </div>
