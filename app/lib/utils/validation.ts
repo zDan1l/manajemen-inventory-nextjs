@@ -51,3 +51,14 @@ export const paginationSchema = z.object({
     pageSize : z.number().int().min(1).max(100).default(10),
     search : z.string().optional(),
 })
+
+export const pengadaanSchema = z.object({
+    idpengadaan : z.number().int().optional(),
+    user_iduser : z.number().int().optional(),
+    vendor_idvendor : z.number().int().optional(),
+    timestamp : z.string().optional(),
+    status : z.number().max(1),
+    subtotal_nilai : z.number(),
+    ppn : z.number(),
+    total_nilai : z.number()
+})

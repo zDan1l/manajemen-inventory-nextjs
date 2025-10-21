@@ -48,6 +48,30 @@ const Sidebar = () => {
       icon: '📈',
       href: '/margin',
       color: 'bg-pink-400'
+    },
+    {
+      title: 'Pengadaan',
+      icon: '📠',
+      href: '/pengadaan',
+      color: 'bg-pink-400'
+    },
+    {
+      title: 'Penerimaan',
+      icon: '📥',
+      href: '/penerimaan',
+      color: 'bg-pink-400'
+    },
+    {
+      title: 'Retur',
+      icon: '📤',
+      href: '/retur',
+      color: 'bg-pink-400'
+    },
+    {
+      title: 'Penjualan',
+      icon: '🛒',
+      href: '/penjualan',
+      color: 'bg-pink-400'
     }
   ];
 

@@ -42,6 +42,17 @@ export interface Margin {
     updated_at : string | Date;
 }
 
+export interface Pengadaan {
+    idpengadaan : number,
+    user_iduser : number,
+    vendor_idvendor : number,
+    timestamp : string | Date,
+    status : string,
+    subtotal_nilai : number,
+    ppn : number,
+    total_nilai : number
+}
+
 export interface ApiResponse<T>{
     status: number;
     data?: T;
@@ -54,3 +65,5 @@ export interface PaginatedResponse<T> {
     page: number;
     pageSize: number;
 }
+
+
