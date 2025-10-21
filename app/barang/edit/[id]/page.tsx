@@ -21,7 +21,7 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
 
   const statusOptions = [
     { id: 1, label: 'Baik' },
-    { id: 0, label: 'Buruk' },
+    { id: 0, label: 'Rusak' },
   ];
 
   useEffect(() => {

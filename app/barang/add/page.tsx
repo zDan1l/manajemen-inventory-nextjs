@@ -62,7 +62,7 @@ export default function AddBarang() {
 
   return (
     <div className="mt-30 p-5 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-5">Tambah Peran</h1>
+      <h1 className="text-2xl font-bold mb-5">Tambah Barang</h1>
       {error && <div className="text-red-600 mb-4">Error: {error}</div>}
       <form onSubmit={handleSubmit}>
         <FormInput label="Nama Barang" type="text" value={nama} onChange={setNama} required />
@@ -88,7 +88,7 @@ export default function AddBarang() {
         />
         <div className="flex">
                   <div className="flex gap-2">
-                          <LinkButton href="/role" variant="primary" size="medium">
+                          <LinkButton href="/barang" variant="primary" size="medium">
                           Kembali
                           </LinkButton>
                         </div>

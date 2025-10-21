@@ -67,17 +67,10 @@ export default function Roles() {
       <h1 className="text-2xl font-bold mb-5">Daftar Peran</h1>
       <div className="mb-5 flex gap-4">
         <div className="flex items-center">
-                <LinkButton href="/role/add" variant="primary" size="medium">
-                Tambah Peran
-                </LinkButton>
+          <LinkButton href="/role/add" variant="primary" size="medium">
+            Tambah Peran
+          </LinkButton>
         </div>
-        <FormInput
-          label="Cari"
-          type="text"
-          value={search}
-          onChange={setSearch}
-          required={false}
-        />
       </div>
       <Table
         data={roles}
