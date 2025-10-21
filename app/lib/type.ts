@@ -61,6 +61,13 @@ export interface Penerimaan {
     iduser : number
 }
 
+export interface Retur {
+    idretur : number,
+    created_at : string | Date;
+    idpenerimaan : number,
+    iduser : number
+}
+
 export interface ApiResponse<T>{
     status: number;
     data?: T;
