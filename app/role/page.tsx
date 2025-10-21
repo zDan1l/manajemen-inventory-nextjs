@@ -86,11 +86,6 @@ export default function Roles() {
         editPath="/role/edit"
         idKey="idrole"
       />
-      <div className="mt-4 flex gap-2">
-        <LinkButton href="/" variant="primary" size="medium">
-        Kembali
-        </LinkButton>
-      </div>
     </div>
   );
 }

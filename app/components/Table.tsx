@@ -22,40 +22,40 @@ export function Table<T>({
 }: TableProps<T>) {
   const variants = {
     red: {
-      headerBg: 'bg-red-400',
-      rowBg: 'bg-red-50 hover:bg-red-100',
+      headerBg: 'bg-red-500',
+      rowBg: 'bg-white',
       border: 'border-black',
-      accent: 'bg-red-200',
+      accent: 'bg-red-400',
     },
     blue: {
-      headerBg: 'bg-blue-400',
-      rowBg: 'bg-blue-50 hover:bg-blue-100',
+      headerBg: 'bg-blue-200',
+      rowBg: 'bg-white',
       border: 'border-black',
-      accent: 'bg-blue-200',
+      accent: 'bg-blue-100',
     },
     yellow: {
-      headerBg: 'bg-yellow-400',
-      rowBg: 'bg-yellow-50 hover:bg-yellow-100',
+      headerBg: 'bg-yellow-200',
+      rowBg: 'bg-white',
       border: 'border-black',
-      accent: 'bg-yellow-200',
+      accent: 'bg-yellow-100',
     },
     green: {
-      headerBg: 'bg-green-400',
-      rowBg: 'bg-green-50 hover:bg-green-100',
+      headerBg: 'bg-green-200',
+      rowBg: 'bg-white',
       border: 'border-black',
-      accent: 'bg-green-200',
+      accent: 'bg-green-100',
     },
     purple: {
-      headerBg: 'bg-purple-400',
-      rowBg: 'bg-purple-50 hover:bg-purple-100',
+      headerBg: 'bg-purple-200',
+      rowBg: 'bg-white',
       border: 'border-black',
-      accent: 'bg-purple-200',
+      accent: 'bg-purple-100',
     },
     pink: {
-      headerBg: 'bg-pink-400',
-      rowBg: 'bg-pink-50 hover:bg-pink-100',
+      headerBg: 'bg-pink-200',
+      rowBg: 'bg-white',
       border: 'border-black',
-      accent: 'bg-pink-200',
+      accent: 'bg-pink-100',
     },
   };
 
@@ -64,19 +64,14 @@ export function Table<T>({
   return (
     <div className="w-full">
       {title && (
-        <div className={`${currentVariant.accent} border-4 ${currentVariant.border} p-6 mb-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transform -rotate-1`}>
-          <h2 className="text-3xl font-black uppercase tracking-wider text-black">
+        <div className={`${currentVariant.accent} border-2 ${currentVariant.border} p-4 mb-4`}>
+          <h2 className="text-xl font-bold uppercase text-black">
             {title}
           </h2>
-          <div className="mt-2 flex gap-2">
-            <div className="w-4 h-4 bg-black"></div>
-            <div className="w-4 h-4 bg-black"></div>
-            <div className="w-4 h-4 bg-black"></div>
-          </div>
         </div>
       )}
 
-      <div className={`border-4 ${currentVariant.border} bg-white overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]`}>
+      <div className={`border-2 ${currentVariant.border} bg-white overflow-hidden`}>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -84,12 +79,12 @@ export function Table<T>({
                 {columns.map((col, index) => (
                   <th
                     key={col.key as string}
-                    className={`${index !== columns.length - 1 || columns.length === 0 ? `border-r-4 ${currentVariant.border}` : ''} p-4 text-left font-black uppercase tracking-wider text-black`}
+                    className={`${index !== columns.length - 1 || columns.length === 0 ? `border-r-2 ${currentVariant.border}` : ''} p-3 text-left font-bold uppercase text-black`}
                   >
                     {col.label}
                   </th>
                 ))}
-                <th className="p-4 text-left font-black uppercase tracking-wider text-black">
+                <th className="p-3 text-left font-bold uppercase text-black">
                   AKSI
                 </th>
               </tr>
@@ -97,12 +92,12 @@ export function Table<T>({
             <tbody>
               {data.length === 0 ? (
                 <tr>
-                  <td colSpan={columns.length + 1} className="p-12 text-center text-black font-bold text-xl">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-16 h-16 bg-gray-200 border-4 border-black flex items-center justify-center">
-                        <span className="text-2xl">📦</span>
+                  <td colSpan={columns.length + 1} className="p-8 text-center text-black font-medium text-base">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-12 h-12 bg-gray-100 border-2 border-black flex items-center justify-center">
+                        <span className="text-lg">📦</span>
                       </div>
-                      TIDAK ADA DATA TERSEDIA
+                      Tidak ada data tersedia
                     </div>
                   </td>
                 </tr>
@@ -110,21 +105,21 @@ export function Table<T>({
                 data.map((item: any, index) => (
                   <tr
                     key={item.iduser || item.idrole || index}
-                    className={`${currentVariant.rowBg} transition-all duration-200 border-b-2 ${currentVariant.border}`}
+                    className={`${currentVariant.rowBg} border-b border-gray-600`}
                   >
                     {columns.map((col, colIndex) => (
                       <td
                         key={col.key as string}
-                        className={`${colIndex !== columns.length - 1 ? `border-r-2 ${currentVariant.border}` : ''} p-4 font-bold text-black`}
+                        className={`${colIndex !== columns.length - 1 ? `border-r border-gray-600` : ''} p-3 font-medium text-black`}
                       >
                         {item[col.key] || '-'}
                       </td>
                     ))}
-                    <td className="p-4">
-                      <div className="flex gap-3 items-center">
+                    <td className="p-3">
+                      <div className="flex gap-2 items-center">
                         <Link
                           href={`${editPath}/${item[idKey]}`}
-                          className="px-4 py-2 bg-yellow-300 border-3 border-black font-black text-black uppercase text-sm hover:bg-yellow-200 transition-all duration-200 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1"
+                          className="px-3 py-1 bg-yellow-200 border-2 border-black font-bold text-black uppercase text-xs"
                         >
                           EDIT
                         </Link>
@@ -132,7 +127,7 @@ export function Table<T>({
                           onClick={() => onDelete(item[idKey])}
                           variant="danger"
                           size="small"
-                          className="px-4 py-2 border-3 border-black font-black text-white uppercase text-sm hover:bg-red-600 transition-all duration-200 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1"
+                          className="px-3 py-1 border-2 border-black font-bold text-white uppercase text-xs"
                         >
                           HAPUS
                         </Button>

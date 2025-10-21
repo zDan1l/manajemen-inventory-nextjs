@@ -19,39 +19,34 @@ export function Button({
 }: ButtonProps) {
     const variants = {
         primary: {
-            bg: 'bg-blue-400',
+            bg: 'bg-blue-200',
             border: 'border-black',
             text: 'text-black',
-            hoverBg: 'hover:bg-blue-300',
-            shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
+            hoverBg: 'hover:bg-blue-300'
         },
         secondary: {
-            bg: 'bg-gray-300',
+            bg: 'bg-gray-200',
             border: 'border-black',
             text: 'text-black',
-            hoverBg: 'hover:bg-gray-200',
-            shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
+            hoverBg: 'hover:bg-gray-300'
         },
         danger: {
             bg: 'bg-red-400',
             border: 'border-black',
             text: 'text-black',
-            hoverBg: 'hover:bg-red-300',
-            shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
+            hoverBg: 'hover:bg-red-500'
         },
         success: {
-            bg: 'bg-green-400',
+            bg: 'bg-green-200',
             border: 'border-black',
             text: 'text-black',
-            hoverBg: 'hover:bg-green-300',
-            shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
+            hoverBg: 'hover:bg-green-300'
         },
         warning: {
-            bg: 'bg-yellow-400',
+            bg: 'bg-yellow-200',
             border: 'border-black',
             text: 'text-black',
-            hoverBg: 'hover:bg-yellow-300',
-            shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
+            hoverBg: 'hover:bg-yellow-300'
         }
     };
 
@@ -71,14 +66,10 @@ export function Button({
             disabled={disabled}
             className={`
                 ${currentVariant.bg} ${currentVariant.border} ${currentVariant.text} ${currentVariant.hoverBg}
-                border-4 font-black uppercase tracking-wider
+                border-2 font-bold uppercase
                 ${currentSize}
-                transition-all duration-200
-                ${currentVariant.shadow}
-                hover:-translate-x-1 hover:-translate-y-1
-                active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0
-                disabled:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                transition-colors duration-200
+                disabled:opacity-50 disabled:cursor-not-allowed
                 ${className}
             `}
         >

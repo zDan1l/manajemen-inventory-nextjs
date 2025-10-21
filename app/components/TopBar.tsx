@@ -14,19 +14,19 @@ const TopBar = () => {
         {/* Right Section */}
         <div className="flex items-center gap-3">
           {/* Notifications */}
-          <div className="bg-pink-200 border-2 border-black p-2 cursor-pointer">
+          {/* <div className="bg-pink-200 border-2 border-black p-2 cursor-pointer">
             <div className="flex items-center gap-2">
               <span className="text-base">🔔</span>
               <div className="w-4 h-4 bg-red-400 border border-black flex items-center justify-center">
                 <span className="text-xs font-bold">3</span>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Settings */}
-          <div className="bg-blue-200 border-2 border-black p-2 cursor-pointer">
+          {/* <div className="bg-blue-200 border-2 border-black p-2 cursor-pointer">
             <span className="text-base">⚙️</span>
-          </div>
+          </div> */}
 
           {/* User Profile */}
           <div className="bg-green-200 border-2 border-black p-2 cursor-pointer">

@@ -17,40 +17,35 @@ export function LinkButton({
 }: LinkButtonProps) {
   const variants = {
     primary: {
-      bg: 'bg-blue-400',
+      bg: 'bg-blue-200',
       border: 'border-black',
       text: 'text-black',
-      hoverBg: 'hover:bg-blue-300',
-      shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]',
+      hoverBg: 'hover:bg-blue-300'
     },
     secondary: {
-      bg: 'bg-gray-300',
+      bg: 'bg-gray-200',
       border: 'border-black',
       text: 'text-black',
-      hoverBg: 'hover:bg-gray-200',
-      shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]',
+      hoverBg: 'hover:bg-gray-300'
     },
     danger: {
-      bg: 'bg-red-400',
+      bg: 'bg-red-200',
       border: 'border-black',
       text: 'text-black',
-      hoverBg: 'hover:bg-red-300',
-      shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]',
+      hoverBg: 'hover:bg-red-300'
     },
     success: {
-      bg: 'bg-green-400',
+      bg: 'bg-green-200',
       border: 'border-black',
       text: 'text-black',
-      hoverBg: 'hover:bg-green-300',
-      shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]',
+      hoverBg: 'hover:bg-green-300'
     },
     warning: {
-      bg: 'bg-yellow-400',
+      bg: 'bg-yellow-200',
       border: 'border-black',
       text: 'text-black',
-      hoverBg: 'hover:bg-yellow-300',
-      shadow: 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]',
-    },
+      hoverBg: 'hover:bg-yellow-300'
+    }
   };
 
   const sizes = {
@@ -66,13 +61,10 @@ export function LinkButton({
     <Link
       href={href}
       className={`
-        inline ${currentVariant.bg} ${currentVariant.border} ${currentVariant.text} ${currentVariant.hoverBg}
-        border-4 font-black uppercase tracking-wider
+        inline-block ${currentVariant.bg} ${currentVariant.border} ${currentVariant.text} ${currentVariant.hoverBg}
+        border-2 font-bold uppercase
         ${currentSize}
-        transition-all duration-200
-        ${currentVariant.shadow}
-        hover:-translate-x-1 hover:-translate-y-1
-        active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
+        transition-colors duration-200
         ${className} 
       `}
     >

@@ -55,30 +55,58 @@ export default function AddUser() {
   };
 
   return (
-    <div className="mt-30 p-5 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-5">Tambah Pengguna</h1>
-      {error && <div className="text-red-600 mb-4">Error: {error}</div>}
-      <form onSubmit={handleSubmit}>
-        <FormInput label="Username" type="text" value={username} onChange={setUsername} required />
-        <FormInput label="Password" type="password" value={password} onChange={setPassword} required />
-        <SelectInput
-          label="Peran"
-          value={idrole}
-          onChange={setIdrole}
-          options={roles || []}
-          optionKey="idrole"
-          optionLabel="nama_role"
-          placeholder="Pilih Peran (Opsional)"
-        />
-        <div className="flex">
-          <div className="flex gap-2">
-                  <LinkButton href="/user" variant="primary" size="medium">
-                  Kembali
-                  </LinkButton>
-                </div>
-          <Button type="submit">Simpan</Button>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-blue-200 border-2 border-black p-4">
+        <h1 className="text-xl font-bold uppercase text-black">Tambah Pengguna</h1>
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-200 border-2 border-black p-3">
+          <p className="font-bold text-red-800">Error: {error}</p>
         </div>
-      </form>
+      )}
+
+      {/* Form */}
+      <div className="bg-white border-2 border-black p-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <FormInput 
+            label="Username" 
+            type="text" 
+            value={username} 
+            onChange={setUsername} 
+            required 
+          />
+          
+          <FormInput 
+            label="Password" 
+            type="password" 
+            value={password} 
+            onChange={setPassword} 
+            required 
+          />
+          
+          <SelectInput
+            label="Peran"
+            value={idrole}
+            onChange={setIdrole}
+            options={roles || []}
+            optionKey="idrole"
+            optionLabel="nama_role"
+            placeholder="Pilih Peran (Opsional)"
+          />
+          
+          <div className="flex gap-2 pt-4">
+            <LinkButton href="/user" variant="primary" size="medium">
+              Kembali
+            </LinkButton>
+            <Button type="submit" variant="success">
+              Simpan
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

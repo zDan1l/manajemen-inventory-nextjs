@@ -19,7 +19,7 @@ const Breadcrumb = () => {
   };
 
   return (
-    <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 mb-6">
+    <div className="bg-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] p-4 mb-6">
       <nav className="flex items-center space-x-2">
         <Link href="/">
           <div className="bg-blue-300 border-2 border-black px-3 py-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-200">

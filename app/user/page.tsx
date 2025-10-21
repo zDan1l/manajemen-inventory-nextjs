@@ -62,38 +62,46 @@ export default function Users() {
   ];
 
   return (
-    <div className="p-5 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-5">Daftar Pengguna</h1>
-      <div className="mb-5 flex gap-4">
-        <div className="flex items-center">
-        <LinkButton href="/user/add" variant="primary" size="medium">
-        Tambah Pengguna
-        </LinkButton>
-        <LinkButton href="/role" variant="success" size="medium">
-          Kelola Peran
-        </LinkButton>
-
-        </div>
-      <FormInput
-          label="Cari"
-          type="text"
-          value={search}
-          onChange={setSearch}
-          required={false}
-        />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-blue-200 border-2 border-black p-4">
+        <h1 className="text-xl font-bold uppercase text-black">Daftar Pengguna</h1>
       </div>
+
+      {/* Controls */}
+      <div className="bg-white border-2 border-black p-4">
+        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+          <div className="flex gap-2">
+            <LinkButton href="/user/add" variant="primary" size="medium">
+              Tambah Pengguna
+            </LinkButton>
+            <LinkButton href="/role" variant="success" size="medium">
+              Kelola Peran
+            </LinkButton>
+          </div>
+          
+          <div className="w-full md:w-64">
+            <FormInput
+              label="Cari"
+              type="text"
+              value={search}
+              onChange={setSearch}
+              required={false}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Table */}
       <Table
         data={users}
         columns={columns}
         onDelete={handleDelete}
         editPath="/user/edit"
         idKey="iduser"
+        variant="blue"
       />
-      <div className="mt-4 flex gap-2">
-        <LinkButton href="/" variant="primary" size="medium">
-        Kembali
-        </LinkButton>
-      </div>
+      
     </div>
   );
 }
