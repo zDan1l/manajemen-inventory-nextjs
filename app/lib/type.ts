@@ -68,6 +68,16 @@ export interface Retur {
     iduser : number
 }
 
+export interface Penjualan {
+    idpenjualan : number,
+    created_at : string | Date;
+    subtotal_nilai : number,
+    ppn : number,
+    total_nilai : number,
+    iduser : number,
+    idmargin_penjualan : number
+}
+
 export interface ApiResponse<T>{
     status: number;
     data?: T;
