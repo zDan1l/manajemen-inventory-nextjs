@@ -1,12 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { DashboardStats } from '@/app/lib/type';
 
-interface DashboardStats {
-  totalUsers: number;
-  totalBarangs: number;
-  totalVendors: number;
-  totalMargins: number;
-}
+
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats>({
@@ -21,30 +17,22 @@ export default function Dashboard() {
   const fetchDashboardStats = async () => {
     try {
       setLoading(true);
+      setError(null);
       
-      // Fetch data from all endpoints
-      const [usersRes, barangsRes, vendorsRes, marginsRes] = await Promise.all([
-        fetch('/api/users'),
-        fetch('/api/barangs'),
-        fetch('/api/vendors'),
-        fetch('/api/margins')
-      ]);
+      // Fetch semua statistik dari satu endpoint
+      const response = await fetch('/api/dashboard');
+      const data = await response.json();
 
-      // Parse all responses
-      const [usersData, barangsData, vendorsData, marginsData] = await Promise.all([
-        usersRes.json(),
-        barangsRes.json(),
-        vendorsRes.json(),
-        marginsRes.json()
-      ]);
-
-      // Update stats with actual counts
-      setStats({
-        totalUsers: Array.isArray(usersData) ? usersData.length : 0,
-        totalBarangs: Array.isArray(barangsData) ? barangsData.length : 0,
-        totalVendors: Array.isArray(vendorsData) ? vendorsData.length : 0,
-        totalMargins: Array.isArray(marginsData) ? marginsData.length : 0
-      });
+      if (response.ok) {
+        setStats({
+          totalUsers: data.totalUsers || 0,
+          totalBarangs: data.totalBarangs || 0,
+          totalVendors: data.totalVendors || 0,
+          totalMargins: data.totalMargins || 0
+        });
+      } else {
+        setError(data.error || 'Failed to load dashboard statistics');
+      }
 
     } catch (err) {
       console.error('Error fetching dashboard stats:', err);

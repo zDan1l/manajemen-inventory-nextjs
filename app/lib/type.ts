@@ -1,3 +1,11 @@
+export interface DashboardStats {
+  totalUsers: number;
+  totalBarangs: number;
+  totalVendors: number;
+  totalMargins: number;
+}
+
+
 export interface User {
     iduser : number;
     username : string;
