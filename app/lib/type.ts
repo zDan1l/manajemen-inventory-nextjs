@@ -31,6 +31,7 @@ export interface Barang {
     jenis : string;
     nama : string;
     status : string;
+    harga : string;
     created_at : string | Date;
 }
 

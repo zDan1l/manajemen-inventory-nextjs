@@ -6,9 +6,9 @@ export async function GET() {
   try {
     // Query semua statistik dalam satu kali koneksi database
     const [usersResult] = await db.execute('SELECT count_user() AS total');
-    const [barangsResult] = await db.execute('SELECT COUNT(*) as total FROM barang');
-    const [vendorsResult] = await db.execute('SELECT COUNT(*) as total FROM vendor');
-    const [marginsResult] = await db.execute('SELECT COUNT(*) as total FROM margin_penjualan');
+    const [barangsResult] = await db.execute('SELECT count_barang() AS total');
+    const [vendorsResult] = await db.execute('SELECT count_vendor() AS total');
+    const [marginsResult] = await db.execute('SELECT count_margin_penjualan() AS total');
 
     const stats = {
       totalUsers: (usersResult as any[])[0].total,

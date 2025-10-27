@@ -91,6 +91,7 @@ export default function Barangs() {
     { key: 'nama', label: 'Nama Barang' },
     { key: 'nama_satuan', label: 'Satuan' },
     { key: 'jenis', label: 'Jenis' },
+    { key: 'harga', label: 'Harga' },
     { key: 'status', label: 'Status' },
   ];
 
