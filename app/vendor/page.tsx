@@ -30,7 +30,6 @@ export default function Vendors() {
         setError((data as { error: string }).error || 'Failed to fetch vendors');
       }
     } catch (err) {
-      console.error('Fetch vendor error:', err);
       setError('Network error: ' + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setLoading(false);
@@ -151,8 +150,8 @@ export default function Vendors() {
                   onChange={(e) => filterByStatus(e.target.value)}
                   className="w-full p-3 border-2 border-black bg-white font-medium text-sm text-black focus:outline-none transition-colors duration-200 appearance-none cursor-pointer pr-10"
                 >
-                  <option value="all" className="bg-white text-black font-medium">Semua Status</option>
-                  <option value="aktif" className="bg-white text-black font-medium">Dalam Kontrak</option>
+                  <option value="all" className="bg-white text-black font-medium">Semua Status (View All)</option>
+                  <option value="aktif" className="bg-white text-black font-medium">Dalam Kontrak (View Aktif)</option>
                 </select>
                 {/* Custom dropdown arrow */}
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">

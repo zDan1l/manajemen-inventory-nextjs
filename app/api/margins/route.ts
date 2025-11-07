@@ -1,12 +1,22 @@
 
 
-import { createMargin, deleteMargin, getMargin, updateMargin } from "@/app/lib/models/margin";
+import { createMargin, deleteMargin, getMargin, getmarginAktif, updateMargin } from "@/app/lib/models/margin";
 import { Margin } from "@/app/lib/type";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  const result = await getMargin();
-  return NextResponse.json(result.error || result.data, { status: result.status });
+
+export async function GET(request: NextRequest) {
+    // Ambil query parameter 'filter' dari URL
+    // Contoh: /apiMargins?filter=aktif
+    const searchParams = request.nextUrl.searchParams;
+    const filter = searchParams.get('filter');
+    let result;
+    if (filter == 'aktif') {
+        result = await getmarginAktif();
+    } else {
+        result = await getMargin();
+    }
+    return NextResponse.json(result.error || result.data, { status: result.status });
 }
 
 export async function POST(request: Request){

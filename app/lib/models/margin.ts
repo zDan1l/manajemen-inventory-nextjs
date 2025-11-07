@@ -6,16 +6,38 @@ import mysql from 'mysql2/promise';
 
 export async function getMargin(): Promise<ApiResponse<Margin[]>> {
   const db = await getDbConnection();
-  try {
-  const [margins] = await db.execute(
-    'select * from view_margin');
+    try {
+    // Menggunakan view_margin_all untuk menampilkan semua margin
+    const [margins] = await db.execute(
+      'SELECT * FROM view_margin_all'
+    );
 
     return {
       status: 200,
       data: margins as Margin[],
     };
   } catch (error) {
-    return { status: 500, error: `Failed to fetch Margin: ${error instanceof Error ? error.message : 'Unknown error'}` };
+    return { status: 500, error: `Failed to fetch margins: ${error instanceof Error ? error.message : 'Unknown error'}` };
+  } finally {
+    db.release();
+  }
+}
+
+// Fungsi baru: Mengambil hanya margin aktif
+export async function getmarginAktif(): Promise<ApiResponse<Margin[]>> {
+  const db = await getDbConnection();
+  try {
+    // Menggunakan view_margin_aktif untuk menampilkan margin aktif saja
+    const [margins] = await db.execute(
+      'SELECT * FROM view_margin_aktif'
+    );
+
+    return {
+      status: 200,
+      data: margins as Margin[],
+    };
+  } catch (error) {
+    return { status: 500, error: `Failed to fetch active margins: ${error instanceof Error ? error.message : 'Unknown error'}` };
   } finally {
     db.release();
   }
