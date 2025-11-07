@@ -4,18 +4,57 @@ import { satuanSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
 
+// export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
+//   const db = await getDbConnection();
+//   try {
+//   const [satuans] = await db.execute(
+//     'SELECT * FROM view_satuan');
+
+//     return {
+//       status: 200,
+//       data: satuans as Satuan[],
+//     };
+//   } catch (error) {
+//     return { status: 500, error: `Failed to fetch satuan: ${error instanceof Error ? error.message : 'Unknown error'}` };
+//   } finally {
+//     db.release();
+//   }
+// }
+
 export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
   const db = await getDbConnection();
   try {
-  const [satuans] = await db.execute(
-    'SELECT * FROM view_satuan');
+    // Menggunakan view_satuan_all untuk menampilkan semua satuan
+    const [satuans] = await db.execute(
+      'SELECT * FROM view_satuan_all'
+    );
 
     return {
       status: 200,
       data: satuans as Satuan[],
     };
   } catch (error) {
-    return { status: 500, error: `Failed to fetch satuan: ${error instanceof Error ? error.message : 'Unknown error'}` };
+    return { status: 500, error: `Failed to fetch satuanss: ${error instanceof Error ? error.message : 'Unknown error'}` };
+  } finally {
+    db.release();
+  }
+}
+
+// Fungsi baru: Mengambil hanya satuan aktif
+export async function getSatuanAktif(): Promise<ApiResponse<Satuan[]>> {
+  const db = await getDbConnection();
+  try {
+    // Menggunakan view_satuan_aktif untuk menampilkan satuan aktif saja
+    const [satuans] = await db.execute(
+      'SELECT * FROM view_satuan_aktif'
+    );
+
+    return {
+      status: 200,
+      data: satuans as Satuan[],
+    };
+  } catch (error) {
+    return { status: 500, error: `Failed to fetch active satuans: ${error instanceof Error ? error.message : 'Unknown error'}` };
   } finally {
     db.release();
   }

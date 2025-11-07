@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { Barang} from '@/app/lib/type';
 import { Table } from '@/app/components/Table';
-import { FormInput } from '@/app/components/FormInput';
 import { LinkButton } from '../components/LinkButton';
 
 export default function Barangs() {
