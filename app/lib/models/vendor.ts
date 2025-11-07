@@ -6,24 +6,38 @@ import mysql from 'mysql2/promise';
 
 export async function getVendor(): Promise<ApiResponse<Vendor[]>> {
   const db = await getDbConnection();
-  try {
-    // Try the view first, fall back to base table if view doesn't exist
-    let query = 'SELECT * FROM view_vendor';
-    let [vendors] = await db.execute(query).catch(async (err) => {
-      console.warn('view_vendor not found, trying base table:', err.message);
-      // Fallback to base vendor table
-      query = 'SELECT idvendor, nama_vendor, badan_hukum, status FROM vendor';
-      return await db.execute(query);
-    });
-
-    console.log('Vendor query result:', { query, count: (vendors as any[]).length, sample: (vendors as any[])[0] });
+    try {
+    // Menggunakan view_vendor_all untuk menampilkan semua vendor
+    const [vendors] = await db.execute(
+      'SELECT * FROM view_vendor_all'
+    );
 
     return {
       status: 200,
       data: vendors as Vendor[],
     };
   } catch (error) {
-    return { status: 500, error: `Failed to fetch vendor: ${error instanceof Error ? error.message : 'Unknown error'}` };
+    return { status: 500, error: `Failed to fetch vendors: ${error instanceof Error ? error.message : 'Unknown error'}` };
+  } finally {
+    db.release();
+  }
+}
+
+// Fungsi baru: Mengambil hanya vendor aktif
+export async function getVendorAktif(): Promise<ApiResponse<Vendor[]>> {
+  const db = await getDbConnection();
+  try {
+    // Menggunakan view_vendor_aktif untuk menampilkan vendor aktif saja
+    const [vendors] = await db.execute(
+      'SELECT * FROM view_vendor_aktif'
+    );
+
+    return {
+      status: 200,
+      data: vendors as Vendor[],
+    };
+  } catch (error) {
+    return { status: 500, error: `Failed to fetch active vendors: ${error instanceof Error ? error.message : 'Unknown error'}` };
   } finally {
     db.release();
   }

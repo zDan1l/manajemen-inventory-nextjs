@@ -4,22 +4,6 @@ import { satuanSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
 
-// export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
-//   const db = await getDbConnection();
-//   try {
-//   const [satuans] = await db.execute(
-//     'SELECT * FROM view_satuan');
-
-//     return {
-//       status: 200,
-//       data: satuans as Satuan[],
-//     };
-//   } catch (error) {
-//     return { status: 500, error: `Failed to fetch satuan: ${error instanceof Error ? error.message : 'Unknown error'}` };
-//   } finally {
-//     db.release();
-//   }
-// }
 
 export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
   const db = await getDbConnection();

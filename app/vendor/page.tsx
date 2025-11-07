@@ -7,18 +7,42 @@ import { map } from 'zod';
 
 export default function Vendors() {
   const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [badanHukumFilter, setBadanHukumFilter] = useState<string>('all');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fungsi untuk memetakan status ke string
+  const fetchVendor = async (filter : string = 'all') => {
+    try {
+      setLoading(true);
+      // Tentukan endpoint berdasarkan filter
+      let endpoint = '/api/vendors';
+      if (filter === 'aktif') {
+        endpoint = '/api/vendors?filter=aktif'; // Akan menggunakan view_vendor_aktif
+      }
+
+      const res = await fetch(endpoint);
+      const data: Vendor[] | { error: string } = await res.json();
+
+      if (res.ok && Array.isArray(data)) {
+        // tidak perlu mapping lagi karena sudah di handle di view
+        setVendors(data);// Set initial filtered data
+      } else {
+        setError((data as { error: string }).error || 'Failed to fetch vendors');
+      }
+    } catch (err) {
+      console.error('Fetch vendor error:', err);
+      setError('Network error: ' + (err instanceof Error ? err.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+   // Fungsi untuk memetakan status ke string
   const mapStatusToString = (status: string | number): string => {
     const statusValue = typeof status === 'string' ? parseInt(status) : status;
     const statusMap: { [key: number]: string } = {
-      0: 'Dalam Kontrak',
-      1: 'Selesai Kontrak',
+      1: 'Dalam Kontrak',
+      0: 'Selesai Kontrak',
     };
     return statusMap[statusValue] || 'Unknown';
   };
@@ -32,93 +56,13 @@ export default function Vendors() {
     return badanMap[badan_hukum] || 'Unknown';
   };
 
-  const fetchVendor = async () => {
-    try {
-      const res = await fetch('/api/vendors');
-      const responseText = await res.text(); // Get raw response first
-      
-      console.log('Raw API Response:', { status: res.status, text: responseText });
-      
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error('JSON Parse Error:', parseError);
-        setError('Invalid response format from server');
-        return;
-      }
-      
-      console.log('Parsed data:', data);
-      
-      if (res.ok) {
-        if (Array.isArray(data)) {
-          console.log('Vendors fetched successfully:', data.length, 'items');
-          // Ensure each vendor has required fields with defaults
-          const normalizedVendors = data.map(vendor => ({
-            idvendor: vendor.idvendor || 0,
-            nama_vendor: vendor.nama_vendor || 'Unknown',
-            badan_hukum: vendor.badan_hukum || 'N',
-            status: vendor.status ?? 0, // Use nullish coalescing to handle 0 values
-            ...vendor // Preserve any additional fields
-          }));
-          setVendors(normalizedVendors);
-          setFilteredVendors(normalizedVendors);
-        } else {
-          console.error('Data is not an array:', typeof data, data);
-          setError('Unexpected data format received');
-        }
-      } else {
-        console.error('Error response:', data);
-        setError(typeof data === 'object' && data.error ? data.error : 'Failed to fetch vendors');
-      }
-    } catch (err) {
-      console.error('Fetch vendor error:', err);
-      setError('Network error: ' + (err instanceof Error ? err.message : 'Unknown error'));
-    } finally {
-      setLoading(false);
-    }
+
+   // handle perubahan filter
+  const filterByStatus = (filterValue: string) => {
+    setStatusFilter(filterValue);
+    fetchVendor(filterValue);
   };
 
-
-
-  // Filter functions
-  const filterVendors = (statusValue: string, badanHukumValue: string) => {
-    console.log('Filtering vendors:', { statusValue, badanHukumValue, totalVendors: vendors.length }); // Debug log
-    
-    let filtered = vendors;
-    
-    // Filter by status
-    if (statusValue !== 'all') {
-      filtered = filtered.filter(vendor => {
-        const vendorStatus = String(vendor.status);
-        console.log('Status filter check:', { vendor: vendor.idvendor, vendorStatus, target: statusValue }); // Debug log
-        return vendorStatus === statusValue;
-      });
-    }
-    
-    // Filter by badan hukum
-    if (badanHukumValue !== 'all') {
-      filtered = filtered.filter(vendor => {
-        console.log('Badan Hukum filter check:', { vendor: vendor.idvendor, badan_hukum: vendor.badan_hukum, target: badanHukumValue }); // Debug log
-        return vendor.badan_hukum === badanHukumValue;
-      });
-    }
-    
-    console.log('Filtered result:', filtered.length); // Debug log
-    setFilteredVendors(filtered);
-  };
-
-  const handleStatusFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const statusValue = e.target.value;
-    setStatusFilter(statusValue);
-    filterVendors(statusValue, badanHukumFilter);
-  };
-
-  const handleBadanHukumFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const badanHukumValue = e.target.value;
-    setBadanHukumFilter(badanHukumValue);
-    filterVendors(statusFilter, badanHukumValue);
-  };
 
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this vendor?')) {
@@ -141,7 +85,7 @@ export default function Vendors() {
   };
 
   useEffect(() => {
-    fetchVendor();
+    fetchVendor('all');
   }, []);
 
   if (loading) return (
@@ -204,52 +148,34 @@ export default function Vendors() {
                 <select
                   id="status-filter"
                   value={statusFilter}
-                  onChange={handleStatusFilter}
+                  onChange={(e) => filterByStatus(e.target.value)}
                   className="w-full p-3 border-2 border-black bg-white font-medium text-sm text-black focus:outline-none transition-colors duration-200 appearance-none cursor-pointer pr-10"
                 >
                   <option value="all" className="bg-white text-black font-medium">Semua Status</option>
-                  <option value="0" className="bg-white text-black font-medium">Dalam Kontrak</option>
-                  <option value="1" className="bg-white text-black font-medium">Selesai Kontrak</option>
+                  <option value="aktif" className="bg-white text-black font-medium">Dalam Kontrak</option>
                 </select>
                 {/* Custom dropdown arrow */}
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                   <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black"></div>
                 </div>
               </div>
-            </div>
-            
-            <div className="w-full md:w-64">
-              <label className="block mb-2 text-sm font-bold uppercase text-black">
-                Filter Badan Hukum
-              </label>
-              <div className="relative">
-                <select
-                  id="badan-hukum-filter"
-                  value={badanHukumFilter}
-                  onChange={handleBadanHukumFilter}
-                  className="w-full p-3 border-2 border-black bg-white font-medium text-sm text-black focus:outline-none transition-colors duration-200 appearance-none cursor-pointer pr-10"
-                >
-                  <option value="all" className="bg-white text-black font-medium">Semua Badan Hukum</option>
-                  <option value="Y" className="bg-white text-black font-medium">Berbadan Hukum</option>
-                  <option value="N" className="bg-white text-black font-medium">Tidak Berbadan Hukum</option>
-                </select>
-                {/* Custom dropdown arrow */}
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black"></div>
-                </div>
-              </div>
+              <p className="mt-1 text-xs text-gray-600">
+              {statusFilter === 'aktif' 
+                ? '✓ Menggunakan view_vendor_aktif' 
+                : '✓ Menggunakan view_vendor_all'}
+            </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table */}   
       <Table
-        data={filteredVendors.map(vendor => ({
-          ...vendor,
-          status: mapStatusToString(vendor.status),
-          badan_hukum: mapBadanToString(vendor.badan_hukum),
-        }))}
+        data={vendors.map(vendor => ({
+            ...vendor,
+            status: mapStatusToString(vendor.status),
+            badan_hukum: mapBadanToString(vendor.badan_hukum),
+          }))}
         columns={columns}
         onDelete={handleDelete}
         editPath="/vendor/edit"
