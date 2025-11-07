@@ -8,22 +8,30 @@ import { LinkButton } from '../components/LinkButton';
 
 export default function Barangs() {
   const [barangs, setBarangs] = useState<Barang[]>([]);
-  const [filteredBarangs, setFilteredBarangs] = useState<Barang[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchBarangs = async () => {
+  // Fetch barangs dengan parameter filter
+  // Jika filter = 'aktif', akan menggunakan view_barang_aktif
+  // Jika filter = 'all', akan menggunakan view_barang_all
+  const fetchBarangs = async (filter: string = 'all') => {
     try {
-      const res = await fetch('/api/barangs');
+      setLoading(true);
+      
+      // Tentukan endpoint berdasarkan filter
+      let endpoint = '/api/barangs';
+      if (filter === 'aktif') {
+        endpoint = '/api/barangs?filter=aktif'; // Akan menggunakan view_barang_aktif
+      }
+      // filter 'all' atau lainnya akan menggunakan view_barang_all (default)
+      
+      const res = await fetch(endpoint);
       const data: Barang[] | { error: string } = await res.json();
+      
       if (res.ok && Array.isArray(data)) {
-        const mappedBarangs = data.map((barang) => ({
-            ...barang,
-            status: mapStatusToString(typeof barang.status === 'number' ? barang.status : parseInt(barang.status.toString())), // Konversi status ke string
-          }));
-        setBarangs(mappedBarangs);
-        setFilteredBarangs(mappedBarangs); // Set initial filtered data
+        // Tidak perlu mapping lagi karena sudah di-handle di view
+        setBarangs(data);
       } else {
         setError((data as { error: string }).error || 'Failed to fetch barangs');
       }
@@ -33,13 +41,15 @@ export default function Barangs() {
       setLoading(false);
     }
   };
-  // Fungsi untuk memetakan status numerik ke string
-  const mapStatusToString = (status: number): string => {
+
+  // Fungsi untuk memetakan status numerik ke string (untuk display)
+  const mapStatusToString = (status: number | string): string => {
+    const statusValue = typeof status === 'string' ? parseInt(status) : status;
     const statusMap: { [key: number]: string } = {
       0: 'Rusak',
       1: 'Baik',
     };
-    return statusMap[status] || 'Unknown'; // Fallback jika status tidak dikenali
+    return statusMap[statusValue] || 'Unknown';
   };
 
   const handleDelete = async (id: number) => {
@@ -51,7 +61,8 @@ export default function Barangs() {
           body: JSON.stringify({ idbarang: id }),
         });
         if (res.ok) {
-          fetchBarangs();
+          // Re-fetch dengan filter yang sedang aktif
+          fetchBarangs(statusFilter);
         } else {
           const data = await res.json();
           alert(data.error || 'Failed to delete barang');
@@ -62,26 +73,17 @@ export default function Barangs() {
     }
   };
 
-  // Filter function based on status
-  const filterByStatus = (statusValue: string) => {
-    setStatusFilter(statusValue);
-    if (statusValue === 'all') {
-      setFilteredBarangs(barangs);
-    } else {
-      const targetStatus = statusValue === '1' ? 'Baik' : 'Rusak';
-      const filtered = barangs.filter(barang => barang.status === targetStatus);
-      setFilteredBarangs(filtered);
-    }
+  // Handle perubahan filter
+  const handleFilterChange = (filterValue: string) => {
+    setStatusFilter(filterValue);
+    // Fetch ulang data dengan filter baru
+    fetchBarangs(filterValue);
   };
 
   useEffect(() => {
-    fetchBarangs();
+    // Fetch data pertama kali dengan filter 'all'
+    fetchBarangs('all');
   }, []);
-
-  // Update filtered data when barangs or statusFilter changes
-  useEffect(() => {
-    filterByStatus(statusFilter);
-  }, [barangs]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;
@@ -118,25 +120,32 @@ export default function Barangs() {
             <div className="relative">
               <select
                 value={statusFilter}
-                onChange={(e) => filterByStatus(e.target.value)}
+                onChange={(e) => handleFilterChange(e.target.value)}
                 className="w-full p-3 border-2 border-black bg-white font-medium text-sm text-black focus:outline-none transition-colors duration-200 appearance-none cursor-pointer pr-10"
               >
-                <option value="all" className="bg-white text-black font-medium">Semua Status</option>
-                <option value="1" className="bg-white text-black font-medium">Baik</option>
-                <option value="0" className="bg-white text-black font-medium">Rusak</option>
+                <option value="all" className="bg-white text-black font-medium">Semua Status (View All)</option>
+                <option value="aktif" className="bg-white text-black font-medium">Barang Aktif Saja (View Aktif)</option>
               </select>
               {/* Custom dropdown arrow */}
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                 <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black"></div>
               </div>
             </div>
+            <p className="mt-1 text-xs text-gray-600">
+              {statusFilter === 'aktif' 
+                ? '✓ Menggunakan view_barang_aktif' 
+                : '✓ Menggunakan view_barang_all'}
+            </p>
           </div>
         </div>
       </div>
 
       {/* Table */}
       <Table
-        data={filteredBarangs}
+        data={barangs.map(barang => ({
+          ...barang,
+          status: mapStatusToString(barang.status),
+        }))}
         columns={columns}
         onDelete={handleDelete}
         editPath="/barang/edit"

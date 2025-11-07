@@ -7,8 +7,10 @@ import mysql from 'mysql2/promise';
 export async function getBarang(): Promise<ApiResponse<Barang[]>> {
   const db = await getDbConnection();
   try {
-  const [barangs] = await db.execute(
-    'SELECT * from view_barang');
+    // Menggunakan view_barang_all untuk menampilkan semua barang
+    const [barangs] = await db.execute(
+      'SELECT * FROM view_barang_all'
+    );
 
     return {
       status: 200,
@@ -16,6 +18,26 @@ export async function getBarang(): Promise<ApiResponse<Barang[]>> {
     };
   } catch (error) {
     return { status: 500, error: `Failed to fetch barangs: ${error instanceof Error ? error.message : 'Unknown error'}` };
+  } finally {
+    db.release();
+  }
+}
+
+// Fungsi baru: Mengambil hanya barang aktif
+export async function getBarangAktif(): Promise<ApiResponse<Barang[]>> {
+  const db = await getDbConnection();
+  try {
+    // Menggunakan view_barang_aktif untuk menampilkan barang aktif saja
+    const [barangs] = await db.execute(
+      'SELECT * FROM view_barang_aktif'
+    );
+
+    return {
+      status: 200,
+      data: barangs as Barang[],
+    };
+  } catch (error) {
+    return { status: 500, error: `Failed to fetch active barangs: ${error instanceof Error ? error.message : 'Unknown error'}` };
   } finally {
     db.release();
   }
