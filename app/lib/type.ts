@@ -47,7 +47,7 @@ export interface Margin {
     iuser? : number;
     created_at : string | Date;
     persen : number;
-    status : number;
+    status : number | string;
     updated_at : string | Date;
 }
 
@@ -127,7 +127,6 @@ export interface DetailRetur {
 export interface Penjualan {
     idpenjualan: number;
     created_at: string | Date;
-    status: 'D' | 'P' | 'B' | 'S'; // D=Draft, P=Posted, B=Batal, S=Selesai
     subtotal_nilai: number;
     ppn: number;
     total_nilai: number;

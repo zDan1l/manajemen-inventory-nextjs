@@ -1,64 +1,54 @@
-// app/role/page.tsx
+// app/penjualan/page.tsx
 'use client';
+
 import { useEffect, useState } from 'react';
-import { Penjualan } from '@/app/lib/type';
-import { Table } from '../components/Table';
-import { LinkButton } from '../components/LinkButton';
+import { ApiResponse, Penjualan } from '@/app/lib/type';
+import { LinkButton } from '@/app/components/LinkButton';
+import { Table } from '@/app/components/Table';
+import { useRouter } from 'next/navigation';
 
-export default function Roles() {
+export default function PenjualanPage() {
+  const router = useRouter();
   const [penjualans, setPenjualans] = useState<Penjualan[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const fetchPenjualans = async () => {
-      try {
-        const res = await fetch('/api/penjualans');
-        const data: Penjualan[] | { error: string } = await res.json();
-        if (res.ok && Array.isArray(data)) {
-          setPenjualans(data);
-        } else {
-          setError((data as { error: string }).error || 'Failed to fetch penjualans');
-        }
-      } catch (err) {
-        setError('Failed to fetch penjualan');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-  const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this role?')) {
-      try {
-        const res = await fetch('/api/roles', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idrole: id }),
-        });
-        if (res.ok) {
-          fetchPenjualans();
-        } else {
-          const data = await res.json();
-          alert(data.error || 'Failed to delete role');
-        }
-      } catch (err) {
-        alert('Failed to delete role');
-      }
-    }
-  };
 
   useEffect(() => {
     fetchPenjualans();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-600">Error: {error}</div>;
+  const fetchPenjualans = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/penjualans');
+      const result: ApiResponse<Penjualan[]> = await res.json();
+      
+      if (result.status === 200 && Array.isArray(result.data)) {
+        setPenjualans(result.data);
+      } else {
+        setError('Failed to fetch penjualan');
+      }
+    } catch (err) {
+      setError('Error fetching penjualan');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    alert('Delete functionality tidak tersedia untuk penjualan');
+  };
+
+  if (loading) return <div className="p-6">Loading...</div>;
+  if (error) return <div className="p-6 text-red-600">Error: {error}</div>;
 
   const columns = [
-    { key: 'idpenjualan', label: 'ID' },
-    { key: 'created_at', label: 'Tanggal Penjualan' },
-    { key: 'subtotal_nilai', label: 'Sub Total Nilai' },
+    { key: 'idpenjualan', label: 'ID Penjualan' },
+    { key: 'created_at', label: 'Tanggal' },
+    { key: 'subtotal_nilai', label: 'Subtotal' },
     { key: 'ppn', label: 'PPN' },
-    { key: 'total_nilai', label: 'Total Nilai' },
+    { key: 'total_nilai', label: 'Total' },
   ];
 
   return (
@@ -68,23 +58,24 @@ export default function Roles() {
         <h1 className="text-xl font-bold uppercase text-black">Daftar Penjualan</h1>
       </div>
 
-        {/* Controls */}
+      {/* Controls */}
       <div className="bg-white border-2 border-black p-4">
-        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-          <div className="flex gap-2">
-            <LinkButton href="/penjualan/add" variant="primary" size="medium">
-              Tambah Penjualan
-            </LinkButton>
-          </div>
+        <div className="flex gap-2">
+          <LinkButton href="/penjualan/add" variant="primary" size="medium">
+            Tambah Penjualan
+          </LinkButton>
         </div>
       </div>
-        <Table
-          data={penjualans}
-          columns={columns}
-          onDelete={handleDelete}
-          editPath="/role/edit"
-          idKey="idpenjualan"
-        />
-      </div>
+
+      {/* Table */}
+      <Table
+        data={penjualans}
+        columns={columns}
+        onDelete={handleDelete}
+        editPath="/penjualan/edit"
+        idKey="idpenjualan"
+        variant="blue"
+      />
+    </div>
   );
 }
