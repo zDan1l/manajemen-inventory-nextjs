@@ -39,7 +39,7 @@ export default function TambahPengadaan() {
 
   const fetchVendors = async () => {
     try {
-      const res = await fetch('/api/vendors');
+      const res = await fetch('/api/vendors?filter=aktif');
       const data = await res.json();
       if (Array.isArray(data)) {
         setVendors(data);
@@ -51,7 +51,7 @@ export default function TambahPengadaan() {
 
   const fetchBarangs = async () => {
     try {
-      const res = await fetch('/api/barangs');
+      const res = await fetch('/api/barangs?filter=aktif');
       const data = await res.json();
       if (Array.isArray(data)) {
         setBarangs(data);

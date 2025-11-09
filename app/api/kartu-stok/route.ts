@@ -12,7 +12,7 @@ export async function GET(req: Request) {
   const limit = parseInt(searchParams.get('limit') || '100');
   const offset = parseInt(searchParams.get('offset') || '0');
 
-  const result = await getKartuStok(limit, offset);
+  const result = await getKartuStok();
 
   if (result.error) {
     return NextResponse.json(
