@@ -216,7 +216,7 @@ export async function createPenerimaan(data: {
 
   // Validasi setiap detail
   for (const detail of data.details) {
-    if (!detail.idbarang || !detail.jumlah_terima || !detail.harga_satuan_terima) {
+    if (!detail.idbarang || detail.jumlah_terima === undefined || detail.jumlah_terima === null || detail.harga_satuan_terima === undefined || detail.harga_satuan_terima === null) {
       return {
         status: 400,
         error: 'Each detail must have: idbarang, jumlah_terima, harga_satuan_terima',

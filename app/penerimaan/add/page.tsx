@@ -113,26 +113,33 @@ export default function AddPenerimaanPage() {
       return;
     }
 
+    // Filter hanya barang yang diterima (jumlah_terima > 0)
+    const filteredDetails = details.filter(d => d.jumlah_terima > 0);
+
     // Validasi minimal satu item diterima
-    if (details.every(d => d.jumlah_terima === 0)) {
+    if (filteredDetails.length === 0) {
       setError('Minimal satu barang harus diterima');
       return;
     }
 
     setLoading(true);
     try {
+      const payload = {
+        idpengadaan: selectedPengadaan,
+        iduser: iduser,
+        details: filteredDetails.map(d => ({
+          idbarang: Number(d.idbarang),
+          jumlah_terima: Number(d.jumlah_terima),
+          harga_satuan_terima: Number(d.harga_satuan_terima),
+        })),
+      };
+
+      console.log('Payload to send:', JSON.stringify(payload, null, 2));
+
       const res = await fetch('/api/penerimaans', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          idpengadaan: selectedPengadaan,
-          iduser: iduser,
-          details: details.map(d => ({
-            idbarang: d.idbarang,
-            jumlah_terima: d.jumlah_terima,
-            harga_satuan_terima: d.harga_satuan_terima,
-          })),
-        }),
+        body: JSON.stringify(payload),
       });
 
       const result: ApiResponse<unknown> = await res.json();
@@ -181,18 +188,22 @@ export default function AddPenerimaanPage() {
                   className="p-4 border-2 border-gray-300 rounded cursor-pointer hover:bg-blue-50"
                   onClick={() => handleSelectPengadaan(p.idpengadaan)}
                 >
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-4 gap-4">
                     <div>
                       <p className="font-bold text-sm">ID Pengadaan</p>
                       <p className="text-black">{p.idpengadaan}</p>
                     </div>
                     <div>
-                      <p className="font-bold text-sm">Nomor Pengadaan</p>
-                      <p className="text-black">{p.nomor_pengadaan}</p>
-                    </div>
-                    <div>
                       <p className="font-bold text-sm">Vendor</p>
                       <p className="text-black">{p.nama_vendor || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">Status</p>
+                      <p className="text-black">{p.status_text || p.status}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">Progress</p>
+                      <p className="text-black">{p.items_lengkap || 0} / {p.total_items || 0} items</p>
                     </div>
                   </div>
                 </div>
