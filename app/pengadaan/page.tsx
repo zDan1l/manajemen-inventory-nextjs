@@ -118,7 +118,7 @@ export default function Margins() {
       <div className="bg-white border-2 border-black p-4">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
           <div className="flex gap-2">
-            <LinkButton href="/pengadaan/add" variant="primary" size="medium">
+            <LinkButton href="/pengadaan/create" variant="primary" size="medium">
               Tambah Pengadaan
             </LinkButton>
           </div>

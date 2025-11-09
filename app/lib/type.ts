@@ -51,40 +51,113 @@ export interface Margin {
     updated_at : string | Date;
 }
 
+// ========================================
+// TRANSACTION ENTITIES (with detailed fields)
+// ========================================
+
 export interface Pengadaan {
-    idpengadaan : number,
-    user_iduser : number,
-    vendor_idvendor : number,
-    timestamp : string | Date,
-    status : string,
-    subtotal_nilai : number,
-    ppn : number,
-    total_nilai : number
+    idpengadaan: number;
+    user_iduser: number;
+    vendor_idvendor: number;
+    timestamp: string | Date;
+    status: 'P' | 'S' | 'L' | 'B'; // P=Proses, S=Sebagian, L=Lengkap, B=Batal
+    subtotal_nilai: number;
+    ppn: number;  // Nilai PPN dalam rupiah (dari input user)
+    total_nilai: number;
+    // Relations for view
+    username?: string;
+    nama_vendor?: string;
+}
+
+export interface DetailPengadaan {
+    iddetail_pengadaan: number;
+    idpengadaan: number;
+    idbarang: number;
+    harga_satuan: number;
+    jumlah: number;
+    jumlah_diterima?: number; // Updated by trigger
+    sub_total: number;
+    // Relations
+    nama_barang?: string;
 }
 
 export interface Penerimaan {
-    idpenerimaan : number,
-    created_at : string | Date;
-    status : string,
-    idpengadaan : number,
-    iduser : number
+    idpenerimaan: number;
+    created_at: string | Date;
+    status: 'D' | 'P' | 'B'; // D=Draft, P=Posted, B=Batal
+    idpengadaan: number;
+    iduser: number;
+    // Relations
+    username?: string;
+}
+
+export interface DetailPenerimaan {
+    iddetail_penerimaan: number;
+    idpenerimaan: number;
+    idbarang: number;
+    jumlah_terima: number;
+    harga_satuan_terima: number;
+    subtotal_terima: number;
+    iddetail_pengadaan: number;
+    // Relations
+    nama_barang?: string;
 }
 
 export interface Retur {
-    idretur : number,
-    created_at : string | Date;
-    idpenerimaan : number,
-    iduser : number
+    idretur: number;
+    created_at: string | Date;
+    idpenerimaan: number;
+    iduser: number;
+    // Relations
+    username?: string;
+}
+
+export interface DetailRetur {
+    iddetail_retur: number;
+    idretur: number;
+    iddetail_penerimaan: number;
+    jumlah: number;
+    alasan: string;
+    // Relations
+    nama_barang?: string;
 }
 
 export interface Penjualan {
-    idpenjualan : number,
-    created_at : string | Date;
-    subtotal_nilai : number,
-    ppn : number,
-    total_nilai : number,
-    iduser : number,
-    idmargin_penjualan : number
+    idpenjualan: number;
+    created_at: string | Date;
+    status: 'D' | 'P' | 'B' | 'S'; // D=Draft, P=Posted, B=Batal, S=Selesai
+    subtotal_nilai: number;
+    ppn: number;
+    total_nilai: number;
+    iduser: number;
+    idmargin_penjualan: number;
+    // Relations
+    username?: string;
+    margin_persen?: number;
+}
+
+export interface DetailPenjualan {
+    iddetail_penjualan: number;
+    idpenjualan: number;
+    idbarang: number;
+    harga_jual: number;
+    jumlah: number;
+    subtotal: number;
+    // Relations
+    nama_barang?: string;
+}
+
+export interface KartuStok {
+    idkartu_stok: number;
+    jenis_transaksi: 'M' | 'K' | 'R'; // M=Masuk, K=Keluar, R=Retur
+    idtransaksi: number; // ID dari penerimaan/penjualan/retur
+    masuk: number;
+    keluar: number;
+    stock: number;
+    created_at: string | Date;
+    idbarang: number;
+    // Relations
+    nama_barang?: string;
 }
 
 export interface ApiResponse<T>{
