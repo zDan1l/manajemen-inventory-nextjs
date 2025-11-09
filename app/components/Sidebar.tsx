@@ -64,7 +64,7 @@ const Sidebar = () => {
       items: [
         {
           title: 'Pengadaan',
-          icon: '�',
+          icon: '📋',
           href: '/pengadaan',
           color: 'bg-indigo-400'
         },
@@ -85,6 +85,17 @@ const Sidebar = () => {
           icon: '🛒',
           href: '/penjualan',
           color: 'bg-emerald-400'
+        }
+      ]
+    },
+    {
+      title: 'Inventory',
+      items: [
+        {
+          title: 'Kartu Stok',
+          icon: '📊',
+          href: '/kartu-stok',
+          color: 'bg-teal-400'
         }
       ]
     }

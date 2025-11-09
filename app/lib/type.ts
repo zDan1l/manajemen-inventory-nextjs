@@ -149,17 +149,18 @@ export interface DetailPenjualan {
     nama_barang?: string;
 }
 
-export interface KartuStok {
-    idkartu_stok: number;
-    jenis_transaksi: 'M' | 'K' | 'R'; // M=Masuk, K=Keluar, R=Retur
-    idtransaksi: number; // ID dari penerimaan/penjualan/retur
-    masuk: number;
-    keluar: number;
-    stock: number;
-    created_at: string | Date;
-    idbarang: number;
-    // Relations
-    nama_barang?: string;
+export interface KartuStokDetail {
+  idkartu_stok: number;
+  idtransaksi: number;
+  idbarang: number;
+  nama_barang: string;
+  nama_satuan: string;
+  jenis_transaksi: string; // M, K, R
+  jenis_text: string; // Penerimaan, Penjualan, Retur
+  masuk: number;
+  keluar: number;
+  current_stock: number;
+  created_at: string | Date;
 }
 
 export interface ApiResponse<T>{
