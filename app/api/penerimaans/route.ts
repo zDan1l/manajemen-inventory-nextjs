@@ -1,29 +1,37 @@
-
-
-import { getPenerimaan } from "@/app/lib/models/penerimaan";
-import { Penerimaan } from "@/app/lib/type";
+import { getPenerimaans, createPenerimaan } from "@/app/lib/models/penerimaans";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const result = await getPenerimaan();
-  return NextResponse.json(result.error || result.data, { status: result.status });
+  const result = await getPenerimaans();
+  return NextResponse.json(result, { status: result.status });
 }
 
-// export async function POST(request: Request){
-//     const body = await request.json();
-//     const result = await createMargin(body as Omit<Margin, 'idmargin_penjualan'>);
-//     console.log(result);
-//     return NextResponse.json(result.error || result.data, {status: result.status})
-// }
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { idpengadaan, iduser } = body;
 
-// export async function PUT(request: Request){
-//     const body = await request.json();
-//     const result = await updateMargin(body as Margin);
-//     return NextResponse.json(result.error || result.data, {status: result.status})
-// }
+    if (!idpengadaan) {
+      return NextResponse.json(
+        { status: 400, error: "Missing idpengadaan" },
+        { status: 400 }
+      );
+    }
 
-// export async function DELETE(request: Request){
-//     const { idmargin_penjualan } = await request.json();
-//     const result = await deleteMargin(idmargin_penjualan);
-//     return NextResponse.json(result.error || result.data, {status: result.status})
-// }
+    const result = await createPenerimaan({
+      idpengadaan,
+      iduser: iduser || null,
+      details: [],
+    });
+
+    return NextResponse.json(result, { status: result.status });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        status: 500,
+        error: `Failed to create penerimaan: ${error instanceof Error ? error.message : "Unknown error"}`,
+      },
+      { status: 500 }
+    );
+  }
+}

@@ -14,11 +14,11 @@ export default function Margins() {
 
   // Fungsi untuk memetakan status numerik ke string
   const mapStatusToString = (status: string): string => {
-    const statusMap: { [key: string]: string } = {
-      'A': 'Diproses',
-      'B': 'Pengiriman',
-      'C': 'Selesai',
-      'D': 'Ditolak',
+    const statusMap: { [key: string]: string } = { 
+      'P': 'Diproses', // P=Proses, S=Sebagian, L=Lengkap, B=Batal
+      'S': 'Sebagian',
+      'L': 'Lengkap',
+      'B': 'Batal',
     };
     return statusMap[status] || 'Unknown'; 
   };
@@ -26,7 +26,6 @@ export default function Margins() {
   const fetchPengadaans = async () => {
     try {
       const res = await fetch('/api/pengadaans');
-      console.log(res);
       const data: Pengadaan[] | { error: string } = await res.json();
       if (res.ok && Array.isArray(data)) {
         // Store original data for filtering
@@ -69,14 +68,14 @@ export default function Margins() {
       setFilteredPengadaans(pengadaans);
     } else {
       let targetStatus : string;
-      if (statusValue === 'A') {
+      if (statusValue === 'P') {
         targetStatus = 'Diproses';
+      } else if (statusValue === 'S') {
+        targetStatus = 'Sebagian';
+      } else if (statusValue === 'L') {
+        targetStatus = 'Lengkap';
       } else if (statusValue === 'B') {
-        targetStatus = 'Pengiriman';
-      } else if (statusValue === 'C') {
-        targetStatus = 'Selesai';
-      } else if (statusValue === 'D') {
-        targetStatus = 'Ditolak';
+        targetStatus = 'Batal';
       }
       const filtered = pengadaans.filter(pengadaan => {
         const mappedStatus = mapStatusToString(pengadaan.status);
@@ -100,7 +99,7 @@ export default function Margins() {
 
   const columns = [
     { key: 'idpengadaan', label: 'ID' },
-    { key: 'timestamp', label: 'Tanggal Pengadaan' },
+    { key: 'tanggal', label: 'Tanggal Pengadaan' },
     { key: 'status', label: 'Status Pengadaan' },
     { key: 'subtotal_nilai', label: 'Sub Total Nilai' },
     { key: 'ppn', label: 'PPN' },
@@ -134,10 +133,10 @@ export default function Margins() {
                 className="w-full p-3 border-2 border-black bg-white font-medium text-sm text-black focus:outline-none transition-colors duration-200 appearance-none cursor-pointer pr-10"
               >
                 <option value="all" className="bg-white text-black font-medium">Semua Status</option>
-                <option value="A" className="bg-white text-black font-medium">Diproses</option>
-                <option value="B" className="bg-white text-black font-medium">Pengiriman</option>
-                <option value="C" className="bg-white text-black font-medium">Selesai</option>
-                <option value="D" className="bg-white text-black font-medium">Ditolak</option>
+                <option value="P" className="bg-white text-black font-medium">Diproses</option>
+                <option value="S" className="bg-white text-black font-medium">Sebagian</option>
+                <option value="L" className="bg-white text-black font-medium">Lengkap / Selesai</option>
+                <option value="B" className="bg-white text-black font-medium">Batal</option>
               </select>
               {/* Custom dropdown arrow */}
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">

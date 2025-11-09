@@ -1,13 +1,29 @@
-
-import { getMarginById } from "@/app/lib/models/margin";
+import { getPenerimaanById } from "@/app/lib/models/penerimaans";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, {params}: {params: Promise<{ id: string[] }> }){
-    const unwrappedParams = await params;
-    const id = unwrappedParams.id;
-    if(!id){
-        return NextResponse.json({error : 'Missing ID'}, {status : 400});
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    if (!id) {
+      return NextResponse.json(
+        { status: 400, error: "Missing penerimaan ID" },
+        { status: 400 }
+      );
     }
-    const result = await getMarginById(Number(id))
-    return NextResponse.json(result.error || result.data, {status: result.status})
+
+    const result = await getPenerimaanById(Number(id));
+    return NextResponse.json(result, { status: result.status });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        status: 500,
+        error: `Failed to fetch penerimaan: ${error instanceof Error ? error.message : "Unknown error"}`,
+      },
+      { status: 500 }
+    );
+  }
 }

@@ -1,7 +1,5 @@
 import { getDbConnection } from "@/app/lib/services/db";
 import {  ApiResponse, Penerimaan } from "@/app/lib/type";
-import { penerimaanSchema } from "@/app/lib/utils/validation";
-import mysql from 'mysql2/promise';
 
 
 export async function getPenerimaan(): Promise<ApiResponse<Penerimaan[]>> {

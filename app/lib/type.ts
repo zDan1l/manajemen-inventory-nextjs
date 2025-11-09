@@ -84,11 +84,13 @@ export interface DetailPengadaan {
 export interface Penerimaan {
     idpenerimaan: number;
     created_at: string | Date;
-    status: 'D' | 'P' | 'B'; // D=Draft, P=Posted, B=Batal
+    status: 'I' | 'V' | 'A'; // I=Input, V=Verified, A=Approved
     idpengadaan: number;
     iduser: number;
     // Relations
     username?: string;
+    nama_vendor?: string;
+    vendor_idvendor?: number;
 }
 
 export interface DetailPenerimaan {
@@ -97,10 +99,10 @@ export interface DetailPenerimaan {
     idbarang: number;
     jumlah_terima: number;
     harga_satuan_terima: number;
-    subtotal_terima: number;
-    iddetail_pengadaan: number;
+    sub_total_terima: number;
     // Relations
     nama_barang?: string;
+    nama_satuan?: string;
 }
 
 export interface Retur {

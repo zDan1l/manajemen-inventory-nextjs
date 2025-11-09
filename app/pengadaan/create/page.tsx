@@ -152,21 +152,13 @@ export default function TambahPengadaan() {
         }))
       };
 
-      console.log('=== FRONTEND: Sending payload ===');
-      console.log('Payload:', JSON.stringify(payload, null, 2));
-
       const response = await fetch('/api/pengadaans', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-      
       const result = await response.json();
-      console.log('Response body:', result);
-
       if (response.ok) {
         alert('Pengadaan berhasil dibuat!');
         router.push('/pengadaan');
@@ -175,7 +167,6 @@ export default function TambahPengadaan() {
         alert(`Error: ${result.error || 'Failed to create pengadaan'}`);
       }
     } catch (error) {
-      console.error('Network error:', error);
       alert('Network error. Please try again.');
     } finally {
       setLoading(false);

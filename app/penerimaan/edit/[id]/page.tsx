@@ -1,132 +1,107 @@
-// app/users/edit/[id]/page.tsx
-'use client'; // Tetap menggunakan client-side rendering
+'use client';
+
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { Margin, User } from '@/app/lib/type'; // Pastikan path sesuai
-import { FormInput } from '@/app/components/FormInput';
-import { SelectInput } from '@/app/components/SelectInput';
+import { ApiResponse } from '@/app/lib/type';
 import { Button } from '@/app/components/Button';
-import { LinkButton } from '@/app/components/LinkButton';
 
-export default function EditUser({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params); // Unwrap params menggunakan React.use()
-  const [users, setUser] = useState<User[]>([]);
-    const [iduser, setIduser] = useState<string>('');
-    const [persen, setPersen] = useState<string>('');
-    const [status, setStatus] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
+interface Penerimaan {
+  idpenerimaan: number;
+  idpengadaan: number;
+  created_at: string;
+  user_iduser: number;
+  username: string;
+}
+
+export default function DetailPenerimaanPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const router = useRouter();
-
-
-  const statusOptions = [
-    { id: 1, label: 'Dipakai' },
-    { id: 0, label: 'Tidak Pakai' },
-  ];
-
+  const [penerimaan, setPenerimaan] = useState<Penerimaan | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchMargin = async () => {
-      try {
-        const res = await fetch(`/api/margins/${id}`); 
-        // Sesuaikan dengan rute dinamis [id]
-        const data = await res.json();
-        console.log(data);
-        if (res.ok) {
-          setIduser(data.iduser);
-          setPersen(data.persen);
-          setStatus(data.status);
-        } else {
-          setError(data.error || 'Failed to fetch margin');
-        }
-      } catch (err) {
-        setError('Failed to fetch margin');
-      }
+    fetchPenerimaan();
+  }, [id]);
 
-    };
-
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/users');
-        const data = await res.json();
-        if (res.ok) {
-          setUser(data);
-        } else {
-          setError(data.error || 'Failed to fetch user');
-        }
-      } catch (err) {
-        setError('Failed to fetch user');
-      }
-    };
-
-    fetchUser();
-    fetchMargin();
-  }, [id]); // Dependency diubah ke id yang sudah di-unwrap
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const fetchPenerimaan = async () => {
     try {
-      const res = await fetch(`/api/margins`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          idmargin_penjualan: Number(id),
-          iduser: Number(iduser),
-          persen: Number(persen),
-          status: Number(status),
-        }),
-      });
-      if (res.ok) {
-        router.push('/margin');
+      setLoading(true);
+      const res = await fetch(`/api/penerimaans/${id}`);
+      const result: ApiResponse<Penerimaan> = await res.json();
+      
+      if (result.status === 200 && result.data) {
+        setPenerimaan(result.data);
       } else {
-        const data = await res.json();
-        setError(data.error || 'Failed to update margin');
+        setError('Failed to fetch penerimaan');
       }
     } catch (err) {
-      setError('Failed to update margin');
+      setError('Error fetching penerimaan');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (error) return <div className="text-red-600">Error: {error}</div>;
+  if (loading) return <div className="p-6">Loading...</div>;
+  if (error) return <div className="p-6 text-red-600">Error: {error}</div>;
+  if (!penerimaan) return <div className="p-6">Penerimaan tidak ditemukan</div>;
 
   return (
-    <div className="mt-30 p-5 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-5">Edit Margin</h1>
-      <form onSubmit={handleSubmit}>
-        <FormInput 
-          label="Persen" 
-          type="number" 
-          value={persen} 
-          onChange={(value) => setPersen(value)} 
-          required 
-        />
-        <SelectInput
-                  label="User"
-                  value={iduser}
-                  onChange={setIduser}
-                  options={users || []}
-                  optionKey="iduser"
-                  optionLabel="username"
-                  placeholder="Pilih User"
-                />
-        <SelectInput
-          label="Status"
-          value={status}
-          onChange={setStatus}
-          options={statusOptions}
-          optionKey="id"
-          optionLabel="label"
-          placeholder="Pilih Status"
-          required
-        />
-        <div className="flex">
-                  <div className="flex gap-2">
-                          <LinkButton href="/margin" variant="primary" size="medium">
-                          Kembali
-                          </LinkButton>
-                        </div>
-                  <Button type="submit">Simpan</Button>
-                </div>
-      </form>
+    <div className="space-y-6 max-w-2xl">
+      {/* Header */}
+      <div className="bg-blue-200 border-2 border-black p-4">
+        <h1 className="text-xl font-bold uppercase text-black">Detail Penerimaan</h1>
+      </div>
+
+      {/* Detail */}
+      <div className="bg-white border-2 border-black p-6 space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-bold uppercase text-black mb-2">
+              ID Penerimaan
+            </label>
+            <p className="p-3 border-2 border-gray-300 bg-gray-50 text-black">
+              {penerimaan.idpenerimaan}
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-bold uppercase text-black mb-2">
+              ID Pengadaan
+            </label>
+            <p className="p-3 border-2 border-gray-300 bg-gray-50 text-black">
+              {penerimaan.idpengadaan}
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-bold uppercase text-black mb-2">
+              User
+            </label>
+            <p className="p-3 border-2 border-gray-300 bg-gray-50 text-black">
+              {penerimaan.username}
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-bold uppercase text-black mb-2">
+              Tanggal
+            </label>
+            <p className="p-3 border-2 border-gray-300 bg-gray-50 text-black">
+              {new Date(penerimaan.created_at).toLocaleDateString('id-ID')}
+            </p>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-3 pt-4">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => router.push('/penerimaan')}
+          >
+            Kembali
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

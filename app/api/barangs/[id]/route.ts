@@ -2,7 +2,7 @@
 import { getBarangById } from "@/app/lib/models/barang";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, {params}: {params: Promise<{ id: string[] }> }){
+export async function GET(request: Request, {params}: {params: Promise<{ id: string }> }){
     const unwrappedParams = await params;
     const id = unwrappedParams.id;
     if(!id){
