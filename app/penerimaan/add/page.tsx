@@ -51,6 +51,7 @@ export default function AddPenerimaanPage() {
       setLoading(true);
       const res = await fetch('/api/penerimaans/pengadaan-belum-lengkap');
       const result: ApiResponse<any[]> = await res.json();
+      console.log(result);
       if (result.status === 200 && Array.isArray(result.data)) {
         setPengadaans(result.data);
       } else {
@@ -202,8 +203,8 @@ export default function AddPenerimaanPage() {
                       <p className="text-black">{p.status_text || p.status}</p>
                     </div>
                     <div>
-                      <p className="font-bold text-sm">Progress</p>
-                      <p className="text-black">{p.items_lengkap || 0} / {p.total_items || 0} items</p>
+                      <p className="font-bold text-sm">Progress Item Selesai</p>
+                      <p className="text-black">{p.items_lengkap || 0} / {p.total_items || 0} items selesai</p>
                     </div>
                   </div>
                 </div>

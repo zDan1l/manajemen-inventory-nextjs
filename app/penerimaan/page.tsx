@@ -40,12 +40,12 @@ export default function PenerimaanPage() {
   };
 
   const mapStatusToString = (status: string) => {
-    const statusMap: Record<string, string> = {
-      'I': 'Input',
-      'V': 'Verified',
-      'A': 'Approved'
+    const statusMap: Record<string, { label: string; color: string }> = {
+      'C': { label: 'Selesai', color: 'bg-yellow-200 text-yellow-800' },
+      'S': { label: 'Sebagian', color: 'bg-blue-200 text-blue-800' },
+      'B': { label: 'Batal', color: 'bg-green-200 text-green-800' }
     };
-    return statusMap[status] || status;
+    return statusMap[status] || { label: status, color: 'bg-gray-200 text-gray-800' };
   };
 
   if (loading) return <div className="p-6">Loading...</div>;
@@ -53,16 +53,18 @@ export default function PenerimaanPage() {
 
   const columns = [
     { key: 'idpenerimaan', label: 'ID Penerimaan' },
-    { key: 'idpengadaan', label: 'ID Pengadaan' },
-    { key: 'username', label: 'User' },
     { key: 'created_at', label: 'Tanggal' },
     { key: 'status', label: 'Status' }
   ];
 
-  const displayData = penerimaans.map(p => ({
-    ...p,
-    status: mapStatusToString(p.status),
-  }));
+  const displayData = penerimaans.map(p => {
+    const statusInfo = mapStatusToString(p.status);
+    return {
+      ...p,
+      status: statusInfo.label,
+      _statusColor: statusInfo.color, // Metadata untuk styling (jika diperlukan custom Table)
+    };
+  });
 
   return (
     <div className="space-y-6">

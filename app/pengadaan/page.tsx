@@ -15,9 +15,9 @@ export default function Margins() {
   // Fungsi untuk memetakan status numerik ke string
   const mapStatusToString = (status: string): string => {
     const statusMap: { [key: string]: string } = { 
-      'P': 'Diproses', // P=Proses, S=Sebagian, L=Lengkap, B=Batal
+      'P': 'Diproses', // P=Proses, S=Sebagian, C=Selesai, B=Batal
       'S': 'Sebagian',
-      'L': 'Lengkap',
+      'C': 'Selesai',
       'B': 'Batal',
     };
     return statusMap[status] || 'Unknown'; 
@@ -72,8 +72,8 @@ export default function Margins() {
         targetStatus = 'Diproses';
       } else if (statusValue === 'S') {
         targetStatus = 'Sebagian';
-      } else if (statusValue === 'L') {
-        targetStatus = 'Lengkap';
+      } else if (statusValue === 'C') {
+        targetStatus = 'Selesai';
       } else if (statusValue === 'B') {
         targetStatus = 'Batal';
       }
@@ -135,7 +135,7 @@ export default function Margins() {
                 <option value="all" className="bg-white text-black font-medium">Semua Status</option>
                 <option value="P" className="bg-white text-black font-medium">Diproses</option>
                 <option value="S" className="bg-white text-black font-medium">Sebagian</option>
-                <option value="L" className="bg-white text-black font-medium">Lengkap / Selesai</option>
+                <option value="C" className="bg-white text-black font-medium">Lengkap / Selesai</option>
                 <option value="B" className="bg-white text-black font-medium">Batal</option>
               </select>
               {/* Custom dropdown arrow */}
