@@ -33,15 +33,15 @@ export function Button({
   className = '',
 }: ButtonProps) {
   
-  // Variant styles - Minimalist with solid colors and subtle shadows
+  // Variant styles - Modern minimalist with #00A69F primary
   const variants = {
-    primary: 'bg-primary-600 hover:bg-primary-700 text-white shadow-sm hover:shadow-md active:shadow-sm',
-    secondary: 'bg-secondary-600 hover:bg-secondary-700 text-white shadow-sm hover:shadow-md active:shadow-sm',
-    success: 'bg-success-600 hover:bg-success-700 text-white shadow-sm hover:shadow-md active:shadow-sm',
-    warning: 'bg-warning-600 hover:bg-warning-700 text-white shadow-sm hover:shadow-md active:shadow-sm',
-    danger: 'bg-danger-600 hover:bg-danger-700 text-white shadow-sm hover:shadow-md active:shadow-sm',
-    outline: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 shadow-sm hover:shadow-md',
-    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 active:bg-gray-200',
+    primary: 'bg-gradient-to-r from-[#00A69F] to-[#0D9488] hover:from-[#0D9488] hover:to-[#00A69F] text-white shadow-sm hover:shadow-md active:shadow-sm',
+    secondary: 'bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-white shadow-sm hover:shadow-md active:shadow-sm',
+    success: 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-sm hover:shadow-md active:shadow-sm',
+    warning: 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-sm hover:shadow-md active:shadow-sm',
+    danger: 'bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white shadow-sm hover:shadow-md active:shadow-sm',
+    outline: 'bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-[#00A69F] shadow-sm hover:shadow-md',
+    ghost: 'bg-transparent text-gray-700 hover:bg-[#00A69F]/10 active:bg-[#00A69F]/20',
   };
 
   // Size variants

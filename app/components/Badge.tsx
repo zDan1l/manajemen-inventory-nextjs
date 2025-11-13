@@ -14,12 +14,12 @@ interface BadgeProps {
 
 export function Badge({ children, variant = 'gray', size = 'md', className = '' }: BadgeProps) {
   const variants = {
-    success: 'bg-success-100 text-success-800 border-success-200',
-    warning: 'bg-warning-100 text-warning-800 border-warning-200',
-    danger: 'bg-danger-100 text-danger-800 border-danger-200',
-    info: 'bg-info-100 text-info-800 border-info-200',
-    primary: 'bg-primary-100 text-primary-800 border-primary-200',
-    gray: 'bg-gray-100 text-gray-800 border-gray-200',
+    success: 'bg-gradient-to-r from-teal-100 to-emerald-100 text-[#00A69F] border-[#00A69F]/30',
+    warning: 'bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 border-amber-300',
+    danger: 'bg-gradient-to-r from-red-100 to-rose-100 text-red-700 border-red-300',
+    info: 'bg-gradient-to-r from-cyan-100 to-blue-100 text-cyan-700 border-cyan-300',
+    primary: 'bg-gradient-to-r from-[#00A69F]/20 to-[#0D9488]/20 text-[#00A69F] border-[#00A69F]',
+    gray: 'bg-gradient-to-r from-gray-100 to-slate-100 text-gray-700 border-gray-300',
   };
 
   const sizes = {

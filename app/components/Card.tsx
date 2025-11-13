@@ -1,6 +1,6 @@
 // ==========================================
 // MODERN CARD COMPONENT
-// Design System v2.0 - Minimalist
+// Design System v3.0 - Minimalist with #00A69F
 // ==========================================
 
 import { ReactNode } from 'react';
@@ -40,9 +40,9 @@ export function Card({ children, className = '', padding = 'md', hover = false }
   return (
     <div 
       className={`
-        bg-white rounded-lg shadow-sm border border-gray-200
+        bg-white rounded-xl shadow-sm border border-gray-200
         ${paddingClasses[padding]}
-        ${hover ? 'hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer' : ''}
+        ${hover ? 'hover:shadow-lg hover:border-[#00A69F]/30 transition-all duration-300 cursor-pointer' : ''}
         ${className}
       `}
     >

@@ -4,7 +4,8 @@ import { DashboardStats } from '@/app/lib/type';
 import { LinkButton } from './components/LinkButton';
 import { Alert } from './components/Alert';
 import { Card, CardBody } from './components/Card';
-import { FaUsers, FaBox, FaStore, FaChartLine, FaUserPlus, FaBoxOpen, FaPlusSquare, FaPercentage } from 'react-icons/fa';
+import { FaUsers, FaBox, FaStore, FaChartLine, FaUserPlus, FaBoxOpen, FaPlusSquare, FaPercentage, FaArrowUp, FaArrowDown, FaClock, FaCheckCircle, FaExclamationTriangle, FaExclamationCircle, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { MdRefresh, MdTrendingUp, MdDashboard, MdWarning, MdSwapHoriz } from 'react-icons/md';
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats>({
@@ -15,6 +16,9 @@ export default function Dashboard() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [stockActivities, setStockActivities] = useState<any[]>([]);
+  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
+  const [loadingActivities, setLoadingActivities] = useState(true);
 
   const fetchDashboardStats = async () => {
     try {
@@ -42,8 +46,26 @@ export default function Dashboard() {
     }
   };
 
+  const fetchDashboardActivities = async () => {
+    try {
+      setLoadingActivities(true);
+      const response = await fetch('/api/dashboard/activities');
+      const data = await response.json();
+      
+      if (response.ok) {
+        setStockActivities(data.stockActivities || []);
+        setRecentTransactions(data.recentTransactions || []);
+      }
+    } catch (err) {
+      console.error('Error fetching dashboard activities:', err);
+    } finally {
+      setLoadingActivities(false);
+    }
+  };
+
   useEffect(() => {
     fetchDashboardStats();
+    fetchDashboardActivities();
   }, []);
 
   const statCards = [
@@ -51,9 +73,9 @@ export default function Dashboard() {
       title: 'Total Users',
       value: stats.totalUsers,
       icon: <FaUsers className="w-6 h-6" />, 
-      gradient: 'from-blue-400 to-blue-600',
-      bgColor: 'bg-gradient-to-br from-blue-50 to-white',
-      iconColor: 'text-blue-600',
+      gradient: 'from-[#00A69F] to-[#0D9488]',
+      bgColor: 'bg-gradient-to-br from-teal-50 to-white',
+      iconColor: 'text-[#00A69F]',
       change: '+12%',
       changeType: 'increase'
     },
@@ -61,9 +83,9 @@ export default function Dashboard() {
       title: 'Total Barang',
       value: stats.totalBarangs,
       icon: <FaBox className="w-6 h-6" />,
-      gradient: 'from-emerald-400 to-emerald-600',
-      bgColor: 'bg-gradient-to-br from-emerald-50 to-white',
-      iconColor: 'text-emerald-600',
+      gradient: 'from-[#06B6D4] to-[#0891B2]',
+      bgColor: 'bg-gradient-to-br from-cyan-50 to-white',
+      iconColor: 'text-[#06B6D4]',
       change: '+8%',
       changeType: 'increase'
     },
@@ -71,9 +93,9 @@ export default function Dashboard() {
       title: 'Total Vendors',
       value: stats.totalVendors,
       icon: <FaStore className="w-6 h-6" />,
-      gradient: 'from-purple-400 to-purple-600',
-      bgColor: 'bg-gradient-to-br from-purple-50 to-white',
-      iconColor: 'text-purple-600',
+      gradient: 'from-[#0D9488] to-[#115E59]',
+      bgColor: 'bg-gradient-to-br from-teal-50 to-white',
+      iconColor: 'text-[#0D9488]',
       change: '+5%',
       changeType: 'increase'
     },
@@ -81,9 +103,9 @@ export default function Dashboard() {
       title: 'Total Margins',
       value: stats.totalMargins,
       icon: <FaChartLine className="w-6 h-6" />,
-      gradient: 'from-amber-400 to-amber-600',
-      bgColor: 'bg-gradient-to-br from-amber-50 to-white',
-      iconColor: 'text-amber-600',
+      gradient: 'from-[#14B8A6] to-[#0D9488]',
+      bgColor: 'bg-gradient-to-br from-teal-50 to-white',
+      iconColor: 'text-[#14B8A6]',
       change: '+15%',
       changeType: 'increase'
     }
@@ -94,170 +116,284 @@ export default function Dashboard() {
       title: 'Add User', 
       href: '/user/add', 
       icon: <FaUserPlus className="w-5 h-5" />, 
-      color: 'bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700' 
+      color: 'bg-teal-50 hover:bg-teal-100 border-[#00A69F] text-[#0D9488]' 
     },
     { 
       title: 'Add Barang', 
       href: '/barang/add', 
       icon: <FaBoxOpen className="w-5 h-5" />, 
-      color: 'bg-emerald-50 hover:bg-emerald-100 border-emerald-200 text-emerald-700' 
+      color: 'bg-cyan-50 hover:bg-cyan-100 border-[#06B6D4] text-[#0891B2]' 
     },
     { 
       title: 'Add Vendor', 
       href: '/vendor/add', 
       icon: <FaPlusSquare className="w-5 h-5" />, 
-      color: 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700' 
+      color: 'bg-teal-50 hover:bg-teal-100 border-[#0D9488] text-[#115E59]' 
     },
     { 
       title: 'Add Margin', 
       href: '/margin/add', 
       icon: <FaPercentage className="w-5 h-5" />, 
-      color: 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700' 
+      color: 'bg-teal-50 hover:bg-teal-100 border-[#14B8A6] text-[#0D9488]' 
     }
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Dashboard Overview</h1>
-          <p className="text-sm text-gray-600 mt-1">Welcome back! Here's what's happening today.</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20">
+      <div className="max-w-7xl mx-auto space-y-8 p-6">
+        {/* Welcome Header with Gradient */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#00A69F] via-[#0D9488] to-[#06B6D4] p-8 shadow-xl">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <MdDashboard className="w-8 h-8 text-white/90" />
+                <h1 className="text-3xl font-bold text-white">Dashboard Overview</h1>
+              </div>
+              <p className="text-teal-100 text-base">Welcome back! Here's what's happening with your business today.</p>
+              <div className="flex items-center gap-2 text-sm text-teal-100/80 mt-3">
+                <FaClock className="w-4 h-4" />
+                <span>Last updated: {new Date().toLocaleTimeString()}</span>
+              </div>
+            </div>
+            <button
+              onClick={fetchDashboardStats}
+              disabled={loading}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-sm font-medium text-white hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+            >
+              <MdRefresh className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Refresh Data</span>
+            </button>
+          </div>
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-400/10 rounded-full blur-2xl"></div>
         </div>
-        <button
-          onClick={fetchDashboardStats}
-          disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
-        >
-          <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          Refresh
-        </button>
-      </div>
 
-      {/* Error Alert */}
-      {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
+        {/* Error Alert */}
+        {error && (
+          <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((card, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 rounded-lg ${card.bgColor} flex items-center justify-center ${card.iconColor}`}>
-                {card.icon}
-              </div>
-              <div className={`text-xs font-medium ${card.changeType === 'increase' ? 'text-success-600' : 'text-danger-600'} flex items-center gap-1`}>
-                {card.changeType === 'increase' ? '↑' : '↓'}
-                {card.change}
+        {/* Stats Cards with Enhanced Design */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {statCards.map((card, index) => (
+            <div 
+              key={index} 
+              className="group relative bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+            >
+              {/* Gradient Background on Hover */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+              
+              <div className="relative z-10">
+                <div className="flex items-start justify-between mb-5">
+                  <div className={`relative w-14 h-14 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
+                    {card.icon}
+                    <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${card.gradient} blur-xl opacity-40 group-hover:opacity-60 transition-opacity`}></div>
+                  </div>
+                  <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${
+                    card.changeType === 'increase' 
+                      ? 'bg-teal-50 text-[#0D9488] border border-teal-100' 
+                      : 'bg-red-50 text-red-700 border border-red-100'
+                  }`}>
+                    {card.changeType === 'increase' ? (
+                      <FaArrowUp className="w-3 h-3" />
+                    ) : (
+                      <FaArrowDown className="w-3 h-3" />
+                    )}
+                    {card.change}
+                  </div>
+                </div>
+                
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{card.title}</p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {loading ? (
+                      <span className="inline-block w-24 h-9 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded animate-pulse bg-[length:200%_100%]"></span>
+                    ) : (
+                      <span className="bg-gradient-to-br from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                        {card.value.toLocaleString()}
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Trend Indicator */}
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <MdTrendingUp className="w-4 h-4" />
+                    <span>vs last month</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div>
-              <p className="text-sm text-gray-600 mb-1">{card.title}</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                {loading ? (
-                  <span className="inline-block w-16 h-8 bg-gray-200 rounded animate-pulse"></span>
-                ) : (
-                  card.value.toLocaleString()
-                )}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Quick Actions */}
-      <Card>
-        <CardBody>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {quickActions.map((action, index) => (
-              <LinkButton
-                key={index}
-                href={action.href}
-                variant="outline"
-                className={`${action.color} border justify-start gap-2`}
-                icon={action.icon}
-              >
-                {action.title}
-              </LinkButton>
-            ))}
-          </div>
-        </CardBody>
-      </Card>
-
-      {/* System Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Quick Actions */}
         <Card>
           <CardBody>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">System Status</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Database</span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
-                  <span className="w-1.5 h-1.5 bg-success-500 rounded-full"></span>
-                  Online
-                </span>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Quick Actions</h3>
+                <p className="text-sm text-gray-500 mt-1">Shortcuts to common tasks</p>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">API Server</span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
-                  <span className="w-1.5 h-1.5 bg-success-500 rounded-full"></span>
-                  Running
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Last Backup</span>
-                <span className="text-sm text-gray-900">2 hours ago</span>
-              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {quickActions.map((action, index) => (
+                <LinkButton
+                  key={index}
+                  href={action.href}
+                  variant="outline"
+                  className={`${action.color} border-2 justify-center gap-3 py-4 text-center hover:shadow-lg transition-all hover:-translate-y-1`}
+                  icon={action.icon}
+                >
+                  <span className="font-semibold">{action.title}</span>
+                </LinkButton>
+              ))}
             </div>
           </CardBody>
         </Card>
 
-        <Card>
-          <CardBody>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-900">New user registered</p>
-                  <p className="text-xs text-gray-500">5 minutes ago</p>
-                </div>
+        {/* System Info & Activity Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Stock Activity Card */}
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition-shadow">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#00A69F] to-[#0D9488] flex items-center justify-center text-white shadow-lg">
+                <MdSwapHoriz className="w-5 h-5" />
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-900">Stock updated</p>
-                  <p className="text-xs text-gray-500">1 hour ago</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-900">New transaction</p>
-                  <p className="text-xs text-gray-500">2 hours ago</p>
-                </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Stock Activities</h3>
+                <p className="text-sm text-gray-500">Recent stock movements</p>
               </div>
             </div>
-          </CardBody>
-        </Card>
+            <div className="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
+              {loadingActivities ? (
+                <div className="space-y-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl animate-pulse">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="w-8 h-8 bg-gray-200 rounded-lg"></div>
+                        <div className="flex-1">
+                          <div className="h-3 bg-gray-200 rounded w-3/4 mb-2"></div>
+                          <div className="h-2 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : stockActivities.length > 0 ? (
+                stockActivities.map((activity, idx) => {
+                  const isIncoming = activity.masuk > 0;
+                  const amount = isIncoming ? activity.masuk : activity.keluar;
+                  
+                  return (
+                    <div key={idx} className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
+                      isIncoming 
+                        ? 'bg-gradient-to-r from-teal-50/50 to-transparent border-teal-100 hover:border-[#00A69F]' 
+                        : 'bg-gradient-to-r from-orange-50/50 to-transparent border-orange-100 hover:border-orange-300'
+                    }`}>
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                          isIncoming ? 'bg-teal-100' : 'bg-orange-100'
+                        }`}>
+                          {isIncoming ? (
+                            <FaArrowLeft className={`w-4 h-4 ${isIncoming ? 'text-[#00A69F]' : 'text-orange-600'}`} />
+                          ) : (
+                            <FaArrowRight className="w-4 h-4 text-orange-600" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-gray-900 truncate">{activity.nama_barang}</p>
+                          <p className="text-xs text-gray-500">{activity.jenis_text} • {amount} {activity.nama_satuan}</p>
+                        </div>
+                      </div>
+                      <div className="text-right ml-3">
+                        <p className="text-xs font-medium text-gray-500">Stock</p>
+                        <p className="text-sm font-bold text-gray-900">{activity.current_stock}</p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <FaBox className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                  <p className="text-sm font-medium">No stock activities yet</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Recent Transactions Card */}
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition-shadow">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#06B6D4] to-[#0891B2] flex items-center justify-center text-white shadow-lg">
+                <FaStore className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Recent Pengadaan</h3>
+                <p className="text-sm text-gray-500">Latest procurement orders</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {loadingActivities ? (
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="p-4 bg-gray-50 rounded-xl animate-pulse">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                        <div className="h-3 bg-gray-200 rounded w-16"></div>
+                      </div>
+                      <div className="h-3 bg-gray-200 rounded w-2/3 mb-2"></div>
+                      <div className="h-5 bg-gray-200 rounded w-1/4"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : recentTransactions.length > 0 ? (
+                recentTransactions.map((trans, idx) => {
+                  const statusColors: any = {
+                    'P': { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'Processing' },
+                    'S': { bg: 'bg-blue-100', text: 'text-blue-700', label: 'Partial' },
+                    'L': { bg: 'bg-green-100', text: 'text-green-700', label: 'Complete' },
+                    'B': { bg: 'bg-red-100', text: 'text-red-700', label: 'Cancelled' }
+                  };
+                  const statusStyle = statusColors[trans.status] || statusColors['P'];
+                  
+                  return (
+                    <div key={idx} className="p-4 bg-gradient-to-r from-cyan-50/50 to-transparent rounded-xl border border-cyan-100 hover:border-[#06B6D4] transition-colors">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-gray-500">
+                          PO #{trans.idpengadaan}
+                        </span>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
+                          {statusStyle.label}
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-gray-900 mb-1">{trans.nama_vendor}</p>
+                      <p className="text-xs text-gray-500 mb-2">by {trans.username}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-[#00A69F]">
+                          Rp {trans.total_nilai.toLocaleString('id-ID')}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          {new Date(trans.timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <FaStore className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                  <p className="text-sm font-medium">No transactions yet</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
