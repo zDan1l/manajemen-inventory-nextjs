@@ -5,17 +5,19 @@ import { FormInput } from '../../components/FormInput';
 import { Button } from '../../components/Button';
 import { LinkButton } from '@/app/components/LinkButton';
 import { SelectInput } from '@/app/components/SelectInput';
+import { Alert } from '@/app/components/Alert';
+import { Card, CardHeader, CardTitle, CardDescription, CardBody, CardFooter } from '@/app/components/Card';
 
 export default function AddSatuan() {
   const [nama_satuan, setNamaSatuan] = useState<string>('');
-  const [status, setStatus] = useState<number | ''>(''); // Default ke '' sampai ada pilihan
+  const [status, setStatus] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  // Opsi status dengan nilai angka
   const statusOptions = [
-    { id: 0, label: 'Tidak Bisa Dipakai' },
-    { id: 1, label: 'Bisa Dipakai' },
+    { value: 0, label: 'Tidak Bisa Dipakai' },
+    { value: 1, label: 'Bisa Dipakai' },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,47 +27,97 @@ export default function AddSatuan() {
       return;
     }
 
+    setLoading(true);
+    setError(null);
+
     try {
       const res = await fetch('/api/satuans', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nama_satuan, status: Number(status) }),
       });
-      console.log('Response:', res);
+      
       if (res.ok) {
         router.push('/satuan');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to add satuan');
+        setError(data.error || 'Failed to add unit');
       }
     } catch (err) {
-      setError('Failed to add satuan');
+      setError('Failed to add unit');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="mt-30 p-5 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-5">Tambah Satuan</h1>
-      {error && <div className="text-red-600 mb-4">Error: {error}</div>}
-      <form onSubmit={handleSubmit}>
-        <FormInput label="Nama Satuan" type="text" value={nama_satuan} onChange={setNamaSatuan} required />
-        <SelectInput
-          label="Status"
-          value={status}
-          onChange={setStatus}
-          options={statusOptions}
-          optionKey="id"
-          optionLabel="label"
-          placeholder="Pilih Status"
-          required
-        />
-        <div className="flex gap-2 mt-4">
-          <LinkButton href="/satuan" variant="primary" size="medium">
-            Kembali
-          </LinkButton>
-          <Button type="submit">Simpan</Button>
-        </div>
-      </form>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-semibold text-gray-900">Add Unit</h1>
+        <p className="text-sm text-gray-600 mt-1">Create a new measurement unit</p>
+      </div>
+
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
+      {/* Form Card */}
+      <Card>
+        <form onSubmit={handleSubmit}>
+          <CardHeader>
+            <CardTitle>Unit Information</CardTitle>
+            <CardDescription>Enter the details for the new unit</CardDescription>
+          </CardHeader>
+          
+          <CardBody>
+            <div className="space-y-6">
+              <FormInput 
+                label="Unit Name" 
+                type="text" 
+                value={nama_satuan} 
+                onChange={(e) => setNamaSatuan(e.target.value)} 
+                required 
+                placeholder="e.g., Kilogram, Liter, Piece"
+                helper="Enter the measurement unit name"
+              />
+
+              <SelectInput
+                label="Status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                options={statusOptions}
+                placeholder="Select status"
+                required
+                helper="Choose whether this unit can be used"
+              />
+            </div>
+          </CardBody>
+          
+          <CardFooter>
+            <div className="flex gap-3">
+              <LinkButton href="/satuan" variant="outline">
+                Cancel
+              </LinkButton>
+              <Button 
+                type="submit" 
+                variant="primary" 
+                loading={loading}
+                icon={
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                }
+              >
+                Save Unit
+              </Button>
+            </div>
+          </CardFooter>
+        </form>
+      </Card>
     </div>
   );
 }

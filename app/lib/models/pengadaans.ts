@@ -152,8 +152,7 @@ export async function createPengadaan(data: {
     // ============================================
     // STEP 2: Call sp_tambah_detail_pengadaan dengan JSON (looping di SQL)
     // ============================================
-    console.log(`Step 2: Calling sp_tambah_detail_pengadaan with ${data.details.length} items...`);
-    
+    console.log(data.details);
     // Format details array ke JSON string
     const detailsJson = JSON.stringify(data.details);
     console.log('Details JSON:', detailsJson);

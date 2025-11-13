@@ -1,106 +1,84 @@
-interface SelectInputProps<T> {
-    label: string;
-    value: string;
-    onChange: (value: string) => void;
-    options: T[];
-    optionKey: keyof T;
-    optionLabel: keyof T;
-    placeholder?: string;
-    variant?: 'red' | 'blue' | 'yellow' | 'green' | 'purple' | 'pink';
-    required?: boolean;
+import React from 'react';
+
+interface SelectOption {
+  value: string | number;
+  label: string;
 }
 
-export function SelectInput<T>({
-    label,
-    value,
-    onChange,
-    options,
-    optionKey,
-    optionLabel,
-    placeholder,
-    variant = 'blue',
-    required = false,
-}: SelectInputProps<T>) {
-    const variants = {
-        red: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-red-50',
-            label: 'text-black',
-            accent: 'bg-red-200'
-        },
-        blue: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-blue-50',
-            label: 'text-black',
-            accent: 'bg-blue-200'
-        },
-        yellow: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-yellow-50',
-            label: 'text-black',
-            accent: 'bg-yellow-200'
-        },
-        green: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-green-50',
-            label: 'text-black',
-            accent: 'bg-green-200'
-        },
-        purple: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-purple-50',
-            label: 'text-black',
-            accent: 'bg-purple-200'
-        },
-        pink: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-pink-50',
-            label: 'text-black',
-            accent: 'bg-pink-200'
-        }
-    };
+interface SelectInputProps {
+  label: string;
+  value: string | number;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: SelectOption[];
+  required?: boolean;
+  placeholder?: string;
+  error?: string;
+  helper?: string;
+  disabled?: boolean;
+}
 
-    const currentVariant = variants[variant];
-
-    return (
-        <div className="mb-4">
-            <label className={`block mb-2 text-sm font-bold uppercase ${currentVariant.label}`}>
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-            </label>
-            <div className="relative">
-                <select
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    className={`
-                        w-full p-3 border-2 ${currentVariant.border} ${currentVariant.bg}
-                        font-medium text-sm text-black
-                        focus:outline-none
-                        transition-colors duration-200
-                        appearance-none cursor-pointer
-                        pr-10
-                    `}
-                    required={required}
-                >
-                    <option value="" className="bg-white text-gray-500 font-medium">
-                        {placeholder || 'Pilih opsi'}
-                    </option>
-                    {options.map((option: any) => (
-                        <option 
-                            key={option[optionKey]} 
-                            value={option[optionKey]}
-                            className="bg-white text-black font-medium"
-                        >
-                            {option[optionLabel]}
-                        </option>
-                    ))}
-                </select>
-                
-                {/* Custom dropdown arrow */}
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                    <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black"></div>
-                </div>
-            </div>
+export const SelectInput: React.FC<SelectInputProps> = ({
+  label,
+  value,
+  onChange,
+  options,
+  required = false,
+  placeholder = 'Select an option',
+  error,
+  helper,
+  disabled = false,
+}) => {
+  return (
+    <div className="w-full">
+      <label className="block text-sm font-medium text-gray-700 mb-1.5">
+        {label}
+        {required && <span className="text-danger-600 ml-1">*</span>}
+      </label>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={onChange}
+          required={required}
+          disabled={disabled}
+          className={`
+            w-full px-4 py-2.5 pr-10
+            border rounded-lg 
+            text-sm text-gray-900
+            appearance-none
+            transition-colors duration-200
+            ${error 
+              ? 'border-danger-300 focus:border-danger-500 focus:ring-2 focus:ring-danger-200' 
+              : 'border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200'
+            }
+            ${disabled 
+              ? 'bg-gray-50 cursor-not-allowed opacity-60' 
+              : 'bg-white hover:border-gray-400'
+            }
+            focus:outline-none
+          `}
+        >
+          <option value="">{placeholder}</option>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+          <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
-    );
-}
+        {error && (
+          <div className="absolute inset-y-0 right-8 pr-3 flex items-center pointer-events-none">
+            <svg className="h-5 w-5 text-danger-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+        )}
+      </div>
+      {error && <p className="mt-1.5 text-xs text-danger-600">{error}</p>}
+      {!error && helper && <p className="mt-1.5 text-xs text-gray-500">{helper}</p>}
+    </div>
+  );
+};

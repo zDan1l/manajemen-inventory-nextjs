@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/app/components/Button';
 import { ApiResponse } from '@/app/lib/type';
+import { ConfirmDialog } from '@/app/components/ConfirmDialog';
 
 interface BarangTersedia {
   idbarang: number;
@@ -32,12 +33,13 @@ export default function AddPenjualanPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
   
   // Form state
   const [barangList, setBarangList] = useState<BarangTersedia[]>([]);
   const [marginList, setMarginList] = useState<Margin[]>([]);
   const [selectedMargin, setSelectedMargin] = useState<number | null>(null);
-  const [ppn, setPpn] = useState<number>(0); // Input manual PPN (rupiah)
+  const [ppn, setPpn] = useState<number>(0); // Input PPN dalam persen (0-100)
   const [iduser, setIduser] = useState<number>(1); // TODO: Get from auth
   
   // Detail penjualan
@@ -162,9 +164,9 @@ export default function AddPenjualanPage() {
       return;
     }
 
-    // Validasi PPN
-    if (ppn < 0) {
-      setError('PPN tidak boleh negatif');
+    // Validasi PPN (0-100%)
+    if (ppn < 0 || ppn > 100) {
+      setError('PPN harus antara 0% - 100%');
       return;
     }
 
@@ -201,13 +203,23 @@ export default function AddPenjualanPage() {
       }
     }
 
+    // Show confirmation dialog
+    setShowConfirm(true);
+  };
+
+  // Actual submission after confirmation
+  const confirmSubmit = async () => {
+    setShowConfirm(false);
+    
+    const validDetails = details.filter(d => d.idbarang > 0 && d.jumlah > 0);
+
     try {
       setLoading(true);
 
       const payload = {
         idmargin_penjualan: selectedMargin,
         iduser: iduser,
-        ppn: ppn,
+        ppn: ppn,  // PPN dalam persen
         details: validDetails.map(d => ({
           idbarang: d.idbarang,
           jumlah: d.jumlah,
@@ -301,19 +313,22 @@ export default function AddPenjualanPage() {
           {/* PPN */}
           <div className="p-4 border-2 border-gray-300 rounded">
             <label className="block text-sm font-bold uppercase text-black mb-2">
-              PPN (Rp) *
+              PPN (%) *
             </label>
             <input
               type="number"
               value={ppn}
               onChange={(e) => setPpn(Number(e.target.value))}
-              placeholder="Masukkan nilai PPN dalam rupiah"
+              placeholder="Masukkan persentase PPN (misal: 11 untuk 11%)"
               min={0}
-              step={1}
+              max={100}
+              step={0.01}
               className="w-full p-3 border-2 border-black"
               required
             />
-            <p className="text-xs text-gray-600 mt-2">Masukkan nilai PPN dalam rupiah (misal: 50000 untuk Rp 50.000)</p>
+            <p className="text-xs text-gray-600 mt-2">
+              Masukkan persentase PPN (0-100). Misal: 11 untuk PPN 11%. Nilai PPN akan dihitung otomatis dari subtotal.
+            </p>
           </div>
 
           {/* Detail Barang */}
@@ -418,6 +433,18 @@ export default function AddPenjualanPage() {
           </div>
         </div>
       </form>
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirm}
+        title="Konfirmasi Transaksi Penjualan"
+        message={`Apakah Anda yakin ingin menyimpan transaksi penjualan ini?\n\n${details.filter(d => d.idbarang > 0 && d.jumlah > 0).length} item akan dijual.\n\nTransaksi yang sudah disimpan TIDAK DAPAT DIEDIT atau DIHAPUS.`}
+        confirmText="Ya, Simpan"
+        cancelText="Periksa Kembali"
+        onConfirm={confirmSubmit}
+        onCancel={() => setShowConfirm(false)}
+        variant="info"
+      />
     </div>
   );
 }

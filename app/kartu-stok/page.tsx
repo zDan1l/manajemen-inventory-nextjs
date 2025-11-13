@@ -81,11 +81,6 @@ export default function KartuStokPage() {
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <span className="font-bold">Total Records:</span>
           <span>{kartuStok.length}</span>
-          <span className="mx-2">|</span>
-          <span className="font-bold">Jenis:</span>
-          <span className="px-2 py-1 bg-green-100 border border-green-300 text-green-800 text-xs font-bold">M = Masuk (Penerimaan)</span>
-          <span className="px-2 py-1 bg-red-100 border border-red-300 text-red-800 text-xs font-bold">K = Keluar (Penjualan)</span>
-          <span className="px-2 py-1 bg-blue-100 border border-blue-300 text-blue-800 text-xs font-bold">R = Retur</span>
         </div>
       </div>
 
@@ -96,7 +91,6 @@ export default function KartuStokPage() {
         onDelete={handleDelete}
         editPath="/kartu-stok/detail"
         idKey="idkartu_stok"
-        variant="green"
       />
     </div>
   );

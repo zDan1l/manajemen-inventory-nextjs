@@ -42,23 +42,9 @@ export default function Margins() {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this margin?')) {
-      try {
-        const res = await fetch('/api/margins', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idmargin_penjualan: id }),
-        });
-        if (res.ok) {
-          fetchPengadaans();
-        } else {
-          const data = await res.json();
-          alert(data.error || 'Failed to delete margins');
-        }
-      } catch (err) {
-        alert('Failed to delete margins');
-      }
-    }
+    // Transaksi pengadaan tidak boleh dihapus
+    // Gunakan fitur "Batalkan" jika perlu membatalkan pengadaan
+    alert('⚠️ Transaksi pengadaan tidak dapat dihapus.\n\nJika ingin membatalkan pengadaan, silakan gunakan fitur "Batalkan Pengadaan" (status akan berubah menjadi Batal).\n\nData transaksi harus tetap ada untuk keperluan audit.');
   };
 
   // Filter function based on status
@@ -117,7 +103,7 @@ export default function Margins() {
       <div className="bg-white border-2 border-black p-4">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
           <div className="flex gap-2">
-            <LinkButton href="/pengadaan/create" variant="primary" size="medium">
+            <LinkButton href="/pengadaan/create" variant="primary" size="md">
               Tambah Pengadaan
             </LinkButton>
           </div>
@@ -154,10 +140,9 @@ export default function Margins() {
           status: mapStatusToString(pengadaan.status),
         }))}
         columns={columns}
-        onDelete={handleDelete}
-        editPath="/pengadaan/edit"
         idKey="idpengadaan"
-        variant="blue"
+        isTransaction={true}
+        detailPath="/pengadaan/detail"
       />
     </div>
   );

@@ -1,105 +1,162 @@
 'use client';
-import { useEffect, useState, use } from 'react';
-import { LinkButton } from '@/app/components/LinkButton';
-import { SelectInput } from '@/app/components/SelectInput';
-import { FormInput } from '@/app/components/FormInput';
-import { Button } from '@/app/components/Button';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { FormInput } from '@/app/components/FormInput';
+import { SelectInput } from '@/app/components/SelectInput';
+import { Button } from '@/app/components/Button';
+import { LinkButton } from '@/app/components/LinkButton';
+import { Alert } from '@/app/components/Alert';
+import { Card, CardHeader, CardTitle, CardDescription, CardBody, CardFooter } from '@/app/components/Card';
 
-export default function EditSatuan({ params }: { params: Promise<{ id: string }> }) {
+export default function EditVendor({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const [nama_vendor, setNamaVendor] = useState<string>('');
-  const [badan_hukum, setBadanHukum] = useState<string>('');
+  const [namaVendor, setNamaVendor] = useState<string>('');
+  const [badanHukum, setBadanHukum] = useState<string>('');
   const [status, setStatus] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingData, setLoadingData] = useState<boolean>(true);
   const router = useRouter();
+
+  const badanHukumOptions = [
+    { value: 'Y', label: 'Berbadan Hukum' },
+    { value: 'N', label: 'Tidak Berbadan Hukum' },
+  ];
+
+  const statusOptions = [
+    { value: '1', label: 'Dalam Kontrak' },
+    { value: '0', label: 'Selesai Kontrak' },
+  ];
 
   useEffect(() => {
     const fetchVendor = async () => {
       try {
-        const res = await fetch(`/api/vendors/${id}`); 
-        // Sesuaikan dengan rute dinamis [id]
+        const res = await fetch(`/api/vendors/${id}`);
         const data = await res.json();
         if (res.ok) {
           setNamaVendor(data.nama_vendor);
           setBadanHukum(data.badan_hukum);
-          setStatus(data.status ? data.status : '');
+          setStatus(data.status);
         } else {
           setError(data.error || 'Failed to fetch vendor');
         }
       } catch (err) {
         setError('Failed to fetch vendor');
+      } finally {
+        setLoadingData(false);
       }
     };
-    fetchVendor();
-  }, [id]); 
 
-  const statusOptions = [
-    { id: '0', label: 'Dalam Kontrak' },
-    { id: '1', label: 'Seleasi Kontrak' },
-  ];
-  const badanOptions = [
-    { id: 'Y', label: 'Berbadan Hukum' },
-    { id: 'N', label: 'Tidak Berbadan Hukum' },
-  ];
+    fetchVendor();
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nama_vendor || status === '') {
-      setError('Nama vendor dan status wajib diisi');
-      return;
-    }
+    setLoading(true);
+    setError(null);
 
     try {
       const res = await fetch('/api/vendors', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nama_vendor, badan_hukum , status, idvendor: Number(id)}),
+        body: JSON.stringify({ 
+          idvendor: Number(id),
+          nama_vendor: namaVendor, 
+          badan_hukum: badanHukum, 
+          status 
+        }),
       });
+      
       if (res.ok) {
         router.push('/vendor');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to edit vendor');
+        setError(data.error || 'Failed to update vendor');
       }
     } catch (err) {
-      setError('Failed to add vendor');
+      setError('Failed to update vendor');
+    } finally {
+      setLoading(false);
     }
   };
 
-  return (
-    <div className="mt-30 p-5 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-5">Edit Vendor</h1>
-      {error && <div className="text-red-600 mb-4">Error: {error}</div>}
-      <form onSubmit={handleSubmit}>
-        <FormInput label="Nama Vendor" type="text" value={nama_vendor} onChange={setNamaVendor} required />
-        <SelectInput
-          label="Badan Hukum"
-          value={badan_hukum}
-          onChange={setBadanHukum}
-          options={badanOptions}
-          optionKey="id"
-          optionLabel="label"
-          placeholder="Pilih Status"
-          required
-        />
-        <SelectInput
-          label="Status"
-          value={status}
-          onChange={setStatus}
-          options={statusOptions}
-          optionKey="id"
-          optionLabel="label"
-          placeholder="Pilih Status"
-          required
-        />
-        <div className="flex gap-2 mt-4">
-          <LinkButton href="/vendor" variant="primary" size="medium">
-            Kembali
-          </LinkButton>
-          <Button type="submit">Simpan</Button>
+  if (loadingData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+          <p className="mt-4 text-gray-600">Loading vendor data...</p>
         </div>
-      </form>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-gray-900">Edit Vendor</h1>
+        <p className="text-sm text-gray-600 mt-1">Update vendor information</p>
+      </div>
+
+      {error && (
+        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
+      <Card>
+        <form onSubmit={handleSubmit}>
+          <CardHeader>
+            <CardTitle>Vendor Information</CardTitle>
+            <CardDescription>Update the vendor details below</CardDescription>
+          </CardHeader>
+          
+          <CardBody>
+            <div className="space-y-6">
+              <FormInput 
+                label="Vendor Name" 
+                type="text" 
+                value={namaVendor} 
+                onChange={(e) => setNamaVendor(e.target.value)} 
+                required 
+                placeholder="Enter vendor name"
+                helper="The official name of the vendor or supplier"
+              />
+
+              <SelectInput
+                label="Legal Entity"
+                value={badanHukum}
+                onChange={(e) => setBadanHukum(e.target.value)}
+                options={badanHukumOptions}
+                placeholder="Select legal entity status"
+                required
+                helper="Whether the vendor is a registered legal entity"
+              />
+
+              <SelectInput
+                label="Contract Status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                options={statusOptions}
+                placeholder="Select contract status"
+                required
+                helper="Current contractual relationship with the vendor"
+              />
+            </div>
+          </CardBody>
+          
+          <CardFooter>
+            <div className="flex gap-3">
+              <LinkButton href="/vendor" variant="outline">Cancel</LinkButton>
+              <Button type="submit" variant="primary" loading={loading} icon={
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              }>Update Vendor</Button>
+            </div>
+          </CardFooter>
+        </form>
+      </Card>
     </div>
   );
 }

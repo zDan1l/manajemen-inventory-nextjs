@@ -1,87 +1,78 @@
+import React from 'react';
+
 interface FormInputProps {
-    label: string;
-    type: string;
-    value: string;
-    onChange: (value: string) => void;
-    required?: boolean;
-    step?: string;
-    placeholder?: string;
-    variant?: 'red' | 'blue' | 'yellow' | 'green' | 'purple' | 'pink';
+  label: string;
+  type?: string;
+  value: string | number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  step?: string;
+  min?: string;
+  max?: string;
+  placeholder?: string;
+  error?: string;
+  helper?: string;
+  disabled?: boolean;
 }
 
-export function FormInput({
-    label,
-    type,
-    value,
-    onChange,
-    required,
-    step,
-    placeholder,
-    variant = 'blue',
-}: FormInputProps) {
-    const variants = {
-        red: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-red-50',
-            label: 'text-black',
-            accent: 'bg-red-200'
-        },
-        blue: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-blue-50',
-            label: 'text-black',
-            accent: 'bg-blue-200'
-        },
-        yellow: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-yellow-50',
-            label: 'text-black',
-            accent: 'bg-yellow-200'
-        },
-        green: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-green-50',
-            label: 'text-black',
-            accent: 'bg-green-200'
-        },
-        purple: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-purple-50',
-            label: 'text-black',
-            accent: 'bg-purple-200'
-        },
-        pink: {
-            bg: 'bg-white',
-            border: 'border-black focus:bg-pink-50',
-            label: 'text-black',
-            accent: 'bg-pink-200'
-        }
-    };
-
-    const currentVariant = variants[variant];
-
-    return (
-        <div className="mb-4">
-            <label className={`block mb-2 text-sm font-bold uppercase ${currentVariant.label}`}>
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-            </label>
-            <div className="relative">
-                <input
-                    type={type}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    placeholder={placeholder}
-                    className={`
-                        w-full p-3 border-2 ${currentVariant.border} ${currentVariant.bg}
-                        font-medium text-sm placeholder-gray-400 text-black
-                        focus:outline-none
-                        transition-colors duration-200
-                    `}
-                    required={required}
-                    step={step}
-                />
-            </div>
-        </div>
-    );
-}
+export const FormInput: React.FC<FormInputProps> = ({
+  label,
+  type = 'text',
+  value,
+  onChange,
+  required = false,
+  step,
+  min,
+  max,
+  placeholder,
+  error,
+  helper,
+  disabled = false,
+}) => {
+  return (
+    <div className="w-full">
+      <label className="block text-sm font-medium text-gray-700 mb-1.5">
+        {label}
+        {required && <span className="text-danger-600 ml-1">*</span>}
+      </label>
+      <div className="relative">
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          required={required}
+          step={step}
+          min={min}
+          max={max}
+          placeholder={placeholder}
+          disabled={disabled}
+          className={`
+            w-full px-4 py-2.5 
+            border rounded-lg 
+            text-sm text-gray-900
+            placeholder:text-gray-400
+            transition-colors duration-200
+            ${error 
+              ? 'border-danger-300 focus:border-danger-500 focus:ring-2 focus:ring-danger-200' 
+              : 'border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200'
+            }
+            ${disabled 
+              ? 'bg-gray-50 cursor-not-allowed opacity-60' 
+              : 'bg-white hover:border-gray-400'
+            }
+            focus:outline-none
+          `}
+        />
+        {error && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <svg className="h-5 w-5 text-danger-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+        )}
+      </div>
+      {error && <p className="mt-1.5 text-xs text-danger-600">{error}</p>}
+      {!error && helper && <p className="mt-1.5 text-xs text-gray-500">{helper}</p>}
+    </div>
+  );
+};

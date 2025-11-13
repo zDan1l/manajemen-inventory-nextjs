@@ -1,9 +1,10 @@
-// app/users/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { Barang} from '@/app/lib/type';
+import { Barang } from '@/app/lib/type';
 import { Table } from '@/app/components/Table';
 import { LinkButton } from '../components/LinkButton';
+import { Alert } from '../components/Alert';
+import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '../components/Card';
 
 export default function Barangs() {
   const [barangs, setBarangs] = useState<Barang[]>([]);
@@ -11,48 +12,33 @@ export default function Barangs() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch barangs dengan parameter filter
-  // Jika filter = 'aktif', akan menggunakan view_barang_aktif
-  // Jika filter = 'all', akan menggunakan view_barang_all
   const fetchBarangs = async (filter: string = 'all') => {
     try {
       setLoading(true);
       
-      // Tentukan endpoint berdasarkan filter
       let endpoint = '/api/barangs';
       if (filter === 'aktif') {
-        endpoint = '/api/barangs?filter=aktif'; // Akan menggunakan view_barang_aktif
+        endpoint = '/api/barangs?filter=aktif';
       }
-      // filter 'all' atau lainnya akan menggunakan view_barang_all (default)
       
       const res = await fetch(endpoint);
       const data: Barang[] | { error: string } = await res.json();
       
       if (res.ok && Array.isArray(data)) {
-        // Tidak perlu mapping lagi karena sudah di-handle di view
         setBarangs(data);
+        setError(null);
       } else {
-        setError((data as { error: string }).error || 'Failed to fetch barangs');
+        setError((data as { error: string }).error || 'Failed to fetch items');
       }
     } catch (err) {
-      setError('Failed to fetch barangs');
+      setError('Failed to fetch items');
     } finally {
       setLoading(false);
     }
   };
 
-  // Fungsi untuk memetakan status numerik ke string (untuk display)
-  const mapStatusToString = (status: number | string): string => {
-    const statusValue = typeof status === 'string' ? parseInt(status) : status;
-    const statusMap: { [key: number]: string } = {
-      0: 'Rusak',
-      1: 'Baik',
-    };
-    return statusMap[statusValue] || 'Unknown';
-  };
-
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this barang?')) {
+    if (confirm('Are you sure you want to delete this item?')) {
       try {
         const res = await fetch('/api/barangs', {
           method: 'DELETE',
@@ -60,98 +46,107 @@ export default function Barangs() {
           body: JSON.stringify({ idbarang: id }),
         });
         if (res.ok) {
-          // Re-fetch dengan filter yang sedang aktif
           fetchBarangs(statusFilter);
         } else {
           const data = await res.json();
-          alert(data.error || 'Failed to delete barang');
+          setError(data.error || 'Failed to delete item');
         }
       } catch (err) {
-        alert('Failed to delete barang');
+        setError('Failed to delete item');
       }
     }
   };
 
-  // Handle perubahan filter
   const handleFilterChange = (filterValue: string) => {
     setStatusFilter(filterValue);
-    // Fetch ulang data dengan filter baru
     fetchBarangs(filterValue);
   };
 
   useEffect(() => {
-    // Fetch data pertama kali dengan filter 'all'
     fetchBarangs('all');
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-600">Error: {error}</div>;
-
   const columns = [
     { key: 'idbarang', label: 'ID' },
-    { key: 'nama', label: 'Nama Barang' },
-    { key: 'nama_satuan', label: 'Satuan' },
-    { key: 'jenis', label: 'Jenis' },
-    { key: 'harga', label: 'Harga' },
+    { key: 'nama', label: 'Item Name' },
+    { key: 'nama_satuan', label: 'Unit' },
+    { key: 'jenis', label: 'Type' },
+    { key: 'harga', label: 'Price' },
     { key: 'status', label: 'Status' },
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-yellow-200 border-2 border-black p-4">
-        <h1 className="text-xl font-bold uppercase text-black">Daftar Barang</h1>
-      </div>
-
-      {/* Controls */}
-      <div className="bg-white border-2 border-black p-4">
-        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-          <div className="flex gap-2">
-            <LinkButton href="/barang/add" variant="warning" size="medium">
-              Tambah Barang
-            </LinkButton>
-          </div>
-          
-          <div className="w-full md:w-64">
-            <label className="block mb-2 text-sm font-bold uppercase text-black">
-              Filter Status
-            </label>
-            <div className="relative">
-              <select
-                value={statusFilter}
-                onChange={(e) => handleFilterChange(e.target.value)}
-                className="w-full p-3 border-2 border-black bg-white font-medium text-sm text-black focus:outline-none transition-colors duration-200 appearance-none cursor-pointer pr-10"
-              >
-                <option value="all" className="bg-white text-black font-medium">Semua Status (View All)</option>
-                <option value="aktif" className="bg-white text-black font-medium">Barang Aktif Saja (View Aktif)</option>
-              </select>
-              {/* Custom dropdown arrow */}
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black"></div>
-              </div>
-            </div>
-            <p className="mt-1 text-xs text-gray-600">
-              {statusFilter === 'aktif' 
-                ? '✓ Menggunakan view_barang_aktif' 
-                : '✓ Menggunakan view_barang_all'}
-            </p>
-          </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">Items</h1>
+          <p className="text-sm text-gray-600 mt-1">Manage inventory items and their details</p>
         </div>
+        <LinkButton href="/barang/add" variant="primary" icon={
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        }>
+          Add Item
+        </LinkButton>
       </div>
 
-      {/* Table */}
-      <Table
-        data={barangs.map(barang => ({
-          ...barang,
-          status: mapStatusToString(barang.status),
-        }))}
-        columns={columns}
-        onDelete={handleDelete}
-        editPath="/barang/edit"
-        idKey="idbarang"
-        variant="yellow"
-      />
-    
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
+      {/* Filter Card */}
+      <Card>
+        <CardBody>
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-gray-700">Filter by Status:</span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleFilterChange('all')}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  statusFilter === 'all'
+                    ? 'bg-primary-100 text-primary-700 border border-primary-300'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => handleFilterChange('aktif')}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  statusFilter === 'aktif'
+                    ? 'bg-success-100 text-success-700 border border-success-300'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                Active Only
+              </button>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+
+      {/* Table Card */}
+      <Card padding="none">
+        <CardHeader className="p-6">
+          <CardTitle>All Items</CardTitle>
+          <CardDescription>A complete list of inventory items with their details</CardDescription>
+        </CardHeader>
+        <CardBody>
+          <Table
+            data={barangs}
+            columns={columns}
+            onDelete={handleDelete}
+            editPath="/barang/edit"
+            idKey="idbarang"
+            loading={loading}
+          />
+        </CardBody>
+      </Card>
     </div>
   );
 }

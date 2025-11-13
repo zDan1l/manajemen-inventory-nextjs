@@ -285,7 +285,7 @@ export default function TambahPengadaan() {
                 type="button"
                 onClick={handleAddItem}
                 variant="primary"
-                size="medium"
+                size="md"
                 className="w-full"
               >
                 + Tambah
@@ -326,7 +326,7 @@ export default function TambahPengadaan() {
                           type="button"
                           onClick={() => handleRemoveItem(item.idbarang)}
                           variant="danger"
-                          size="small"
+                          size="sm"
                         >
                           Hapus
                         </Button>
@@ -379,14 +379,14 @@ export default function TambahPengadaan() {
         <div className="bg-white border-2 border-black p-6">
           <div className="flex gap-4 justify-end">
             <Link href="/pengadaan">
-              <Button type="button" variant="secondary" size="medium">
+              <Button type="button" variant="secondary" size="md">
                 Batal
               </Button>
             </Link>
             <Button
               type="submit"
               variant="success"
-              size="medium"
+              size="md"
               disabled={loading || details.length === 0}
             >
               {loading ? 'Menyimpan...' : 'Simpan Pengadaan'}

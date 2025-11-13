@@ -1,27 +1,29 @@
-// app/users/edit/[id]/page.tsx
-'use client'; // Tetap menggunakan client-side rendering
+'use client';
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { Role } from '@/app/lib/type'; // Pastikan path sesuai
+import { Role } from '@/app/lib/type';
 import { FormInput } from '@/app/components/FormInput';
 import { SelectInput } from '@/app/components/SelectInput';
 import { Button } from '@/app/components/Button';
 import { LinkButton } from '@/app/components/LinkButton';
+import { Alert } from '@/app/components/Alert';
+import { Card, CardHeader, CardTitle, CardDescription, CardBody, CardFooter } from '@/app/components/Card';
 
 export default function EditUser({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params); // Unwrap params menggunakan React.use()
+  const { id } = use(params);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [idrole, setIdrole] = useState<string>('');
   const [roles, setRoles] = useState<Role[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingData, setLoadingData] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(`/api/users/${id}`); 
-        // Sesuaikan dengan rute dinamis [id]
+        const res = await fetch(`/api/users/${id}`);
         const data = await res.json();
         if (res.ok) {
           setUsername(data.username);
@@ -45,15 +47,20 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
         }
       } catch (err) {
         setError('Failed to fetch roles');
+      } finally {
+        setLoadingData(false);
       }
     };
 
     fetchUser();
     fetchRoles();
-  }, [id]); // Dependency diubah ke id yang sudah di-unwrap
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
     try {
       const res = await fetch(`/api/users`, {
         method: 'PUT',
@@ -65,6 +72,7 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
           idrole: idrole ? parseInt(idrole) : null,
         }),
       });
+      
       if (res.ok) {
         router.push('/user');
       } else {
@@ -73,57 +81,103 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
       }
     } catch (err) {
       setError('Failed to update user');
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (error) return <div className="text-red-600">Error: {error}</div>;
+  const roleOptions = roles.map(role => ({
+    value: role.idrole,
+    label: role.nama_role
+  }));
+
+  if (loadingData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+          <p className="mt-4 text-gray-600">Loading user data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-blue-200 border-2 border-black p-4">
-        <h1 className="text-xl font-bold uppercase text-black">Edit Pengguna</h1>
+      <div>
+        <h1 className="text-2xl font-semibold text-gray-900">Edit User</h1>
+        <p className="text-sm text-gray-600 mt-1">Update user account information</p>
       </div>
 
-      {/* Form */}
-      <div className="bg-white border-2 border-black p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <FormInput 
-            label="Username" 
-            type="text" 
-            value={username} 
-            onChange={setUsername} 
-            required 
-          />
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
+      {/* Form Card */}
+      <Card>
+        <form onSubmit={handleSubmit}>
+          <CardHeader>
+            <CardTitle>User Information</CardTitle>
+            <CardDescription>Update the user details below</CardDescription>
+          </CardHeader>
           
-          <FormInput
-            label="Password (Kosongkan jika tidak diubah)"
-            type="password"
-            value={password}
-            onChange={setPassword}
-            required={false}
-          />
+          <CardBody>
+            <div className="space-y-6">
+              <FormInput 
+                label="Username" 
+                type="text" 
+                value={username} 
+                onChange={(e) => setUsername(e.target.value)} 
+                required 
+                placeholder="Enter username"
+                helper="Username must be unique"
+              />
+              
+              <FormInput
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Leave blank to keep current password"
+                helper="Only fill if you want to change the password"
+              />
+              
+              <SelectInput
+                label="Role"
+                value={idrole}
+                onChange={(e) => setIdrole(e.target.value)}
+                options={roleOptions}
+                placeholder="Select a role (Optional)"
+                helper="Assign a role to this user"
+              />
+            </div>
+          </CardBody>
           
-          <SelectInput
-            label="Peran"
-            value={idrole}
-            onChange={setIdrole}
-            options={roles}
-            optionKey="idrole"
-            optionLabel="nama_role"
-            placeholder="Pilih Peran (Opsional)"
-          />
-          
-          <div className="flex gap-2 pt-4">
-            <LinkButton href="/user" variant="primary" size="medium">
-              Kembali
-            </LinkButton>
-            <Button type="submit" variant="success">
-              Simpan Perubahan
-            </Button>
-          </div>
+          <CardFooter>
+            <div className="flex gap-3">
+              <LinkButton href="/user" variant="outline">
+                Cancel
+              </LinkButton>
+              <Button 
+                type="submit" 
+                variant="primary" 
+                loading={loading}
+                icon={
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                }
+              >
+                Update User
+              </Button>
+            </div>
+          </CardFooter>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }
