@@ -6,6 +6,7 @@ import { ApiResponse, Penjualan } from '@/app/lib/type';
 import { LinkButton } from '@/app/components/LinkButton';
 import { Table } from '@/app/components/Table';
 import { useRouter } from 'next/navigation';
+import { formatCurrency } from '@/app/lib/utils/format';
 
 export default function PenjualanPage() {
   const router = useRouter();
@@ -98,7 +99,12 @@ export default function PenjualanPage() {
 
       {/* Table */}
       <Table
-        data={penjualans}
+        data={penjualans.map(penjualan => ({
+          ...penjualan,
+          subtotal_nilai: formatCurrency(penjualan.subtotal_nilai),
+          ppn: formatCurrency(penjualan.ppn),
+          total_nilai: formatCurrency(penjualan.total_nilai),
+        }))}
         columns={columns}
         idKey="idpenjualan"
         isTransaction={true}

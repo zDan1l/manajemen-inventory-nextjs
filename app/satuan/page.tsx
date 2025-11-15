@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '../compo
 
 export default function Satuans() {
   const [satuans, setSatuans] = useState<Satuan[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('aktif');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,7 +61,7 @@ export default function Satuans() {
   };
 
   useEffect(() => {
-    fetchSatuan('all');
+    fetchSatuan('aktif');
   }, []);
 
   // Helper function to map status to readable string

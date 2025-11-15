@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '../compo
 
 export default function Margins() {
   const [margins, setMargins] = useState<Margin[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('aktif');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,7 +60,7 @@ export default function Margins() {
   };
 
   useEffect(() => {
-    fetchMargins('all');
+    fetchMargins('aktif');
   }, []);
 
   // Helper function to map status to readable string

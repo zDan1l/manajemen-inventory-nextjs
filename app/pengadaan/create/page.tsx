@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/app/components/Button';
 import Link from 'next/link';
 import { Vendor, Barang } from '@/app/lib/type';
+import { formatCurrency } from '@/app/lib/utils/format';
 
 interface DetailItem {
   idbarang: number;
@@ -316,10 +317,10 @@ export default function TambahPengadaan() {
                       <td className="border-2 border-black p-3">{item.nama_barang}</td>
                       <td className="border-2 border-black p-3 text-right">{item.jumlah}</td>
                       <td className="border-2 border-black p-3 text-right">
-                        Rp {item.harga_satuan.toLocaleString('id-ID')}
+                        {formatCurrency(item.harga_satuan)}
                       </td>
                       <td className="border-2 border-black p-3 text-right font-bold">
-                        Rp {item.sub_total.toLocaleString('id-ID')}
+                        {formatCurrency(item.sub_total)}
                       </td>
                       <td className="border-2 border-black p-3 text-center">
                         <Button
@@ -340,7 +341,7 @@ export default function TambahPengadaan() {
                       Subtotal:
                     </td>
                     <td className="border-2 border-black p-3 text-right">
-                      Rp {subtotalNilai.toLocaleString('id-ID')}
+                      {formatCurrency(subtotalNilai)}
                     </td>
                     <td className="border-2 border-black"></td>
                   </tr>
@@ -349,7 +350,7 @@ export default function TambahPengadaan() {
                       PPN ({ppnPersen}%):
                     </td>
                     <td className="border-2 border-black p-3 text-right">
-                      Rp {ppnNilai.toLocaleString('id-ID')}
+                      {formatCurrency(ppnNilai)}
                     </td>
                     <td className="border-2 border-black"></td>
                   </tr>
@@ -358,7 +359,7 @@ export default function TambahPengadaan() {
                       Total:
                     </td>
                     <td className="border-2 border-black p-3 text-right text-lg">
-                      Rp {totalNilai.toLocaleString('id-ID')}
+                      {formatCurrency(totalNilai)}
                     </td>
                     <td className="border-2 border-black"></td>
                   </tr>

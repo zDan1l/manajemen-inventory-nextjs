@@ -5,10 +5,11 @@ import { Table } from '@/app/components/Table';
 import { LinkButton } from '../components/LinkButton';
 import { Alert } from '../components/Alert';
 import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '../components/Card';
+import { formatCurrency } from '@/app/lib/utils/format';
 
 export default function Barangs() {
   const [barangs, setBarangs] = useState<Barang[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('aktif');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,7 +64,7 @@ export default function Barangs() {
   };
 
   useEffect(() => {
-    fetchBarangs('all');
+    fetchBarangs('aktif');
   }, []);
 
   // Helper functions to map codes to readable strings
@@ -77,13 +78,15 @@ export default function Barangs() {
       case 'A':
         return 'Alat Tulis Kantor';
       case 'B':
-        return 'Barang Cetakan';
-      case 'K':
-        return 'Komputer';
-      case 'M':
+        return 'Perabotan Rumah Tangga';
+      case 'C':
+        return 'Elektronik';
+      case 'D':
         return 'Makanan & Minuman';
+      case 'E':
+        return 'Aksesoris Elektronik';
       default:
-        return jenis;
+        return "Tidak Ditemukan";
     }
   };
 
@@ -172,6 +175,7 @@ export default function Barangs() {
               ...barang,
               status: mapStatusToString(barang.status),
               jenis: mapJenisToString(barang.jenis),
+              harga: formatCurrency(barang.harga),
             }))}
             columns={columns}
             onDelete={handleDelete}

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Pengadaan } from '@/app/lib/type';
 import { Table } from '@/app/components/Table';
 import { LinkButton } from '../components/LinkButton';
+import { formatCurrency } from '@/app/lib/utils/format';
 
 export default function Margins() {
   const [pengadaans, setPengadaans] = useState<Pengadaan[]>([]);
@@ -149,6 +150,9 @@ export default function Margins() {
         data={filteredPengadaans.map(pengadaan => ({
           ...pengadaan,
           status: mapStatusToString(pengadaan.status),
+          subtotal_nilai: formatCurrency(pengadaan.subtotal_nilai),
+          ppn: formatCurrency(pengadaan.ppn),
+          total_nilai: formatCurrency(pengadaan.total_nilai),
         }))}
         columns={columns}
         idKey="idpengadaan"

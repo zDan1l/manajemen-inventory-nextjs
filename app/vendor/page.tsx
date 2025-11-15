@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '../compo
 
 export default function Vendors() {
   const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('aktif');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,7 +62,7 @@ export default function Vendors() {
   };
 
   useEffect(() => {
-    fetchVendor('all');
+    fetchVendor('aktif');
   }, []);
 
   // Helper functions to map codes to readable strings

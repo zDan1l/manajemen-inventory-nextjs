@@ -26,6 +26,14 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
     { value: 0, label: 'Rusak' },
   ];
 
+  const jenisOptions = [
+    { value: 'A', label: 'Alat Tulis Kantor' },
+    { value: 'B', label: 'Perabotan Rumah Tangga' },
+    { value: 'C', label: 'Elektronik' },
+    { value: 'D', label: 'Makanan & Minuman' },
+    { value: 'E', label: 'Aksesoris Elektronik' },
+  ];
+
   useEffect(() => {
     const fetchBarang = async () => {
       try {
@@ -144,14 +152,14 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
                 helper="Nama deskriptif untuk barang"
               />
 
-              <FormInput 
-                label="Jenis" 
-                type="text" 
-                value={jenis} 
-                onChange={(e) => setJenis(e.target.value)} 
-                required 
-                placeholder="Contoh: A, B, C"
-                helper="Kode klasifikasi atau kategori"
+              <SelectInput
+                label="Jenis Barang"
+                value={jenis}
+                onChange={(e) => setJenis(e.target.value)}
+                options={jenisOptions}
+                placeholder="Pilih jenis barang"
+                required
+                helper="Kategori atau klasifikasi barang"
               />
 
               <SelectInput
