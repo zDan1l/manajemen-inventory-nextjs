@@ -116,16 +116,6 @@ export default function Margins() {
             <span className="text-sm font-medium text-gray-700">Filter berdasarkan Status:</span>
             <div className="flex gap-2">
               <button
-                onClick={() => filterByStatus('all')}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  statusFilter === 'all'
-                    ? 'bg-primary-100 text-primary-700 border border-primary-300'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                Semua
-              </button>
-              <button
                 onClick={() => filterByStatus('aktif')}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   statusFilter === 'aktif'
@@ -134,6 +124,16 @@ export default function Margins() {
                 }`}
               >
                 Aktif Saja
+              </button>
+              <button
+                onClick={() => filterByStatus('all')}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  statusFilter === 'all'
+                    ? 'bg-primary-100 text-primary-700 border border-primary-300'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                Semua
               </button>
             </div>
           </div>
