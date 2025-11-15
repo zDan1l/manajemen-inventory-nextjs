@@ -7,6 +7,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '@/app/co
 import { SelectInput } from '@/app/components/SelectInput';
 import { FormInput } from '@/app/components/FormInput';
 import { Alert } from '@/app/components/Alert';
+import { Toast } from '@/app/components/Toast';
+import { ConfirmDialog } from '@/app/components/ConfirmDialog';
+import { useToast } from '@/app/hooks/useToast';
+import { useConfirm } from '@/app/hooks/useConfirm';
 import { Vendor, Barang } from '@/app/lib/type';
 import { formatCurrency } from '@/app/lib/utils/format';
 
@@ -20,6 +24,8 @@ interface DetailItem {
 
 export default function TambahPengadaan() {
   const router = useRouter();
+  const { toast, showToast, hideToast, success, error: showError, warning } = useToast();
+  const { confirmState, showConfirm, hideConfirm, handleConfirm } = useConfirm();
   
   // State
   const [vendors, setVendors] = useState<Vendor[]>([]);
@@ -51,7 +57,7 @@ export default function TambahPengadaan() {
         setVendors(data);
       }
     } catch (error) {
-      alert('Failed to load vendors');
+      showError('Gagal memuat data vendor');
     }
   };
 
@@ -63,22 +69,22 @@ export default function TambahPengadaan() {
         setBarangs(data);
       }
     } catch (error) {
-      alert('Failed to load barangs');
+      showError('Gagal memuat data barang');
     }
   };
 
   // Add item to detail list
   const handleAddItem = () => {
     if (selectedBarang === 0) {
-      alert('Pilih barang terlebih dahulu');
+      warning('Pilih barang terlebih dahulu');
       return;
     }
     if (jumlah <= 0) {
-      alert('Jumlah harus lebih dari 0');
+      warning('Jumlah harus lebih dari 0');
       return;
     }
     if (hargaSatuan <= 0) {
-      alert('Harga satuan harus lebih dari 0');
+      warning('Harga satuan harus lebih dari 0');
       return;
     }
 
@@ -88,7 +94,7 @@ export default function TambahPengadaan() {
     // Cek apakah barang sudah ada di list
     const exists = details.find(d => d.idbarang === selectedBarang);
     if (exists) {
-      alert('Barang sudah ada dalam daftar. Edit atau hapus terlebih dahulu.');
+      warning('Barang sudah ada dalam daftar. Hapus terlebih dahulu jika ingin mengubah.');
       return;
     }
 
@@ -101,6 +107,7 @@ export default function TambahPengadaan() {
     };
 
     setDetails([...details, newItem]);
+    success('Barang berhasil ditambahkan');
 
     // Reset form
     setSelectedBarang(0);
@@ -123,34 +130,30 @@ export default function TambahPengadaan() {
     e.preventDefault();
 
     if (selectedVendor === 0) {
-      alert('Pilih vendor terlebih dahulu');
+      warning('Pilih vendor terlebih dahulu');
       return;
     }
     
     if (ppnPersen < 0) {
-      alert('PPN tidak boleh negatif');
+      warning('PPN tidak boleh negatif');
       return;
     }
 
     if (details.length === 0) {
-      alert('Tambahkan minimal 1 barang');
+      warning('Tambahkan minimal 1 barang');
       return;
     }
 
     setLoading(true);
 
     try {
-      // ============================================
-      // Hitung PPN di frontend (subtotal × persen)
-      // Kirim nilai RUPIAH ke backend (bukan persen!)
-      // ============================================
       const calculatedSubtotal = details.reduce((sum, item) => sum + item.sub_total, 0);
       const calculatedPpnNilai = calculatedSubtotal * (ppnPersen / 100);
       
       const payload = {
-        user_iduser: 1, // TODO: Get from session/auth
+        user_iduser: 1,
         vendor_idvendor: selectedVendor,
-        ppn_nilai: calculatedPpnNilai,  // Kirim nilai RUPIAH (bukan persen!)
+        ppn_nilai: calculatedPpnNilai,
         details: details.map(d => ({
           idbarang: d.idbarang,
           jumlah: d.jumlah,
@@ -166,14 +169,14 @@ export default function TambahPengadaan() {
       
       const result = await response.json();
       if (response.ok) {
-        alert('Pengadaan berhasil dibuat!');
-        router.push('/pengadaan');
+        success('Pengadaan berhasil dibuat!');
+        setTimeout(() => router.push('/pengadaan'), 1500);
       } else {
         console.error('Error response:', result);
-        alert(`Error: ${result.error || 'Failed to create pengadaan'}`);
+        showError(result.error || 'Gagal membuat pengadaan');
       }
     } catch (error) {
-      alert('Network error. Please try again.');
+      showError('Terjadi kesalahan jaringan. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -267,10 +270,9 @@ export default function TambahPengadaan() {
                 <FormInput
                   label="Jumlah"
                   type="number"
-                  value={jumlah.toString()}
+                  value={jumlah === 0 ? '' : jumlah.toString()}
                   onChange={(e) => setJumlah(parseInt(e.target.value) || 0)}
                   placeholder="0"
-                  min="1"
                 />
               </div>
 
@@ -278,10 +280,9 @@ export default function TambahPengadaan() {
                 <FormInput
                   label="Harga Satuan"
                   type="number"
-                  value={hargaSatuan.toString()}
+                  value={hargaSatuan === 0 ? '' : hargaSatuan.toString()}
                   onChange={(e) => setHargaSatuan(parseInt(e.target.value) || 0)}
                   placeholder="0"
-                  min="0"
                 />
               </div>
 
@@ -412,6 +413,26 @@ export default function TambahPengadaan() {
           </CardBody>
         </Card>
       </form>
+
+      {/* Toast Notification */}
+      <Toast
+        isOpen={toast.isOpen}
+        message={toast.message}
+        variant={toast.variant}
+        onClose={hideToast}
+      />
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.title}
+        message={confirmState.message}
+        variant={confirmState.variant}
+        confirmText="Ya"
+        cancelText="Batal"
+        onConfirm={handleConfirm}
+        onCancel={hideConfirm}
+      />
     </div>
   );
 }

@@ -13,6 +13,7 @@ interface FormInputProps {
   error?: string;
   helper?: string;
   disabled?: boolean;
+  autoComplete?: string;
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
@@ -28,6 +29,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   error,
   helper,
   disabled = false,
+  autoComplete,
 }) => {
   return (
     <div className="w-full">
@@ -46,6 +48,7 @@ export const FormInput: React.FC<FormInputProps> = ({
           max={max}
           placeholder={placeholder}
           disabled={disabled}
+          autoComplete={autoComplete}
           className={`
             w-full px-4 py-2.5 
             border-2 rounded-xl 

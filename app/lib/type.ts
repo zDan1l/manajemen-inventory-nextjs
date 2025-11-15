@@ -148,6 +148,30 @@ export interface DetailPenjualan {
     nama_barang?: string;
 }
 
+// ========================================
+// FORM INPUT INTERFACES
+// ========================================
+
+export interface BarangTersedia {
+  idbarang: number;
+  nama_barang: string;
+  nama_satuan: string;
+  harga_beli: number;
+  status: string;
+  stok_tersedia: number;
+}
+
+export interface DetailPenjualanInput {
+  idbarang: number;
+  jumlah: number;
+  harga_jual: number;  // Harga jual per unit (sudah + margin)
+  sub_total: number;   // jumlah * harga_jual
+  nama_barang?: string;
+  nama_satuan?: string;
+  stok_tersedia?: number;
+  harga_beli?: number; // Untuk kalkulasi harga jual
+}
+
 export interface KartuStokDetail {
   idkartu_stok: number;
   idtransaksi: number;

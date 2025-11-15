@@ -12,6 +12,12 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const pathname = usePathname();
   const isDashboard = pathname === '/';
+  const isLoginPage = pathname === '/login';
+
+  // Jika halaman login, render tanpa sidebar dan topbar
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import DashboardLayout from "./components/DashboardLayout";
+import { AuthProvider } from "./context/AuthContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Inventory Dashboard - Super Admin",
-  description: "Scalable inventory management system with admin controls",
+  title: "CRUD Penjualan - Sistem Manajemen",
+  description: "Sistem Manajemen Penjualan dengan kontrol admin",
 };
 
 export default function RootLayout({
@@ -28,9 +29,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <DashboardLayout>
-          {children}
-        </DashboardLayout>
+        <AuthProvider>
+          <DashboardLayout>
+            {children}
+          </DashboardLayout>
+        </AuthProvider>
       </body>
     </html>
   );
