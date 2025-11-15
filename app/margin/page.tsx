@@ -25,17 +25,17 @@ export default function Margins() {
         setMargins(data);
         setError(null);
       } else {
-        setError((data as { error: string }).error || 'Failed to fetch margins');
+        setError((data as { error: string }).error || 'Gagal memuat data margin');
       }
     } catch (err) {
-      setError('Failed to fetch margins');
+      setError('Gagal memuat data margin');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this margin?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus margin ini?')) {
       try {
         const res = await fetch('/api/margins', {
           method: 'DELETE',
@@ -46,10 +46,10 @@ export default function Margins() {
           fetchMargins(statusFilter);
         } else {
           const data = await res.json();
-          setError(data.error || 'Failed to delete margin');
+          setError(data.error || 'Gagal menghapus margin');
         }
       } catch (err) {
-        setError('Failed to delete margin');
+        setError('Gagal menghapus margin');
       }
     }
   };
@@ -63,33 +63,48 @@ export default function Margins() {
     fetchMargins('all');
   }, []);
 
+  // Helper function to map status to readable string
+  const mapStatusToString = (status: number | string) => {
+    const numStatus = typeof status === 'string' ? parseInt(status) : status;
+    return numStatus === 1 ? 'Aktif' : 'Tidak Aktif';
+  };
+
   const columns = [
     { key: 'idmargin_penjualan', label: 'ID' },
-    { key: 'created_at', label: 'Created At' },
-    { key: 'persen', label: 'Percentage' },
+    { key: 'created_at', label: 'Dibuat Pada' },
+    { key: 'persen', label: 'Persentase' },
     { key: 'status', label: 'Status' },
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Margins</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage sales margin percentages</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 text-white">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">Manajemen Margin</h1>
+              <p className="text-teal-100 mt-1">Kelola persentase margin penjualan</p>
+            </div>
+          </div>
+          <LinkButton href="/margin/add" variant="secondary" size="lg" icon={
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          }>
+            Tambah Margin
+          </LinkButton>
         </div>
-        <LinkButton href="/margin/add" variant="primary" icon={
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-        }>
-          Add Margin
-        </LinkButton>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -98,7 +113,7 @@ export default function Margins() {
       <Card>
         <CardBody>
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-700">Filter by Status:</span>
+            <span className="text-sm font-medium text-gray-700">Filter berdasarkan Status:</span>
             <div className="flex gap-2">
               <button
                 onClick={() => filterByStatus('all')}
@@ -108,7 +123,7 @@ export default function Margins() {
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                All
+                Semua
               </button>
               <button
                 onClick={() => filterByStatus('aktif')}
@@ -118,7 +133,7 @@ export default function Margins() {
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                Active Only
+                Aktif Saja
               </button>
             </div>
           </div>
@@ -128,12 +143,15 @@ export default function Margins() {
       {/* Table Card */}
       <Card padding="none">
         <CardHeader className="p-6">
-          <CardTitle>All Margins</CardTitle>
-          <CardDescription>A list of all margin configurations for sales</CardDescription>
+          <CardTitle>Semua Margin</CardTitle>
+          <CardDescription>Daftar semua konfigurasi margin untuk penjualan</CardDescription>
         </CardHeader>
         <CardBody>
           <Table
-            data={margins}
+            data={margins.map(margin => ({
+              ...margin,
+              status: mapStatusToString(margin.status),
+            }))}
             columns={columns}
             onDelete={handleDelete}
             editPath="/margin/edit"

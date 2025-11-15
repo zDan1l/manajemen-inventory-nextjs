@@ -31,10 +31,10 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
           setNamaSatuan(data.nama_satuan);
           setStatus(data.status.toString());
         } else {
-          setError(data.error || 'Failed to fetch unit');
+          setError(data.error || 'Gagal memuat satuan');
         }
       } catch (err) {
-        setError('Failed to fetch unit');
+        setError('Gagal memuat satuan');
       } finally {
         setLoadingData(false);
       }
@@ -63,10 +63,10 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
         router.push('/satuan');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to update unit');
+        setError(data.error || 'Gagal memperbarui satuan');
       }
     } catch (err) {
-      setError('Failed to update unit');
+      setError('Gagal memperbarui satuan');
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">Loading unit data...</p>
+          <p className="mt-4 text-gray-600">Memuat...</p>
         </div>
       </div>
     );
@@ -85,13 +85,14 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Edit Unit</h1>
-        <p className="text-sm text-gray-600 mt-1">Update measurement unit information</p>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">Edit Satuan</h1>
+        <p className="text-white/90">Perbarui informasi satuan</p>
       </div>
 
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -99,20 +100,20 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Unit Information</CardTitle>
-            <CardDescription>Update the unit details below</CardDescription>
+            <CardTitle>Informasi Satuan</CardTitle>
+            <CardDescription>Masukkan detail untuk memperbarui satuan</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Unit Name" 
+                label="Nama Satuan" 
                 type="text" 
                 value={nama_satuan} 
                 onChange={(e) => setNamaSatuan(e.target.value)} 
                 required 
-                placeholder="e.g., Kilogram, Liter, Piece"
-                helper="Enter the measurement unit name"
+                placeholder="Contoh: Kilogram, Liter, Buah"
+                helper="Masukkan nama satuan pengukuran"
               />
 
               <SelectInput
@@ -120,21 +121,21 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 options={statusOptions}
-                placeholder="Select status"
+                placeholder="Pilih status"
                 required
-                helper="Choose whether this unit can be used"
+                helper="Pilih apakah satuan ini dapat digunakan"
               />
             </div>
           </CardBody>
           
           <CardFooter>
             <div className="flex gap-3">
-              <LinkButton href="/satuan" variant="outline">Cancel</LinkButton>
-              <Button type="submit" variant="primary" loading={loading} icon={
+              <LinkButton href="/satuan" variant="outline" size="lg">Batal</LinkButton>
+              <Button type="submit" variant="primary" size="lg" loading={loading} icon={
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-              }>Update Unit</Button>
+              }>Perbarui Satuan</Button>
             </div>
           </CardFooter>
         </form>

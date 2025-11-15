@@ -21,17 +21,17 @@ export default function Users() {
         setUsers(data);
         setError(null);
       } else {
-        setError((data as { error: string }).error || 'Failed to fetch users');
+        setError((data as { error: string }).error || 'Gagal memuat data pengguna');
       }
     } catch (err) {
-      setError('Failed to fetch users');
+      setError('Gagal memuat data pengguna');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
       try {
         const res = await fetch('/api/users', {
           method: 'DELETE',
@@ -42,10 +42,10 @@ export default function Users() {
           fetchUsers();
         } else {
           const data = await res.json();
-          setError(data.error || 'Failed to delete user');
+          setError(data.error || 'Gagal menghapus pengguna');
         }
       } catch (err) {
-        setError('Failed to delete user');
+        setError('Gagal menghapus pengguna');
       }
     }
   };
@@ -56,30 +56,39 @@ export default function Users() {
 
   const columns = [
     { key: 'iduser', label: 'ID' },
-    { key: 'username', label: 'Username' },
-    { key: 'role_name', label: 'Role' },
+    { key: 'username', label: 'Nama Pengguna' },
+    { key: 'role_name', label: 'Peran' },
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Users</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage system users and their roles</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 text-white">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">Manajemen Pengguna</h1>
+              <p className="text-teal-100 mt-1">Kelola pengguna sistem dan peran mereka</p>
+            </div>
+          </div>
+          <LinkButton href="/user/add" variant="secondary" size="lg" icon={
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          }>
+            Tambah Pengguna
+          </LinkButton>
         </div>
-        <LinkButton href="/user/add" variant="primary" icon={
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-        }>
-          Add User
-        </LinkButton>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}

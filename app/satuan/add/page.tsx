@@ -53,14 +53,23 @@ export default function AddSatuan() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Add Unit</h1>
-        <p className="text-sm text-gray-600 mt-1">Create a new measurement unit</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">Tambah Satuan</h1>
+            <p className="text-orange-100 mt-1">Buat satuan pengukuran baru</p>
+          </div>
+        </div>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -69,20 +78,20 @@ export default function AddSatuan() {
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Unit Information</CardTitle>
-            <CardDescription>Enter the details for the new unit</CardDescription>
+            <CardTitle>Informasi Satuan</CardTitle>
+            <CardDescription>Masukkan detail untuk satuan baru</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Unit Name" 
+                label="Nama Satuan" 
                 type="text" 
                 value={nama_satuan} 
                 onChange={(e) => setNamaSatuan(e.target.value)} 
                 required 
-                placeholder="e.g., Kilogram, Liter, Piece"
-                helper="Enter the measurement unit name"
+                placeholder="Contoh: Kilogram, Liter, Buah"
+                helper="Masukkan nama satuan pengukuran"
               />
 
               <SelectInput
@@ -90,9 +99,9 @@ export default function AddSatuan() {
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 options={statusOptions}
-                placeholder="Select status"
+                placeholder="Pilih status"
                 required
-                helper="Choose whether this unit can be used"
+                helper="Pilih apakah satuan ini dapat digunakan"
               />
             </div>
           </CardBody>
@@ -100,7 +109,7 @@ export default function AddSatuan() {
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/satuan" variant="outline">
-                Cancel
+                Batal
               </LinkButton>
               <Button 
                 type="submit" 
@@ -112,7 +121,7 @@ export default function AddSatuan() {
                   </svg>
                 }
               >
-                Save Unit
+                Simpan
               </Button>
             </div>
           </CardFooter>

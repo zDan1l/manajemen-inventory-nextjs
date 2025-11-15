@@ -29,10 +29,10 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
           setUsername(data.username);
           setIdrole(data.idrole ? data.idrole.toString() : '');
         } else {
-          setError(data.error || 'Failed to fetch user');
+          setError(data.error || 'Gagal memuat pengguna');
         }
       } catch (err) {
-        setError('Failed to fetch user');
+        setError('Gagal memuat pengguna');
       }
     };
 
@@ -43,10 +43,10 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
         if (res.ok) {
           setRoles(data);
         } else {
-          setError(data.error || 'Failed to fetch roles');
+          setError(data.error || 'Gagal memuat peran');
         }
       } catch (err) {
-        setError('Failed to fetch roles');
+        setError('Gagal memuat peran');
       } finally {
         setLoadingData(false);
       }
@@ -77,10 +77,10 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
         router.push('/user');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to update user');
+        setError(data.error || 'Gagal memperbarui pengguna');
       }
     } catch (err) {
-      setError('Failed to update user');
+      setError('Gagal memperbarui pengguna');
     } finally {
       setLoading(false);
     }
@@ -96,7 +96,7 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">Loading user data...</p>
+          <p className="mt-4 text-gray-600">Memuat...</p>
         </div>
       </div>
     );
@@ -105,14 +105,14 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Edit User</h1>
-        <p className="text-sm text-gray-600 mt-1">Update user account information</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">Edit Pengguna</h1>
+        <p className="text-white/90">Perbarui informasi pengguna</p>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -121,50 +121,51 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>User Information</CardTitle>
-            <CardDescription>Update the user details below</CardDescription>
+            <CardTitle>Informasi Pengguna</CardTitle>
+            <CardDescription>Masukkan detail untuk memperbarui pengguna</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Username" 
+                label="Nama Pengguna" 
                 type="text" 
                 value={username} 
                 onChange={(e) => setUsername(e.target.value)} 
                 required 
-                placeholder="Enter username"
-                helper="Username must be unique"
+                placeholder="Masukkan nama pengguna"
+                helper="Nama pengguna harus unik"
               />
               
               <FormInput
-                label="Password"
+                label="Kata Sandi Baru"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Leave blank to keep current password"
-                helper="Only fill if you want to change the password"
+                placeholder="Biarkan kosong untuk tetap menggunakan kata sandi saat ini"
+                helper="Isi hanya jika ingin mengubah kata sandi"
               />
               
               <SelectInput
-                label="Role"
+                label="Peran"
                 value={idrole}
                 onChange={(e) => setIdrole(e.target.value)}
                 options={roleOptions}
-                placeholder="Select a role (Optional)"
-                helper="Assign a role to this user"
+                placeholder="Pilih peran (Opsional)"
+                helper="Tetapkan peran untuk pengguna ini"
               />
             </div>
           </CardBody>
           
           <CardFooter>
             <div className="flex gap-3">
-              <LinkButton href="/user" variant="outline">
-                Cancel
+              <LinkButton href="/user" variant="outline" size="lg">
+                Batal
               </LinkButton>
               <Button 
                 type="submit" 
                 variant="primary" 
+                size="lg"
                 loading={loading}
                 icon={
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,7 +173,7 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
                   </svg>
                 }
               >
-                Update User
+                Perbarui Pengguna
               </Button>
             </div>
           </CardFooter>

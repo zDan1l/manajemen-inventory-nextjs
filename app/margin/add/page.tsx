@@ -31,10 +31,10 @@ export default function AddMargin() {
         if (res.ok) {
           setUser(data);
         } else {
-          setError(data.error || 'Failed to fetch users');
+          setError(data.error || 'Gagal memuat data pengguna');
         }
       } catch (err) {
-        setError('Failed to fetch users');
+        setError('Gagal memuat data pengguna');
       }
     };
     fetchUser();
@@ -60,10 +60,10 @@ export default function AddMargin() {
         router.push('/margin');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to add margin');
+        setError(data.error || 'Gagal menambahkan margin');
       }
     } catch (err) {
-      setError('Failed to add margin');
+      setError('Gagal menambahkan margin');
     } finally {
       setLoading(false);
     }
@@ -77,14 +77,23 @@ export default function AddMargin() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Add Margin</h1>
-        <p className="text-sm text-gray-600 mt-1">Create a new sales margin configuration</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">Tambah Margin</h1>
+            <p className="text-pink-100 mt-1">Buat konfigurasi margin penjualan baru</p>
+          </div>
+        </div>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -93,33 +102,33 @@ export default function AddMargin() {
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Margin Information</CardTitle>
-            <CardDescription>Enter the details for the new margin configuration</CardDescription>
+            <CardTitle>Informasi Margin</CardTitle>
+            <CardDescription>Masukkan detail untuk konfigurasi margin baru</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Percentage" 
+                label="Persentase" 
                 type="number" 
                 value={persen} 
                 onChange={(e) => setPersen(e.target.value)} 
                 required 
-                placeholder="Enter percentage"
-                helper="Margin percentage (e.g., 10 for 10%)"
+                placeholder="Masukkan persentase"
+                helper="Persentase margin (contoh: 10 untuk 10%)"
                 step="0.01"
                 min="0"
                 max="100"
               />
 
               <SelectInput
-                label="User"
+                label="Pengguna"
                 value={iduser}
                 onChange={(e) => setIduser(e.target.value)}
                 options={userOptions}
-                placeholder="Select user"
+                placeholder="Pilih pengguna"
                 required
-                helper="User who created this margin"
+                helper="Pengguna yang membuat margin ini"
               />
 
               <SelectInput
@@ -127,9 +136,9 @@ export default function AddMargin() {
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 options={statusOptions}
-                placeholder="Select status"
+                placeholder="Pilih status"
                 required
-                helper="Whether this margin is currently in use"
+                helper="Apakah margin ini sedang digunakan"
               />
             </div>
           </CardBody>
@@ -137,7 +146,7 @@ export default function AddMargin() {
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/margin" variant="outline">
-                Cancel
+                Batal
               </LinkButton>
               <Button 
                 type="submit" 
@@ -149,7 +158,7 @@ export default function AddMargin() {
                   </svg>
                 }
               >
-                Save Margin
+                Simpan
               </Button>
             </div>
           </CardFooter>

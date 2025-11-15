@@ -27,17 +27,17 @@ export default function Vendors() {
         setVendors(data);
         setError(null);
       } else {
-        setError((data as { error: string }).error || 'Failed to fetch vendors');
+        setError((data as { error: string }).error || 'Gagal memuat data vendor');
       }
     } catch (err) {
-      setError('Network error: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      setError('Kesalahan jaringan: ' + (err instanceof Error ? err.message : 'Kesalahan tidak diketahui'));
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this vendor?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus vendor ini?')) {
       try {
         const res = await fetch('/api/vendors', {
           method: 'DELETE',
@@ -48,10 +48,10 @@ export default function Vendors() {
           fetchVendor(statusFilter);
         } else {
           const data = await res.json();
-          setError(data.error || 'Failed to delete vendor');
+          setError(data.error || 'Gagal menghapus vendor');
         }
       } catch (err) {
-        setError('Failed to delete vendor');
+        setError('Gagal menghapus vendor');
       }
     }
   };
@@ -65,33 +65,63 @@ export default function Vendors() {
     fetchVendor('all');
   }, []);
 
+  // Helper functions to map codes to readable strings
+  const mapStatusToString = (status: number | string) => {
+    const numStatus = typeof status === 'string' ? parseInt(status) : status;
+    return numStatus === 1 ? 'Aktif' : 'Tidak Aktif';
+  };
+
+  const mapBadanHukumToString = (badanHukum: string) => {
+    switch (badanHukum) {
+      case 'P':
+        return 'PT (Perseroan Terbatas)';
+      case 'C':
+        return 'CV (Commanditaire Vennootschap)';
+      case 'F':
+        return 'Firma';
+      case 'K':
+        return 'Koperasi';
+      default:
+        return badanHukum;
+    }
+  };
+
   const columns = [
     { key: 'idvendor', label: 'ID' },
-    { key: 'nama_vendor', label: 'Vendor Name' },
-    { key: 'badan_hukum', label: 'Legal Entity' },
+    { key: 'nama_vendor', label: 'Nama Vendor' },
+    { key: 'badan_hukum', label: 'Badan Hukum' },
     { key: 'status', label: 'Status' },
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Vendors</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage vendor information and contracts</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 text-white">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">Manajemen Vendor</h1>
+              <p className="text-green-100 mt-1">Kelola informasi vendor dan kontrak</p>
+            </div>
+          </div>
+          <LinkButton href="/vendor/add" variant="secondary" size="lg" icon={
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          }>
+            Tambah Vendor
+          </LinkButton>
         </div>
-        <LinkButton href="/vendor/add" variant="primary" icon={
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-        }>
-          Add Vendor
-        </LinkButton>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -100,7 +130,7 @@ export default function Vendors() {
       <Card>
         <CardBody>
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-700">Filter by Status:</span>
+            <span className="text-sm font-medium text-gray-700">Filter berdasarkan Status:</span>
             <div className="flex gap-2">
               <button
                 onClick={() => filterByStatus('all')}
@@ -110,7 +140,7 @@ export default function Vendors() {
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                All
+                Semua
               </button>
               <button
                 onClick={() => filterByStatus('aktif')}
@@ -120,7 +150,7 @@ export default function Vendors() {
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                Active Only
+                Aktif Saja
               </button>
             </div>
           </div>
@@ -130,12 +160,16 @@ export default function Vendors() {
       {/* Table Card */}
       <Card padding="none">
         <CardHeader className="p-6">
-          <CardTitle>All Vendors</CardTitle>
-          <CardDescription>A list of all vendors with their contract status</CardDescription>
+          <CardTitle>Semua Vendor</CardTitle>
+          <CardDescription>Daftar semua vendor dengan status kontrak mereka</CardDescription>
         </CardHeader>
         <CardBody>
           <Table
-            data={vendors}
+            data={vendors.map(vendor => ({
+              ...vendor,
+              status: mapStatusToString(vendor.status),
+              badan_hukum: mapBadanHukumToString(vendor.badan_hukum),
+            }))}
             columns={columns}
             onDelete={handleDelete}
             editPath="/vendor/edit"

@@ -32,10 +32,10 @@ export default function AddBarang() {
         if (res.ok) {
           setSatuans(data);
         } else {
-          setError(data.error || 'Failed to fetch units');
+          setError(data.error || 'Gagal memuat data satuan');
         }
       } catch (err) {
-        setError('Failed to fetch units');
+        setError('Gagal memuat data satuan');
       }
     };
     fetchSatuans();
@@ -62,10 +62,10 @@ export default function AddBarang() {
         router.push('/barang');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to add item');
+        setError(data.error || 'Gagal menambahkan barang');
       }
     } catch (err) {
-      setError('Failed to add item');
+      setError('Gagal menambahkan barang');
     } finally {
       setLoading(false);
     }
@@ -79,14 +79,23 @@ export default function AddBarang() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Add Item</h1>
-        <p className="text-sm text-gray-600 mt-1">Create a new inventory item</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">Tambah Barang</h1>
+            <p className="text-blue-100 mt-1">Buat item inventori baru</p>
+          </div>
+        </div>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -95,40 +104,40 @@ export default function AddBarang() {
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Item Information</CardTitle>
-            <CardDescription>Enter the details for the new inventory item</CardDescription>
+            <CardTitle>Informasi Barang</CardTitle>
+            <CardDescription>Masukkan detail untuk item inventori baru</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Item Name" 
+                label="Nama Barang" 
                 type="text" 
                 value={nama} 
                 onChange={(e) => setNama(e.target.value)} 
                 required 
-                placeholder="Enter item name"
-                helper="A descriptive name for the item"
+                placeholder="Masukkan nama barang"
+                helper="Nama deskriptif untuk barang"
               />
 
               <FormInput 
-                label="Item Type" 
+                label="Jenis Barang" 
                 type="text" 
                 value={jenis} 
                 onChange={(e) => setJenis(e.target.value)} 
                 required 
-                placeholder="e.g., A, B, C"
-                helper="Classification or category code"
+                placeholder="Contoh: A, B, C"
+                helper="Kode klasifikasi atau kategori"
               />
 
               <SelectInput
-                label="Unit"
+                label="Satuan"
                 value={idsatuan}
                 onChange={(e) => setIdSatuan(e.target.value)}
                 options={satuanOptions}
-                placeholder="Select measurement unit"
+                placeholder="Pilih satuan pengukuran"
                 required
-                helper="Choose the unit of measurement"
+                helper="Pilih satuan pengukuran"
               />
 
               <SelectInput
@@ -136,9 +145,9 @@ export default function AddBarang() {
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 options={statusOptions}
-                placeholder="Select condition"
+                placeholder="Pilih kondisi"
                 required
-                helper="Current condition of the item"
+                helper="Kondisi barang saat ini"
               />
             </div>
           </CardBody>
@@ -146,7 +155,7 @@ export default function AddBarang() {
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/barang" variant="outline">
-                Cancel
+                Batal
               </LinkButton>
               <Button 
                 type="submit" 
@@ -158,7 +167,7 @@ export default function AddBarang() {
                   </svg>
                 }
               >
-                Save Item
+                Simpan
               </Button>
             </div>
           </CardFooter>

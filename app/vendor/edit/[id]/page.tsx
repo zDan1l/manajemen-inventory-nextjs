@@ -38,10 +38,10 @@ export default function EditVendor({ params }: { params: Promise<{ id: string }>
           setBadanHukum(data.badan_hukum);
           setStatus(data.status);
         } else {
-          setError(data.error || 'Failed to fetch vendor');
+          setError(data.error || 'Gagal memuat vendor');
         }
       } catch (err) {
-        setError('Failed to fetch vendor');
+        setError('Gagal memuat vendor');
       } finally {
         setLoadingData(false);
       }
@@ -71,10 +71,10 @@ export default function EditVendor({ params }: { params: Promise<{ id: string }>
         router.push('/vendor');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to update vendor');
+        setError(data.error || 'Gagal memperbarui vendor');
       }
     } catch (err) {
-      setError('Failed to update vendor');
+      setError('Gagal memperbarui vendor');
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ export default function EditVendor({ params }: { params: Promise<{ id: string }>
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">Loading vendor data...</p>
+          <p className="mt-4 text-gray-600">Memuat...</p>
         </div>
       </div>
     );
@@ -93,13 +93,14 @@ export default function EditVendor({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Edit Vendor</h1>
-        <p className="text-sm text-gray-600 mt-1">Update vendor information</p>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">Edit Vendor</h1>
+        <p className="text-white/90">Perbarui informasi vendor</p>
       </div>
 
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -107,52 +108,52 @@ export default function EditVendor({ params }: { params: Promise<{ id: string }>
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Vendor Information</CardTitle>
-            <CardDescription>Update the vendor details below</CardDescription>
+            <CardTitle>Informasi Vendor</CardTitle>
+            <CardDescription>Masukkan detail untuk memperbarui vendor</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Vendor Name" 
+                label="Nama Vendor" 
                 type="text" 
                 value={namaVendor} 
                 onChange={(e) => setNamaVendor(e.target.value)} 
                 required 
-                placeholder="Enter vendor name"
-                helper="The official name of the vendor or supplier"
+                placeholder="Masukkan nama vendor"
+                helper="Nama resmi vendor atau pemasok"
               />
 
               <SelectInput
-                label="Legal Entity"
+                label="Badan Hukum"
                 value={badanHukum}
                 onChange={(e) => setBadanHukum(e.target.value)}
                 options={badanHukumOptions}
-                placeholder="Select legal entity status"
+                placeholder="Pilih status badan hukum"
                 required
-                helper="Whether the vendor is a registered legal entity"
+                helper="Apakah vendor terdaftar sebagai badan hukum"
               />
 
               <SelectInput
-                label="Contract Status"
+                label="Status"
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 options={statusOptions}
-                placeholder="Select contract status"
+                placeholder="Pilih status kontrak"
                 required
-                helper="Current contractual relationship with the vendor"
+                helper="Hubungan kontrak saat ini dengan vendor"
               />
             </div>
           </CardBody>
           
           <CardFooter>
             <div className="flex gap-3">
-              <LinkButton href="/vendor" variant="outline">Cancel</LinkButton>
-              <Button type="submit" variant="primary" loading={loading} icon={
+              <LinkButton href="/vendor" variant="outline" size="lg">Batal</LinkButton>
+              <Button type="submit" variant="primary" size="lg" loading={loading} icon={
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-              }>Update Vendor</Button>
+              }>Perbarui Vendor</Button>
             </div>
           </CardFooter>
         </form>

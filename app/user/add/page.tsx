@@ -27,10 +27,10 @@ export default function AddUser() {
         if (res.ok) {
           setRoles(data);
         } else {
-          setError(data.error || 'Failed to fetch roles');
+          setError(data.error || 'Gagal memuat data peran');
         }
       } catch (err) {
-        setError('Failed to fetch roles');
+        setError('Gagal memuat data peran');
       }
     };
     fetchRoles();
@@ -51,10 +51,10 @@ export default function AddUser() {
         router.push('/user');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to add user');
+        setError(data.error || 'Gagal menambahkan pengguna');
       }
     } catch (err) {
-      setError('Failed to add user');
+      setError('Gagal menambahkan pengguna');
     } finally {
       setLoading(false);
     }
@@ -68,14 +68,23 @@ export default function AddUser() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Add User</h1>
-        <p className="text-sm text-gray-600 mt-1">Create a new user account</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Tambah Pengguna</h1>
+            <p className="text-teal-100">Buat akun pengguna baru</p>
+          </div>
+        </div>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -84,51 +93,52 @@ export default function AddUser() {
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>User Information</CardTitle>
-            <CardDescription>Enter the details for the new user</CardDescription>
+            <CardTitle>Informasi Pengguna</CardTitle>
+            <CardDescription>Masukkan detail untuk pengguna baru</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Username" 
+                label="Nama Pengguna" 
                 type="text" 
                 value={username} 
                 onChange={(e) => setUsername(e.target.value)} 
                 required 
-                placeholder="Enter username"
-                helper="Choose a unique username"
+                placeholder="Masukkan nama pengguna"
+                helper="Pilih nama pengguna yang unik"
               />
               
               <FormInput 
-                label="Password" 
+                label="Kata Sandi" 
                 type="password" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
                 required 
-                placeholder="Enter password"
-                helper="Minimum 6 characters recommended"
+                placeholder="Masukkan kata sandi"
+                helper="Minimal 6 karakter untuk keamanan"
               />
               
               <SelectInput
-                label="Role"
+                label="Peran"
                 value={idrole}
                 onChange={(e) => setIdrole(e.target.value)}
                 options={roleOptions}
-                placeholder="Select a role (Optional)"
-                helper="Assign a role to this user"
+                placeholder="Pilih peran pengguna"
+                helper="Tentukan tingkat akses pengguna"
               />
             </div>
           </CardBody>
           
           <CardFooter>
             <div className="flex gap-3">
-              <LinkButton href="/user" variant="outline">
-                Cancel
+              <LinkButton href="/user" variant="outline" size="lg">
+                Batal
               </LinkButton>
               <Button 
                 type="submit" 
-                variant="primary" 
+                variant="primary"
+                size="lg"
                 loading={loading}
                 icon={
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,7 +146,7 @@ export default function AddUser() {
                   </svg>
                 }
               >
-                Save User
+                Simpan Pengguna
               </Button>
             </div>
           </CardFooter>

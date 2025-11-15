@@ -37,10 +37,10 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
           setJenis(data.jenis);
           setStatus(data.status.toString());
         } else {
-          setError(data.error || 'Failed to fetch item');
+          setError(data.error || 'Gagal memuat barang');
         }
       } catch (err) {
-        setError('Failed to fetch item');
+        setError('Gagal memuat barang');
       }
     };
 
@@ -51,10 +51,10 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
         if (res.ok) {
           setSatuans(data);
         } else {
-          setError(data.error || 'Failed to fetch units');
+          setError(data.error || 'Gagal memuat satuan');
         }
       } catch (err) {
-        setError('Failed to fetch units');
+        setError('Gagal memuat satuan');
       } finally {
         setLoadingData(false);
       }
@@ -86,10 +86,10 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
         router.push('/barang');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to update item');
+        setError(data.error || 'Gagal memperbarui barang');
       }
     } catch (err) {
-      setError('Failed to update item');
+      setError('Gagal memperbarui barang');
     } finally {
       setLoading(false);
     }
@@ -105,7 +105,7 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">Loading item data...</p>
+          <p className="mt-4 text-gray-600">Memuat...</p>
         </div>
       </div>
     );
@@ -113,13 +113,14 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Edit Item</h1>
-        <p className="text-sm text-gray-600 mt-1">Update inventory item information</p>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">Edit Barang</h1>
+        <p className="text-white/90">Perbarui informasi barang</p>
       </div>
 
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -127,40 +128,40 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Item Information</CardTitle>
-            <CardDescription>Update the item details below</CardDescription>
+            <CardTitle>Informasi Barang</CardTitle>
+            <CardDescription>Masukkan detail untuk memperbarui barang</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Item Name" 
+                label="Nama Barang" 
                 type="text" 
                 value={nama} 
                 onChange={(e) => setNama(e.target.value)} 
                 required 
-                placeholder="Enter item name"
-                helper="A descriptive name for the item"
+                placeholder="Masukkan nama barang"
+                helper="Nama deskriptif untuk barang"
               />
 
               <FormInput 
-                label="Item Type" 
+                label="Jenis" 
                 type="text" 
                 value={jenis} 
                 onChange={(e) => setJenis(e.target.value)} 
                 required 
-                placeholder="e.g., A, B, C"
-                helper="Classification or category code"
+                placeholder="Contoh: A, B, C"
+                helper="Kode klasifikasi atau kategori"
               />
 
               <SelectInput
-                label="Unit"
+                label="Satuan"
                 value={idsatuan}
                 onChange={(e) => setIdSatuan(e.target.value)}
                 options={satuanOptions}
-                placeholder="Select measurement unit"
+                placeholder="Pilih satuan pengukuran"
                 required
-                helper="Choose the unit of measurement"
+                helper="Pilih satuan pengukuran"
               />
 
               <SelectInput
@@ -168,21 +169,21 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 options={statusOptions}
-                placeholder="Select condition"
+                placeholder="Pilih kondisi"
                 required
-                helper="Current condition of the item"
+                helper="Kondisi barang saat ini"
               />
             </div>
           </CardBody>
           
           <CardFooter>
             <div className="flex gap-3">
-              <LinkButton href="/barang" variant="outline">Cancel</LinkButton>
-              <Button type="submit" variant="primary" loading={loading} icon={
+              <LinkButton href="/barang" variant="outline" size="lg">Batal</LinkButton>
+              <Button type="submit" variant="primary" size="lg" loading={loading} icon={
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-              }>Update Item</Button>
+              }>Perbarui Barang</Button>
             </div>
           </CardFooter>
         </form>

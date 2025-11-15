@@ -294,7 +294,7 @@ export default function Dashboard() {
                     <div key={idx} className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
                       isIncoming 
                         ? 'bg-gradient-to-r from-teal-50/50 to-transparent border-teal-100 hover:border-[#00A69F]' 
-                        : 'bg-gradient-to-r from-orange-50/50 to-transparent border-orange-100 hover:border-orange-300'
+                        : 'bg-gradient-to-r from-red-50/50 to-transparent border-red-100 hover:border-red-300'
                     }`}>
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${

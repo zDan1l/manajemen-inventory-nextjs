@@ -95,38 +95,49 @@ export default function Margins() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-blue-200 border-2 border-black p-4">
-        <h1 className="text-xl font-bold uppercase text-black">Daftar Pengadaan</h1>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="p-4 bg-white/20 backdrop-blur-sm rounded-xl">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white">Manajemen Pengadaan</h1>
+            <p className="text-teal-100 mt-1">Kelola transaksi pengadaan barang dari vendor</p>
+          </div>
+        </div>
       </div>
 
       {/* Controls */}
-      <div className="bg-white border-2 border-black p-4">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
           <div className="flex gap-2">
-            <LinkButton href="/pengadaan/create" variant="primary" size="md">
+            <LinkButton href="/pengadaan/create" variant="primary" size="lg">
               Tambah Pengadaan
             </LinkButton>
           </div>
           
           <div className="w-full md:w-64">
-            <label className="block mb-2 text-sm font-bold uppercase text-black">
+            <label className="block mb-2 text-sm font-semibold text-gray-700">
               Filter Status
             </label>
             <div className="relative">
               <select
                 value={statusFilter}
                 onChange={(e) => filterByStatus(e.target.value)}
-                className="w-full p-3 border-2 border-black bg-white font-medium text-sm text-black focus:outline-none transition-colors duration-200 appearance-none cursor-pointer pr-10"
+                className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-xl bg-white font-medium text-sm text-gray-700 focus:outline-none focus:ring-4 focus:ring-[#00A69F]/10 focus:border-[#00A69F] transition-all duration-200 appearance-none cursor-pointer pr-10"
               >
-                <option value="all" className="bg-white text-black font-medium">Semua Status</option>
-                <option value="P" className="bg-white text-black font-medium">Diproses</option>
-                <option value="S" className="bg-white text-black font-medium">Sebagian</option>
-                <option value="C" className="bg-white text-black font-medium">Lengkap / Selesai</option>
-                <option value="B" className="bg-white text-black font-medium">Batal</option>
+                <option value="all">Semua Status</option>
+                <option value="P">Diproses</option>
+                <option value="S">Sebagian</option>
+                <option value="C">Lengkap / Selesai</option>
+                <option value="B">Batal</option>
               </select>
-              {/* Custom dropdown arrow */}
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black"></div>
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </div>
             </div>
           </div>

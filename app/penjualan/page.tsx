@@ -73,14 +73,24 @@ export default function PenjualanPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-blue-200 border-2 border-black p-4">
-        <h1 className="text-xl font-bold uppercase text-black">Daftar Penjualan</h1>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="p-4 bg-white/20 backdrop-blur-sm rounded-xl">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white">Manajemen Penjualan</h1>
+            <p className="text-teal-100 mt-1">Kelola transaksi penjualan barang kepada pelanggan</p>
+          </div>
+        </div>
       </div>
 
       {/* Controls */}
-      <div className="bg-white border-2 border-black p-4">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex gap-2">
-          <LinkButton href="/penjualan/add" variant="primary" size="md">
+          <LinkButton href="/penjualan/add" variant="primary" size="lg">
             Tambah Penjualan
           </LinkButton>
         </div>

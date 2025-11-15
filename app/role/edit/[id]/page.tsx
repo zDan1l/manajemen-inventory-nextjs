@@ -23,10 +23,10 @@ export default function EditRole({ params }: { params: Promise<{ id: string }> }
         if (res.ok) {
           setNamaRole(data.nama_role);
         } else {
-          setError(data.error || 'Failed to fetch role');
+          setError(data.error || 'Gagal memuat peran');
         }
       } catch (err) {
-        setError('Failed to fetch role');
+        setError('Gagal memuat peran');
       } finally {
         setLoadingData(false);
       }
@@ -51,10 +51,10 @@ export default function EditRole({ params }: { params: Promise<{ id: string }> }
         router.push('/role');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to update role');
+        setError(data.error || 'Gagal memperbarui peran');
       }
     } catch (err) {
-      setError('Failed to update role');
+      setError('Gagal memperbarui peran');
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ export default function EditRole({ params }: { params: Promise<{ id: string }> }
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">Loading role data...</p>
+          <p className="mt-4 text-gray-600">Memuat...</p>
         </div>
       </div>
     );
@@ -74,14 +74,14 @@ export default function EditRole({ params }: { params: Promise<{ id: string }> }
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Edit Role</h1>
-        <p className="text-sm text-gray-600 mt-1">Update role information</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">Edit Peran</h1>
+        <p className="text-white/90">Perbarui informasi peran</p>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -90,32 +90,33 @@ export default function EditRole({ params }: { params: Promise<{ id: string }> }
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Role Information</CardTitle>
-            <CardDescription>Update the role details below</CardDescription>
+            <CardTitle>Informasi Peran</CardTitle>
+            <CardDescription>Masukkan detail untuk memperbarui peran</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Role Name" 
+                label="Nama Peran" 
                 type="text" 
                 value={nama_role} 
                 onChange={(e) => setNamaRole(e.target.value)} 
                 required 
-                placeholder="Enter role name"
-                helper="A descriptive name for this role"
+                placeholder="Masukkan nama peran"
+                helper="Nama deskriptif untuk peran ini"
               />
             </div>
           </CardBody>
           
           <CardFooter>
             <div className="flex gap-3">
-              <LinkButton href="/role" variant="outline">
-                Cancel
+              <LinkButton href="/role" variant="outline" size="lg">
+                Batal
               </LinkButton>
               <Button 
                 type="submit" 
                 variant="primary" 
+                size="lg"
                 loading={loading}
                 icon={
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +124,7 @@ export default function EditRole({ params }: { params: Promise<{ id: string }> }
                   </svg>
                 }
               >
-                Update Role
+                Perbarui Peran
               </Button>
             </div>
           </CardFooter>

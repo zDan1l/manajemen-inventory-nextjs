@@ -21,8 +21,8 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
   const router = useRouter();
 
   const statusOptions = [
-    { value: 1, label: 'Active' },
-    { value: 0, label: 'Inactive' },
+    { value: 1, label: 'Aktif' },
+    { value: 0, label: 'Tidak Aktif' },
   ];
 
   useEffect(() => {
@@ -35,10 +35,10 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
           setIdUser(data.iduser.toString());
           setStatus(data.status.toString());
         } else {
-          setError(data.error || 'Failed to fetch margin');
+          setError(data.error || 'Gagal memuat margin');
         }
       } catch (err) {
-        setError('Failed to fetch margin');
+        setError('Gagal memuat margin');
       }
     };
 
@@ -49,10 +49,10 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
         if (res.ok) {
           setUsers(data);
         } else {
-          setError(data.error || 'Failed to fetch users');
+          setError(data.error || 'Gagal memuat pengguna');
         }
       } catch (err) {
-        setError('Failed to fetch users');
+        setError('Gagal memuat pengguna');
       } finally {
         setLoadingData(false);
       }
@@ -83,10 +83,10 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
         router.push('/margin');
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to update margin');
+        setError(data.error || 'Gagal memperbarui margin');
       }
     } catch (err) {
-      setError('Failed to update margin');
+      setError('Gagal memperbarui margin');
     } finally {
       setLoading(false);
     }
@@ -102,7 +102,7 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">Loading margin data...</p>
+          <p className="mt-4 text-gray-600">Memuat...</p>
         </div>
       </div>
     );
@@ -110,13 +110,14 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Edit Sales Margin</h1>
-        <p className="text-sm text-gray-600 mt-1">Update sales margin configuration</p>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">Edit Margin</h1>
+        <p className="text-white/90">Perbarui informasi margin penjualan</p>
       </div>
 
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -124,33 +125,33 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Margin Information</CardTitle>
-            <CardDescription>Update the margin details below</CardDescription>
+            <CardTitle>Informasi Margin</CardTitle>
+            <CardDescription>Masukkan detail untuk memperbarui margin</CardDescription>
           </CardHeader>
           
           <CardBody>
             <div className="space-y-6">
               <FormInput 
-                label="Margin Percentage" 
+                label="Persentase" 
                 type="number" 
                 value={persen} 
                 onChange={(e) => setPersen(e.target.value)} 
                 required 
-                placeholder="Enter percentage"
-                helper="Margin percentage (e.g., 10 for 10%)"
+                placeholder="Masukkan persentase"
+                helper="Persentase margin (contoh: 10 untuk 10%)"
                 step="0.01"
                 min="0"
                 max="100"
               />
 
               <SelectInput
-                label="User"
+                label="Pengguna"
                 value={iduser}
                 onChange={(e) => setIdUser(e.target.value)}
                 options={userOptions}
-                placeholder="Select user"
+                placeholder="Pilih pengguna"
                 required
-                helper="User responsible for this margin setting"
+                helper="Pengguna yang bertanggung jawab atas pengaturan margin ini"
               />
 
               <SelectInput
@@ -158,21 +159,21 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 options={statusOptions}
-                placeholder="Select status"
+                placeholder="Pilih status"
                 required
-                helper="Whether this margin is currently active"
+                helper="Apakah margin ini sedang aktif"
               />
             </div>
           </CardBody>
           
           <CardFooter>
             <div className="flex gap-3">
-              <LinkButton href="/margin" variant="outline">Cancel</LinkButton>
-              <Button type="submit" variant="primary" loading={loading} icon={
+              <LinkButton href="/margin" variant="outline" size="lg">Batal</LinkButton>
+              <Button type="submit" variant="primary" size="lg" loading={loading} icon={
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-              }>Update Margin</Button>
+              }>Perbarui Margin</Button>
             </div>
           </CardFooter>
         </form>

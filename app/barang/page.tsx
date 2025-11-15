@@ -28,17 +28,17 @@ export default function Barangs() {
         setBarangs(data);
         setError(null);
       } else {
-        setError((data as { error: string }).error || 'Failed to fetch items');
+        setError((data as { error: string }).error || 'Gagal memuat data barang');
       }
     } catch (err) {
-      setError('Failed to fetch items');
+      setError('Gagal memuat data barang');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this item?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus barang ini?')) {
       try {
         const res = await fetch('/api/barangs', {
           method: 'DELETE',
@@ -49,10 +49,10 @@ export default function Barangs() {
           fetchBarangs(statusFilter);
         } else {
           const data = await res.json();
-          setError(data.error || 'Failed to delete item');
+          setError(data.error || 'Gagal menghapus barang');
         }
       } catch (err) {
-        setError('Failed to delete item');
+        setError('Gagal menghapus barang');
       }
     }
   };
@@ -66,35 +66,65 @@ export default function Barangs() {
     fetchBarangs('all');
   }, []);
 
+  // Helper functions to map codes to readable strings
+  const mapStatusToString = (status: number | string) => {
+    const numStatus = typeof status === 'string' ? parseInt(status) : status;
+    return numStatus === 1 ? 'Aktif' : 'Tidak Aktif';
+  };
+
+  const mapJenisToString = (jenis: string) => {
+    switch (jenis) {
+      case 'A':
+        return 'Alat Tulis Kantor';
+      case 'B':
+        return 'Barang Cetakan';
+      case 'K':
+        return 'Komputer';
+      case 'M':
+        return 'Makanan & Minuman';
+      default:
+        return jenis;
+    }
+  };
+
   const columns = [
     { key: 'idbarang', label: 'ID' },
-    { key: 'nama', label: 'Item Name' },
-    { key: 'nama_satuan', label: 'Unit' },
-    { key: 'jenis', label: 'Type' },
-    { key: 'harga', label: 'Price' },
+    { key: 'nama', label: 'Nama Barang' },
+    { key: 'nama_satuan', label: 'Satuan' },
+    { key: 'jenis', label: 'Jenis' },
+    { key: 'harga', label: 'Harga' },
     { key: 'status', label: 'Status' },
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Items</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage inventory items and their details</p>
+      <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 text-white">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">Manajemen Barang</h1>
+              <p className="text-blue-100 mt-1">Kelola item inventori dan detailnya</p>
+            </div>
+          </div>
+          <LinkButton href="/barang/add" variant="secondary" size="lg" icon={
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          }>
+            Tambah Barang
+          </LinkButton>
         </div>
-        <LinkButton href="/barang/add" variant="primary" icon={
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-        }>
-          Add Item
-        </LinkButton>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Error" onClose={() => setError(null)}>
+        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -103,7 +133,7 @@ export default function Barangs() {
       <Card>
         <CardBody>
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-700">Filter by Status:</span>
+            <span className="text-sm font-medium text-gray-700">Filter berdasarkan Status:</span>
             <div className="flex gap-2">
               <button
                 onClick={() => handleFilterChange('all')}
@@ -113,7 +143,7 @@ export default function Barangs() {
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                All
+                Semua
               </button>
               <button
                 onClick={() => handleFilterChange('aktif')}
@@ -123,7 +153,7 @@ export default function Barangs() {
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                Active Only
+                Aktif Saja
               </button>
             </div>
           </div>
@@ -133,12 +163,16 @@ export default function Barangs() {
       {/* Table Card */}
       <Card padding="none">
         <CardHeader className="p-6">
-          <CardTitle>All Items</CardTitle>
-          <CardDescription>A complete list of inventory items with their details</CardDescription>
+          <CardTitle>Semua Barang</CardTitle>
+          <CardDescription>Daftar lengkap item inventori dengan detailnya</CardDescription>
         </CardHeader>
         <CardBody>
           <Table
-            data={barangs}
+            data={barangs.map(barang => ({
+              ...barang,
+              status: mapStatusToString(barang.status),
+              jenis: mapJenisToString(barang.jenis),
+            }))}
             columns={columns}
             onDelete={handleDelete}
             editPath="/barang/edit"

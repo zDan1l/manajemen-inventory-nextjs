@@ -78,6 +78,11 @@ const Sidebar = () => {
           href: '/pengadaan'
         },
         {
+          title: 'Penerimaan',
+          icon: FaWarehouse,
+          href: '/penerimaan'
+        },
+        {
           title: 'Retur',
           icon: MdKeyboardReturn,
           href: '/retur'
