@@ -9,6 +9,7 @@ import { FormInput } from '@/app/components/FormInput';
 import { Toast } from '@/app/components/Toast';
 import { useToast } from '@/app/hooks/useToast';
 import { formatCurrency } from '@/app/lib/utils/format';
+import { useAuth } from '@/app/context/AuthContext';
 
 interface DetailBreakdown {
   iddetail_pengadaan: number;
@@ -32,6 +33,7 @@ interface DetailInput {
 export default function AddPenerimaanPage() {
   const router = useRouter();
   const { toast, hideToast, success, error: showError, warning } = useToast();
+  const { user } = useAuth();
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,9 @@ export default function AddPenerimaanPage() {
   // STEP 2 - Input Detail Penerimaan
   const [breakdown, setBreakdown] = useState<DetailBreakdown[]>([]);
   const [details, setDetails] = useState<DetailInput[]>([]);
-  const [iduser, setIduser] = useState<number | null>(null);
+  
+  // Get iduser from logged in user
+  const iduser = user?.iduser || null;
 
   useEffect(() => {
     if (step === 1) {
@@ -445,15 +449,29 @@ export default function AddPenerimaanPage() {
               <h2 className="text-lg font-bold text-gray-900">Informasi Penerima</h2>
             </div>
             
-            <FormInput
-              label="ID User (Penerima)"
-              type="number"
-              value={iduser?.toString() || ''}
-              onChange={(e) => setIduser(e.target.value ? parseInt(e.target.value) : null)}
-              placeholder="Masukkan ID User yang menerima barang"
-              required
-              helper="ID user yang bertanggung jawab menerima barang ini"
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormInput
+                label="Penerima Barang"
+                type="text"
+                value={user?.username || ''}
+                onChange={() => {}} // Readonly, tidak bisa diubah
+                placeholder="Otomatis terisi dari user login"
+                disabled={true}
+                helper={`${user?.nama_role || 'Role'} - Otomatis terisi dari akun yang sedang login`}
+              />
+              
+              <div className="flex flex-col justify-center">
+                <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                  <svg className="w-8 h-8 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-semibold text-blue-900">Otomatis Terisi</p>
+                    <p className="text-xs text-blue-700 mt-0.5">Penerima barang terisi otomatis sesuai akun yang login</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Card>
 
           {/* Items Table Section */}

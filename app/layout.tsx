@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CRUD Penjualan - Sistem Manajemen",
+  title: "SIMAIN - Sistem Manajemen Inventori",
   description: "Sistem Manajemen Penjualan dengan kontrol admin",
 };
 
