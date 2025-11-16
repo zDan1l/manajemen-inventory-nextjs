@@ -1,29 +1,26 @@
-
-
-import { getRetur } from "@/app/lib/models/retur";
-import { Retur } from "@/app/lib/type";
-import { NextResponse } from "next/server";
+import { getRetur, createRetur } from "@/app/lib/models/retur";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   const result = await getRetur();
-  return NextResponse.json(result.error || result.data, { status: result.status });
+  return NextResponse.json(
+    result.error ? { status: result.status, error: result.error } : { status: result.status, data: result.data },
+    { status: result.status }
+  );
 }
 
-// export async function POST(request: Request){
-//     const body = await request.json();
-//     const result = await createMargin(body as Omit<Margin, 'idmargin_penjualan'>);
-//     console.log(result);
-//     return NextResponse.json(result.error || result.data, {status: result.status})
-// }
-
-// export async function PUT(request: Request){
-//     const body = await request.json();
-//     const result = await updateMargin(body as Margin);
-//     return NextResponse.json(result.error || result.data, {status: result.status})
-// }
-
-// export async function DELETE(request: Request){
-//     const { idmargin_penjualan } = await request.json();
-//     const result = await deleteMargin(idmargin_penjualan);
-//     return NextResponse.json(result.error || result.data, {status: result.status})
-// }
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const result = await createRetur(body);
+    return NextResponse.json(
+      result.error ? { status: result.status, error: result.error } : { status: result.status, data: result.data },
+      { status: result.status }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { status: 500, error: 'Invalid request body' },
+      { status: 500 }
+    );
+  }
+}

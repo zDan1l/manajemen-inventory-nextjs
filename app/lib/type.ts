@@ -186,6 +186,56 @@ export interface KartuStokDetail {
   created_at: string | Date;
 }
 
+// ========================================
+// RETUR INTERFACES
+// ========================================
+
+export interface Retur {
+  idretur: number;
+  created_at: string | Date;
+  idpenerimaan: number;
+  iduser: number;
+  username?: string;
+  idpengadaan?: number;
+  nama_vendor?: string;
+  total_items?: number;
+  total_qty_retur?: number;
+  total_nilai_retur?: number;
+}
+
+export interface DetailRetur {
+  iddetail_retur: number;
+  idretur: number;
+  iddetail_penerimaan: number;
+  jumlah: number;
+  alasan: string;
+  idbarang?: number;
+  nama_barang?: string;
+  nama_satuan?: string;
+  harga_satuan?: number;
+}
+
+export interface DetailPenerimaanForRetur {
+  iddetail_penerimaan: number;
+  idbarang: number;
+  nama: string;
+  nama_satuan: string;
+  jumlah_terima: number;
+  harga_satuan_terima: number;
+  jumlah_sudah_retur: number;
+  sisa_bisa_retur: number;
+  sub_total: number;
+}
+
+export interface DetailReturInput {
+  iddetail_penerimaan: number;
+  jumlah: number;
+  alasan: string;
+  nama_barang?: string;
+  nama_satuan?: string;
+  sisa_bisa_retur?: number;
+}
+
 export interface ApiResponse<T>{
     status: number;
     data?: T;
