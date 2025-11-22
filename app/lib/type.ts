@@ -116,6 +116,24 @@ export interface DetailPenerimaan {
   // Relations
   nama_barang?: string;
   nama_satuan?: string;
+  nama_vendor?: string;
+  idpengadaan?: number;
+  jumlah_sudah_retur?: number;
+  sisa_bisa_retur?: number;
+  total_nilai: number;
+}
+
+export interface PenerimaanDetail {
+  idpenerimaan: number;
+  created_at: string | Date;
+  status: string;
+  idpengadaan: number;
+  iduser: number;
+  username: string;
+  nama_vendor: string;
+  total_items: number;
+  total_nilai: number;
+  details: DetailPenerimaan[];
 }
 
 export interface Retur {

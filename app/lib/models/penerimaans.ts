@@ -7,7 +7,7 @@
 
 import { getDbConnection } from "@/app/lib/services/db";
 import { ApiResponse, Penerimaan, DetailPenerimaan } from "@/app/lib/type";
-import mysql from 'mysql2/promise';
+import mysql from "mysql2/promise";
 
 // ========================================
 // TYPE DEFINITIONS
@@ -45,7 +45,7 @@ export async function getPengadaanBelumLengkap(): Promise<ApiResponse<any[]>> {
   const db = await getDbConnection();
   try {
     const [pengadaans] = await db.execute(
-      'SELECT * FROM view_pengadaan_belum_lengkap'
+      "SELECT * FROM view_pengadaan_belum_lengkap"
     );
     return {
       status: 200,
@@ -54,7 +54,9 @@ export async function getPengadaanBelumLengkap(): Promise<ApiResponse<any[]>> {
   } catch (error) {
     return {
       status: 500,
-      error: `Failed to fetch pengadaan: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: `Failed to fetch pengadaan: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     };
   } finally {
     db.release();
@@ -70,7 +72,7 @@ export async function getDetailPenerimaanBreakdown(
   idpengadaan: number
 ): Promise<ApiResponse<PenerimaanBreakdown[]>> {
   if (!idpengadaan) {
-    return { status: 400, error: 'Missing pengadaan ID' };
+    return { status: 400, error: "Missing pengadaan ID" };
   }
 
   const db = await getDbConnection();
@@ -88,7 +90,9 @@ export async function getDetailPenerimaanBreakdown(
   } catch (error) {
     return {
       status: 500,
-      error: `Failed to fetch breakdown: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: `Failed to fetch breakdown: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     };
   } finally {
     db.release();
@@ -101,9 +105,7 @@ export async function getDetailPenerimaanBreakdown(
 export async function getPenerimaans(): Promise<ApiResponse<Penerimaan[]>> {
   const db = await getDbConnection();
   try {
-    const [penerimaans] = await db.execute(
-      `SELECT * from view_penerimaan`
-    );
+    const [penerimaans] = await db.execute(`SELECT * from view_penerimaan`);
     return {
       status: 200,
       data: penerimaans as Penerimaan[],
@@ -111,7 +113,9 @@ export async function getPenerimaans(): Promise<ApiResponse<Penerimaan[]>> {
   } catch (error) {
     return {
       status: 500,
-      error: `Failed to fetch penerimaans: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: `Failed to fetch penerimaans: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     };
   } finally {
     db.release();
@@ -125,26 +129,28 @@ export async function getPenerimaanById(
   idpenerimaan: number
 ): Promise<ApiResponse<Penerimaan>> {
   if (!idpenerimaan) {
-    return { status: 400, error: 'Missing penerimaan ID' };
+    return { status: 400, error: "Missing penerimaan ID" };
   }
 
   const db = await getDbConnection();
   try {
     const [penerimaans] = await db.execute(
-      `SELECT * FROM penerimaan WHERE idpenerimaan = ?`,
+      `SELECT * FROM view_penerimaan WHERE idpenerimaan = ?`,
       [idpenerimaan]
     );
 
     const penerima = (penerimaans as any[])[0];
     if (!penerima) {
-      return { status: 404, error: 'Penerimaan not found' };
+      return { status: 404, error: "Penerimaan not found" };
     }
 
     return { status: 200, data: penerima };
   } catch (error) {
     return {
       status: 500,
-      error: `Failed to fetch penerimaan: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: `Failed to fetch penerimaan: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     };
   } finally {
     db.release();
@@ -158,17 +164,13 @@ export async function getDetailPenerimaan(
   idpenerimaan: number
 ): Promise<ApiResponse<DetailPenerimaan[]>> {
   if (!idpenerimaan) {
-    return { status: 400, error: 'Missing penerimaan ID' };
+    return { status: 400, error: "Missing penerimaan ID" };
   }
 
   const db = await getDbConnection();
   try {
     const [details] = await db.execute(
-      `SELECT dpr.*, b.nama as nama_barang, s.nama_satuan
-       FROM detail_penerimaan dpr
-       LEFT JOIN barang b ON dpr.idbarang = b.idbarang
-       LEFT JOIN satuan s ON b.idsatuan = s.idsatuan
-       WHERE dpr.idpenerimaan = ?`,
+      `SELECT * FROM view_detail_penerimaan WHERE idpenerimaan = ?`,
       [idpenerimaan]
     );
 
@@ -176,7 +178,9 @@ export async function getDetailPenerimaan(
   } catch (error) {
     return {
       status: 500,
-      error: `Failed to fetch detail penerimaan: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: `Failed to fetch detail penerimaan: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     };
   } finally {
     db.release();
@@ -206,62 +210,66 @@ export async function createPenerimaan(data: {
   if (!data.idpengadaan || !data.iduser) {
     return {
       status: 400,
-      error: 'Missing required fields: idpengadaan, iduser',
+      error: "Missing required fields: idpengadaan, iduser",
     };
   }
 
   if (!data.details || data.details.length === 0) {
-    return { status: 400, error: 'At least one detail item is required' };
+    return { status: 400, error: "At least one detail item is required" };
   }
 
   // Validasi setiap detail
   for (const detail of data.details) {
-    if (!detail.idbarang || detail.jumlah_terima === undefined || detail.jumlah_terima === null || detail.harga_satuan_terima === undefined || detail.harga_satuan_terima === null) {
+    if (
+      !detail.idbarang ||
+      detail.jumlah_terima === undefined ||
+      detail.jumlah_terima === null ||
+      detail.harga_satuan_terima === undefined ||
+      detail.harga_satuan_terima === null
+    ) {
       return {
         status: 400,
-        error: 'Each detail must have: idbarang, jumlah_terima, harga_satuan_terima',
+        error:
+          "Each detail must have: idbarang, jumlah_terima, harga_satuan_terima",
       };
     }
 
     if (detail.jumlah_terima <= 0) {
-      return { status: 400, error: 'jumlah_terima must be > 0' };
+      return { status: 400, error: "jumlah_terima must be > 0" };
     }
   }
 
   const db = await getDbConnection();
 
   try {
-    console.log('=== CREATE PENERIMAAN START ===');
-    console.log('Input data:', JSON.stringify(data, null, 2));
+    console.log("=== CREATE PENERIMAAN START ===");
+    console.log("Input data:", JSON.stringify(data, null, 2));
 
     // Format details ke JSON
     const detailsJson = JSON.stringify(data.details);
-    console.log('Details JSON:', detailsJson);
-    console.log('Item count:', data.details.length);
+    console.log("Details JSON:", detailsJson);
+    console.log("Item count:", data.details.length);
 
     // Call SP dengan JSON array dan item count
     // Parameter: (idpengadaan, iduser, item_count, json_string, OUT idpenerimaan)
     try {
       const [result] = await db.execute(
-        'CALL sp_create_penerimaan(?, ?, ?, ?, @new_penerimaan_id)',
-        [
-          data.idpengadaan,
-          data.iduser,
-          data.details.length,
-          detailsJson,
-        ]
+        "CALL sp_create_penerimaan(?, ?, ?, ?, @new_penerimaan_id)",
+        [data.idpengadaan, data.iduser, data.details.length, detailsJson]
       );
 
       // Get ID penerimaan yang baru dibuat
-      const [idResult] = await db.execute('SELECT @new_penerimaan_id as idpenerimaan');
+      const [idResult] = await db.execute(
+        "SELECT @new_penerimaan_id as idpenerimaan"
+      );
       const idpenerimaan = (idResult as any)[0].idpenerimaan;
 
       if (!idpenerimaan || idpenerimaan === -1) {
-        console.error('❌ ID penerimaan is null/invalid');
-        throw new Error('Failed to create penerimaan');
+        console.error("❌ ID penerimaan is null/invalid");
+        throw new Error("Failed to create penerimaan");
       }
 
-      console.log('✅ PENERIMAAN CREATED SUCCESSFULLY!');
+      console.log("✅ PENERIMAAN CREATED SUCCESSFULLY!");
       console.log(`   ID: ${idpenerimaan}`);
       console.log(`   Items: ${data.details.length}`);
 
@@ -270,19 +278,21 @@ export async function createPenerimaan(data: {
         data: { idpenerimaan },
       };
     } catch (spError) {
-      console.error('❌ SP Error:', spError);
+      console.error("❌ SP Error:", spError);
       throw spError;
     }
   } catch (error) {
-    console.error('❌ ERROR in createPenerimaan:', error);
-    console.error('Error details:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
+    console.error("❌ ERROR in createPenerimaan:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,
     });
 
     return {
       status: 500,
-      error: `Failed to create penerimaan: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: `Failed to create penerimaan: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     };
   } finally {
     db.release();
@@ -297,28 +307,30 @@ export async function updateStatusPenerimaan(
   status: string
 ): Promise<ApiResponse<{ message: string }>> {
   if (!idpenerimaan || !status) {
-    return { status: 400, error: 'Missing idpenerimaan or status' };
+    return { status: 400, error: "Missing idpenerimaan or status" };
   }
 
   const db = await getDbConnection();
   try {
     const [result] = await db.execute(
-      'UPDATE penerimaan SET status = ? WHERE idpenerimaan = ?',
+      "UPDATE penerimaan SET status = ? WHERE idpenerimaan = ?",
       [status, idpenerimaan]
     );
 
     if ((result as mysql.ResultSetHeader).affectedRows === 0) {
-      return { status: 404, error: 'Penerimaan not found' };
+      return { status: 404, error: "Penerimaan not found" };
     }
 
     return {
       status: 200,
-      data: { message: 'Status updated successfully' },
+      data: { message: "Status updated successfully" },
     };
   } catch (error) {
     return {
       status: 500,
-      error: `Failed to update status: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: `Failed to update status: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     };
   } finally {
     db.release();

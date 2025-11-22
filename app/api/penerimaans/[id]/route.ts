@@ -1,4 +1,7 @@
-import { getPenerimaanById } from "@/app/lib/models/penerimaans";
+import {
+  getPenerimaanById,
+  getDetailPenerimaan,
+} from "@/app/lib/models/penerimaans";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -15,13 +18,38 @@ export async function GET(
       );
     }
 
-    const result = await getPenerimaanById(Number(id));
-    return NextResponse.json(result, { status: result.status });
+    // Get penerimaan header from view
+    const penerimaanResult = await getPenerimaanById(Number(id));
+    if (penerimaanResult.status !== 200 || !penerimaanResult.data) {
+      return NextResponse.json(penerimaanResult, {
+        status: penerimaanResult.status,
+      });
+    }
+
+    // Get detail items from view
+    const detailResult = await getDetailPenerimaan(Number(id));
+    if (detailResult.status !== 200) {
+      return NextResponse.json(detailResult, { status: detailResult.status });
+    }
+
+    // Combine header with details
+    return NextResponse.json(
+      {
+        status: 200,
+        data: {
+          ...penerimaanResult.data,
+          details: detailResult.data || [],
+        },
+      },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
       {
         status: 500,
-        error: `Failed to fetch penerimaan: ${error instanceof Error ? error.message : "Unknown error"}`,
+        error: `Failed to fetch penerimaan: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
       },
       { status: 500 }
     );

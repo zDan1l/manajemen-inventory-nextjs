@@ -93,7 +93,7 @@ export default function DetailPengadaan({
       </div>
     );
   }
-  console.log(pengadaan.details[0].nama_vendor);
+  console.log(pengadaan);
 
   return (
     <div className="space-y-6">
