@@ -25,6 +25,7 @@ export const barangSchema = z.object({
     jenis : z.string().max(100, 'Jenis barang terlalu panjang'),
     nama : z.string().max(100, 'Nama barang terlalu panjang'),
     status : z.number().max(1),
+    harga : z.number().min(0, 'Harga tidak boleh negatif'),
     created_at : z.string().optional(),
 })
 

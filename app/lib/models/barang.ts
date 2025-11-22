@@ -64,7 +64,7 @@ export async function getBarangById(id: number): Promise<ApiResponse<Barang>> {
 
 
 export async function createBarang(data: Omit<Barang, 'idbarang'>): Promise<ApiResponse<{ message: string }>> {
-  const parsed = barangSchema.safeParse({ jenis: data.jenis, nama : data.nama, status : data.status, idsatuan : data.idsatuan});
+  const parsed = barangSchema.safeParse({ jenis: data.jenis, nama : data.nama, status : data.status, idsatuan : data.idsatuan, harga: data.harga});
     if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -74,10 +74,10 @@ export async function createBarang(data: Omit<Barang, 'idbarang'>): Promise<ApiR
         }
     }
 
-  const { idsatuan, jenis, nama, status } = parsed.data;
+  const { idsatuan, jenis, nama, status, harga } = parsed.data;
   const db = await getDbConnection();
   try {
-    await db.execute('INSERT INTO barang (idsatuan, jenis, nama, status, created_at) VALUES (?, ?, ?, ?, now())', [idsatuan, jenis, nama, status]);
+    await db.execute('INSERT INTO barang (idsatuan, jenis, nama, status, harga, created_at) VALUES (?, ?, ?, ?, ?, now())', [idsatuan, jenis, nama, status, harga]);
     return { status: 201, data: { message: 'Barang created' } };
   } catch (error) {
     return { status: 500, error: `Failed to create Barang: ${error instanceof Error ? error.message : 'Unknown error'}` };
@@ -87,7 +87,7 @@ export async function createBarang(data: Omit<Barang, 'idbarang'>): Promise<ApiR
 }
 
 export async function updateBarang(data: Barang): Promise<ApiResponse<{ message: string }>> {
-  const parsed = barangSchema.safeParse({...data, jenis: data.jenis, nama : data.nama, status : Number(data.status)});
+  const parsed = barangSchema.safeParse({...data, jenis: data.jenis, nama : data.nama, status : Number(data.status), harga: Number(data.harga)});
   if (!parsed.success){
         const errorMessage = parsed.error.flatten().fieldErrors;
         const formattedErrors = Object.values(errorMessage).flat().join(',');
@@ -96,10 +96,10 @@ export async function updateBarang(data: Barang): Promise<ApiResponse<{ message:
             error : formattedErrors || 'Invalid pagination parameters'
         }
     }
-  const { idbarang, idsatuan, jenis, nama, status } = parsed.data;
+  const { idbarang, idsatuan, jenis, nama, status, harga } = parsed.data;
   const db = await getDbConnection();
   try {
-    const [result] = await db.execute('UPDATE barang SET idsatuan = ?, jenis = ?, nama = ?, status = ? WHERE idbarang = ?', [idsatuan, jenis, nama, status, idbarang]);
+    const [result] = await db.execute('UPDATE barang SET idsatuan = ?, jenis = ?, nama = ?, status = ?, harga = ? WHERE idbarang = ?', [idsatuan, jenis, nama, status, harga, idbarang]);
     if ((result as mysql.ResultSetHeader).affectedRows === 0) {
       return { status: 404, error: 'Barang not found' };
     }

@@ -15,6 +15,7 @@ export default function AddBarang() {
   const [idsatuan, setIdSatuan] = useState<string>('');
   const [jenis, setJenis] = useState<string>('');
   const [status, setStatus] = useState<string>('');
+  const [harga, setHarga] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -62,7 +63,8 @@ export default function AddBarang() {
           nama, 
           idsatuan: Number(idsatuan), 
           jenis, 
-          status: Number(status) 
+          status: Number(status),
+          harga: Number(harga)
         }),
       });
       
@@ -126,6 +128,18 @@ export default function AddBarang() {
                 required 
                 placeholder="Masukkan nama barang"
                 helper="Nama deskriptif untuk barang"
+              />
+
+              <FormInput 
+                label="Harga" 
+                type="number" 
+                value={harga} 
+                onChange={(e) => setHarga(e.target.value)} 
+                required 
+                placeholder="Masukkan harga barang"
+                helper="Harga satuan barang dalam Rupiah"
+                min="0"
+                step="0.01"
               />
 
               <SelectInput

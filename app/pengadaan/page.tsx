@@ -157,7 +157,7 @@ export default function Margins() {
         columns={columns}
         idKey="idpengadaan"
         isTransaction={true}
-        detailPath="/pengadaan/detail"
+        detailPath="/pengadaan"
       />
     </div>
   );

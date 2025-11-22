@@ -16,6 +16,7 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
   const [idsatuan, setIdSatuan] = useState<string>('');
   const [jenis, setJenis] = useState<string>('');
   const [status, setStatus] = useState<string>('');
+  const [harga, setHarga] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
@@ -44,6 +45,7 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
           setIdSatuan(data.idsatuan.toString());
           setJenis(data.jenis);
           setStatus(data.status.toString());
+          setHarga(data.harga.toString());
         } else {
           setError(data.error || 'Gagal memuat barang');
         }
@@ -86,7 +88,8 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
           nama, 
           idsatuan: Number(idsatuan), 
           jenis, 
-          status: Number(status) 
+          status: Number(status),
+          harga: Number(harga)
         }),
       });
       
@@ -150,6 +153,18 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
                 required 
                 placeholder="Masukkan nama barang"
                 helper="Nama deskriptif untuk barang"
+              />
+
+              <FormInput 
+                label="Harga" 
+                type="number" 
+                value={harga} 
+                onChange={(e) => setHarga(e.target.value)} 
+                required 
+                placeholder="Masukkan harga barang"
+                helper="Harga satuan barang dalam Rupiah"
+                min="0"
+                step="0.01"
               />
 
               <SelectInput
