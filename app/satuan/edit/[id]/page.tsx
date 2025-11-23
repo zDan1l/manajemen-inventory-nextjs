@@ -1,25 +1,36 @@
-'use client';
-import { useState, useEffect, use } from 'react';
-import { useRouter } from 'next/navigation';
-import { FormInput } from '@/app/components/FormInput';
-import { SelectInput } from '@/app/components/SelectInput';
-import { Button } from '@/app/components/Button';
-import { LinkButton } from '@/app/components/LinkButton';
-import { Alert } from '@/app/components/Alert';
-import { Card, CardHeader, CardTitle, CardDescription, CardBody, CardFooter } from '@/app/components/Card';
+"use client";
+import { useState, useEffect, use } from "react";
+import { useRouter } from "next/navigation";
+import { FormInput } from "@/app/components/FormInput";
+import { SelectInput } from "@/app/components/SelectInput";
+import { Button } from "@/app/components/Button";
+import { LinkButton } from "@/app/components/LinkButton";
+import { Alert } from "@/app/components/Alert";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardBody,
+  CardFooter,
+} from "@/app/components/Card";
 
-export default function EditSatuan({ params }: { params: Promise<{ id: string }> }) {
+export default function EditSatuan({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = use(params);
-  const [nama_satuan, setNamaSatuan] = useState<string>('');
-  const [status, setStatus] = useState<string>('');
+  const [nama_satuan, setNamaSatuan] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const router = useRouter();
 
   const statusOptions = [
-    { value: 0, label: 'Tidak Bisa Dipakai' },
-    { value: 1, label: 'Bisa Dipakai' },
+    { value: "1", label: "Aktif" },
+    { value: "0", label: "Tidak Aktif" },
   ];
 
   useEffect(() => {
@@ -31,10 +42,10 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
           setNamaSatuan(data.nama_satuan);
           setStatus(data.status.toString());
         } else {
-          setError(data.error || 'Gagal memuat satuan');
+          setError(data.error || "Gagal memuat satuan");
         }
       } catch (err) {
-        setError('Gagal memuat satuan');
+        setError("Gagal memuat satuan");
       } finally {
         setLoadingData(false);
       }
@@ -49,24 +60,24 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
     setError(null);
 
     try {
-      const res = await fetch('/api/satuans', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          idsatuan: Number(id), 
-          nama_satuan, 
-          status: Number(status) 
+      const res = await fetch("/api/satuans", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idsatuan: Number(id),
+          nama_satuan,
+          status: Number(status),
         }),
       });
-      
+
       if (res.ok) {
-        router.push('/satuan');
+        router.push("/satuan");
       } else {
         const data = await res.json();
-        setError(data.error || 'Gagal memperbarui satuan');
+        setError(data.error || "Gagal memperbarui satuan");
       }
     } catch (err) {
-      setError('Gagal memperbarui satuan');
+      setError("Gagal memperbarui satuan");
     } finally {
       setLoading(false);
     }
@@ -92,7 +103,11 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
       </div>
 
       {error && (
-        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
+        <Alert
+          variant="danger"
+          title="Kesalahan"
+          onClose={() => setError(null)}
+        >
           {error}
         </Alert>
       )}
@@ -101,17 +116,19 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Informasi Satuan</CardTitle>
-            <CardDescription>Masukkan detail untuk memperbarui satuan</CardDescription>
+            <CardDescription>
+              Masukkan detail untuk memperbarui satuan
+            </CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Nama Satuan" 
-                type="text" 
-                value={nama_satuan} 
-                onChange={(e) => setNamaSatuan(e.target.value)} 
-                required 
+              <FormInput
+                label="Nama Satuan"
+                type="text"
+                value={nama_satuan}
+                onChange={(e) => setNamaSatuan(e.target.value)}
+                required
                 placeholder="Contoh: Kilogram, Liter, Buah"
                 helper="Masukkan nama satuan pengukuran"
               />
@@ -123,19 +140,39 @@ export default function EditSatuan({ params }: { params: Promise<{ id: string }>
                 options={statusOptions}
                 placeholder="Pilih status"
                 required
-                helper="Pilih apakah satuan ini dapat digunakan"
+                helper="Status penggunaan satuan"
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
-              <LinkButton href="/satuan" variant="outline" size="lg">Batal</LinkButton>
-              <Button type="submit" variant="primary" size="lg" loading={loading} icon={
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              }>Perbarui Satuan</Button>
+              <LinkButton href="/satuan" variant="outline" size="lg">
+                Batal
+              </LinkButton>
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                loading={loading}
+                icon={
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                }
+              >
+                Perbarui Satuan
+              </Button>
             </div>
           </CardFooter>
         </form>

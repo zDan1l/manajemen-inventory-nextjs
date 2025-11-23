@@ -1,13 +1,23 @@
-'use client';
-import { useEffect, useState, use } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '@/app/components/Card';
-import { LinkButton } from '@/app/components/LinkButton';
-import { Alert } from '@/app/components/Alert';
-import { formatCurrency, formatDate } from '@/app/lib/utils/format';
-import { PenjualanDetail } from '@/app/lib/type';
+"use client";
+import { useEffect, useState, use } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardBody,
+} from "@/app/components/Card";
+import { LinkButton } from "@/app/components/LinkButton";
+import { Alert } from "@/app/components/Alert";
+import { formatCurrency, formatDate } from "@/app/lib/utils/format";
+import { PenjualanDetail } from "@/app/lib/type";
 
-export default function DetailPenjualan({ params }: { params: Promise<{ id: string }> }) {
+export default function DetailPenjualan({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = use(params);
   const [penjualan, setPenjualan] = useState<PenjualanDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,10 +37,10 @@ export default function DetailPenjualan({ params }: { params: Promise<{ id: stri
       if (result.status === 200 && result.data) {
         setPenjualan(result.data);
       } else {
-        setError(result.error || 'Gagal mengambil detail penjualan');
+        setError(result.error || "Gagal mengambil detail penjualan");
       }
     } catch (err) {
-      setError('Error mengambil detail penjualan');
+      setError("Error mengambil detail penjualan");
       console.error(err);
     } finally {
       setLoading(false);
@@ -80,7 +90,9 @@ export default function DetailPenjualan({ params }: { params: Promise<{ id: stri
             <h1 className="text-3xl font-bold text-white mb-2">
               Detail Penjualan #{penjualan.idpenjualan}
             </h1>
-            <p className="text-teal-100">Informasi lengkap transaksi penjualan</p>
+            <p className="text-teal-100">
+              Informasi lengkap transaksi penjualan
+            </p>
           </div>
           <LinkButton href="/penjualan" variant="secondary">
             ← Kembali
@@ -170,7 +182,10 @@ export default function DetailPenjualan({ params }: { params: Promise<{ id: stri
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {penjualan.details.map((item, index) => (
-                  <tr key={item.iddetail_penjualan} className="hover:bg-gray-50">
+                  <tr
+                    key={item.iddetail_penjualan}
+                    className="hover:bg-gray-50"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {index + 1}
                     </td>
@@ -218,7 +233,7 @@ export default function DetailPenjualan({ params }: { params: Promise<{ id: stri
                   </div>
                   <div className="flex justify-between items-center py-2">
                     <span className="text-sm font-medium text-gray-600">
-                      PPN ({penjualan.ppn > 0 ? '11%' : '0%'}):
+                      PPN ({penjualan.ppn > 0 ? "11%" : "0%"}):
                     </span>
                     <span className="text-sm font-bold text-gray-900">
                       {formatCurrency(penjualan.ppn)}
