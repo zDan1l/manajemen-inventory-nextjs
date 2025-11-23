@@ -3,8 +3,8 @@
 // Design System v3.0 - Minimalist with #00A69F
 // ==========================================
 
-import Link from 'next/link';
-import { MdVisibility, MdEdit, MdDelete } from 'react-icons/md';
+import Link from "next/link";
+import { MdVisibility, MdEdit, MdDelete } from "react-icons/md";
 
 interface TableProps<T> {
   data: T[];
@@ -16,6 +16,7 @@ interface TableProps<T> {
   idKey: keyof T;
   isTransaction?: boolean;
   loading?: boolean;
+  hideActions?: boolean;
 }
 
 export function Table<T>({
@@ -28,14 +29,16 @@ export function Table<T>({
   idKey,
   isTransaction = false,
   loading = false,
+  hideActions = false,
 }: TableProps<T>) {
-
   if (loading) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="p-12 flex flex-col justify-center items-center gap-4">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#00A69F]"></div>
-          <span className="text-base font-medium text-gray-600">Loading data...</span>
+          <span className="text-base font-medium text-gray-600">
+            Loading data...
+          </span>
         </div>
       </div>
     );
@@ -62,12 +65,14 @@ export function Table<T>({
                   {col.label}
                 </th>
               ))}
-              <th
-                scope="col"
-                className="px-6 py-4 text-center text-sm font-bold text-gray-700 uppercase tracking-wide border-b-2 border-gray-200"
-              >
-                Actions
-              </th>
+              {!hideActions && (
+                <th
+                  scope="col"
+                  className="px-6 py-4 text-center text-sm font-bold text-gray-700 uppercase tracking-wide border-b-2 border-gray-200"
+                >
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
 
@@ -83,8 +88,12 @@ export function Table<T>({
                       <MdVisibility className="w-8 h-8 text-gray-400" />
                     </div>
                     <div>
-                      <p className="text-base font-semibold text-gray-900">No data available</p>
-                      <p className="text-sm text-gray-500 mt-2">There are no records to display at the moment</p>
+                      <p className="text-base font-semibold text-gray-900">
+                        No data available
+                      </p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        There are no records to display at the moment
+                      </p>
                     </div>
                   </div>
                 </td>
@@ -94,7 +103,7 @@ export function Table<T>({
                 <tr
                   key={item[idKey] || index}
                   className={`transition-all duration-200 ${
-                    index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'
+                    index % 2 === 0 ? "bg-white" : "bg-slate-50/30"
                   } hover:bg-[#00A69F]/5 hover:shadow-sm border-l-4 border-transparent hover:border-l-[#00A69F]`}
                 >
                   {columns.map((col) => (
@@ -102,45 +111,49 @@ export function Table<T>({
                       key={col.key as string}
                       className="px-6 py-4 text-[15px] font-medium text-gray-700 whitespace-nowrap"
                     >
-                      {item[col.key] !== null && item[col.key] !== undefined ? item[col.key] : '-'}
+                      {item[col.key] !== null && item[col.key] !== undefined
+                        ? item[col.key]
+                        : "-"}
                     </td>
                   ))}
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-center gap-2">
-                      {isTransaction ? (
-                        detailPath && (
-                          <Link 
-                            href={`${detailPath}/${item[idKey]}`} 
-                            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
-                          >
-                            <MdVisibility className="w-4 h-4" />
-                            Detail
-                          </Link>
-                        )
-                      ) : (
-                        <>
-                          {editPath && (
-                            <Link 
-                              href={`${editPath}/${item[idKey]}`} 
-                              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#00A69F] to-[#0D9488] hover:from-[#0D9488] hover:to-[#00857A] rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
+                  {!hideActions && (
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                        {isTransaction ? (
+                          detailPath && (
+                            <Link
+                              href={`${detailPath}/${item[idKey]}`}
+                              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
                             >
-                              <MdEdit className="w-4 h-4" />
-                              Edit
+                              <MdVisibility className="w-4 h-4" />
+                              Detail
                             </Link>
-                          )}
-                          {onDelete && (
-                            <button 
-                              onClick={() => onDelete(item[idKey])} 
-                              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
-                            >
-                              <MdDelete className="w-4 h-4" />
-                              Delete
-                            </button>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </td>
+                          )
+                        ) : (
+                          <>
+                            {editPath && (
+                              <Link
+                                href={`${editPath}/${item[idKey]}`}
+                                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#00A69F] to-[#0D9488] hover:from-[#0D9488] hover:to-[#00857A] rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
+                              >
+                                <MdEdit className="w-4 h-4" />
+                                Edit
+                              </Link>
+                            )}
+                            {onDelete && (
+                              <button
+                                onClick={() => onDelete(item[idKey])}
+                                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
+                              >
+                                <MdDelete className="w-4 h-4" />
+                                Delete
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))
             )}

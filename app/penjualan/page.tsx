@@ -43,16 +43,6 @@ export default function PenjualanPage() {
     alert('⚠️ Transaksi penjualan tidak dapat dihapus.\nData transaksi harus tetap ada untuk keperluan audit dan pelaporan.');
   };
 
-  if (loading) {
-    return (
-      <div className="p-6">
-        <div className="bg-blue-100 border-2 border-blue-500 p-4 text-center">
-          <p className="text-blue-700 font-medium">Loading data penjualan...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="p-6">
