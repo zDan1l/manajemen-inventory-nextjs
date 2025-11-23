@@ -172,11 +172,29 @@ export interface DetailPenjualan {
   iddetail_penjualan: number;
   idpenjualan: number;
   idbarang: number;
-  harga_jual: number;
+  harga_satuan: number;
   jumlah: number;
   subtotal: number;
   // Relations
   nama_barang?: string;
+  nama_satuan?: string;
+  tanggal_penjualan?: string | Date;
+  username?: string;
+  margin_persen?: number;
+}
+
+export interface PenjualanDetail {
+  idpenjualan: number;
+  created_at: string | Date;
+  iduser: number;
+  username: string;
+  idmargin_penjualan: number;
+  margin_persen: number;
+  subtotal_nilai: number;
+  ppn: number;
+  total_nilai: number;
+  total_items: number;
+  details: DetailPenjualan[];
 }
 
 // ========================================

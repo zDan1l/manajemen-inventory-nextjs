@@ -108,7 +108,7 @@ export default function PenjualanPage() {
         columns={columns}
         idKey="idpenjualan"
         isTransaction={true}
-        detailPath="/penjualan/detail"
+        detailPath="/penjualan"
       />
       
       {penjualans.length === 0 && (
