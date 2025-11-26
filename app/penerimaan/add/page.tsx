@@ -576,11 +576,11 @@ export default function AddPenerimaanPage() {
                   <p className="text-xs text-gray-500 mt-1">dari {breakdown.length} item</p>
                 </div>
 
-                {/* Total Quantity */}
+                {/* Total Quantity */} 
                 <div className="bg-white rounded-xl p-4 shadow-sm">
                   <p className="text-sm text-gray-600 mb-1">Total Kuantitas</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {details.reduce((sum, d) => sum + (d.jumlah_terima || 0), 0)}
+                    {details.reduce((sum, d) => sum + (Number (d.jumlah_terima) || 0), 0)}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">unit barang</p>
                 </div>

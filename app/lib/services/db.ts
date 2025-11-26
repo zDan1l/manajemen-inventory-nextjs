@@ -15,7 +15,7 @@ export async function getDbConnection() : Promise<mysql.PoolConnection> {
             host: parseUrl.hostname || 'localhost',
             user : user || 'root',
             password : password || '',
-            database : parseUrl.pathname?.slice(1) || 'uts_pbd',
+            database : parseUrl.pathname?.slice(1) || 'testing-uts',
             port : parseUrl.port ? parseInt(parseUrl.port) : 3306,
             waitForConnections: true,
             connectionLimit: 10,

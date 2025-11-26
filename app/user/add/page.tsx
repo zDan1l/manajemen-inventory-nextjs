@@ -1,19 +1,26 @@
 // app/users/add/page.tsx
-'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Role } from '@/app/lib/type';
-import { FormInput } from '@/app/components/FormInput';
-import { SelectInput } from '@/app/components/SelectInput';
-import { Button } from '@/app/components/Button';
-import { LinkButton } from '@/app/components/LinkButton';
-import { Alert } from '@/app/components/Alert';
-import { Card, CardHeader, CardTitle, CardDescription, CardBody, CardFooter } from '@/app/components/Card';
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Role } from "@/app/lib/type";
+import { FormInput } from "@/app/components/FormInput";
+import { SelectInput } from "@/app/components/SelectInput";
+import { Button } from "@/app/components/Button";
+import { LinkButton } from "@/app/components/LinkButton";
+import { Alert } from "@/app/components/Alert";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardBody,
+  CardFooter,
+} from "@/app/components/Card";
 
 export default function AddUser() {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [idrole, setIdrole] = useState<string>('');
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [idrole, setIdrole] = useState<string>("");
   const [roles, setRoles] = useState<Role[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,15 +29,15 @@ export default function AddUser() {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const res = await fetch('/api/roles');
+        const res = await fetch("/api/roles");
         const data = await res.json();
         if (res.ok) {
           setRoles(data);
         } else {
-          setError(data.error || 'Gagal memuat data peran');
+          setError(data.error || "Gagal memuat data peran");
         }
       } catch (err) {
-        setError('Gagal memuat data peran');
+        setError("Gagal memuat data peran");
       }
     };
     fetchRoles();
@@ -40,29 +47,41 @@ export default function AddUser() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
+
     try {
-      const res = await fetch('/api/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, idrole: idrole ? parseInt(idrole) : null }),
+      const payload = {
+        username,
+        password,
+        idrole: idrole && idrole !== "" ? parseInt(idrole) : null,
+      };
+
+      console.log("Sending payload:", payload);
+
+      const res = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
+
+      const data = await res.json();
+      console.log("Response:", data);
+
       if (res.ok) {
-        router.push('/user');
+        router.push("/user");
       } else {
-        const data = await res.json();
-        setError(data.error || 'Gagal menambahkan pengguna');
+        setError(data.error || data.message || "Gagal menambahkan pengguna");
       }
     } catch (err) {
-      setError('Gagal menambahkan pengguna');
+      console.error("Error:", err);
+      setError("Gagal menambahkan pengguna");
     } finally {
       setLoading(false);
     }
   };
 
-  const roleOptions = roles.map(role => ({
+  const roleOptions = roles.map((role) => ({
     value: role.idrole,
-    label: role.nama_role
+    label: role.nama_role,
   }));
 
   return (
@@ -84,7 +103,11 @@ export default function AddUser() {
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
+        <Alert
+          variant="danger"
+          title="Kesalahan"
+          onClose={() => setError(null)}
+        >
           {error}
         </Alert>
       )}
@@ -94,31 +117,33 @@ export default function AddUser() {
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Informasi Pengguna</CardTitle>
-            <CardDescription>Masukkan detail untuk pengguna baru</CardDescription>
+            <CardDescription>
+              Masukkan detail untuk pengguna baru
+            </CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Nama Pengguna" 
-                type="text" 
-                value={username} 
-                onChange={(e) => setUsername(e.target.value)} 
-                required 
+              <FormInput
+                label="Nama Pengguna"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
                 placeholder="Masukkan nama pengguna"
                 helper="Pilih nama pengguna yang unik"
               />
-              
-              <FormInput 
-                label="Kata Sandi" 
-                type="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                required 
+
+              <FormInput
+                label="Kata Sandi"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
                 placeholder="Masukkan kata sandi"
                 helper="Minimal 6 karakter untuk keamanan"
               />
-              
+
               <SelectInput
                 label="Peran"
                 value={idrole}
@@ -129,20 +154,30 @@ export default function AddUser() {
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/user" variant="outline" size="lg">
                 Batal
               </LinkButton>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 variant="primary"
                 size="lg"
                 loading={loading}
                 icon={
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 }
               >

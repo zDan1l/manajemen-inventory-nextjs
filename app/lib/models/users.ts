@@ -111,7 +111,7 @@ export async function updateUser(data: User): Promise<ApiResponse<{ message: str
     const parsed = userSchema
         .omit({ password: true })
         .extend({
-            password: z.string().min(6, { message: 'Password terlalu pendek' }).max(50, { message: 'Password terlalu panjang' }).optional(),
+            password: z.string().min(4, { message: 'Password terlalu pendek' }).max(50, { message: 'Password terlalu panjang' }).optional(),
         })
         .safeParse({ ...data, username: sanitizeInput(data.username) });
 
