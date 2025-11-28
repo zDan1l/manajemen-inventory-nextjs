@@ -140,7 +140,7 @@ export default function DetailPenjualan({
                 Margin Penjualan
               </label>
               <p className="text-lg font-semibold text-gray-900">
-                {penjualan.margin_persen}%
+                {penjualan.details[0].margin_persen}%
               </p>
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function DetailPenjualan({
                   </div>
                   <div className="flex justify-between items-center py-2">
                     <span className="text-sm font-medium text-gray-600">
-                      PPN ({penjualan.ppn > 0 ? "11%" : "0%"}):
+                      PPN ({penjualan.ppn > 0 ? "10%" : "0%"}):
                     </span>
                     <span className="text-sm font-bold text-gray-900">
                       {formatCurrency(penjualan.ppn)}
