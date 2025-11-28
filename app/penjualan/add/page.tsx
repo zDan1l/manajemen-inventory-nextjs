@@ -107,9 +107,9 @@ export default function AddPenjualanPage() {
 
     newDetails[index] = {
       idbarang,
-      jumlah: 0,
+      jumlah: 1, // Default jumlah 1 saat barang dipilih
       harga_jual: hargaJual,
-      sub_total: 0,
+      sub_total: hargaJual, // Sub total = 1 * harga jual
       nama_barang: barang?.nama_barang,
       nama_satuan: barang?.nama_satuan,
       stok_tersedia: barang?.stok_tersedia,
@@ -556,7 +556,7 @@ export default function AddPenjualanPage() {
                             onChange={(e) =>
                               handleJumlahChange(index, Number(e.target.value))
                             }
-                            min={0}
+                            min={1}
                             max={detail.stok_tersedia || 0}
                             step={1}
                             className="w-20 p-2 text-center border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00A69F] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"

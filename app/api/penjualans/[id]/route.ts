@@ -38,6 +38,7 @@ export async function GET(
 
     const penjualan = penjualans[0];
     const details = detailRows as any[];
+    
 
     return NextResponse.json({
       status: 200,

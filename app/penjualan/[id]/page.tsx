@@ -33,7 +33,7 @@ export default function DetailPenjualan({
       setLoading(true);
       const res = await fetch(`/api/penjualans/${id}`);
       const result = await res.json();
-
+      console.log(result.data);
       if (result.status === 200 && result.data) {
         setPenjualan(result.data);
       } else {
@@ -131,7 +131,7 @@ export default function DetailPenjualan({
                 User Input
               </label>
               <p className="text-lg font-semibold text-gray-900">
-                {penjualan.username}
+                {penjualan.details[0].username}
               </p>
             </div>
 
