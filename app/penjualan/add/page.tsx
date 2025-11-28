@@ -278,7 +278,15 @@ export default function AddPenjualanPage() {
   const totalQty = validDetails.reduce((sum, d) => sum + d.jumlah, 0);
   const subtotalNilai = validDetails.reduce((sum, d) => sum + d.sub_total, 0);
   const ppnNilai = subtotalNilai * (ppn / 100); // PPN dalam Rupiah
-  const totalNilai = subtotalNilai + ppnNilai;
+
+  // Dapatkan margin persen dari margin yang dipilih
+  const selectedMarginObj = marginList.find(
+    (m) => m.idmargin_penjualan === selectedMargin
+  );
+  const marginPersen = selectedMarginObj?.persen || 0;
+  const marginNilai = subtotalNilai * (marginPersen / 100); // Margin dalam Rupiah
+
+  const totalNilai = subtotalNilai + ppnNilai + marginNilai;
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -597,7 +605,7 @@ export default function AddPenjualanPage() {
               <h3 className="text-md font-semibold text-gray-800 mb-3">
                 Ringkasan Transaksi
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-3">
                 <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-200">
                   <p className="text-xs text-gray-600 mb-1">Total Item</p>
                   <p className="text-lg font-bold text-[#00A69F]">
@@ -612,6 +620,14 @@ export default function AddPenjualanPage() {
                   <p className="text-xs text-gray-600 mb-1">Subtotal</p>
                   <p className="text-lg font-bold text-gray-700">
                     {formatCurrency(subtotalNilai)}
+                  </p>
+                </div>
+                <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-200">
+                  <p className="text-xs text-gray-600 mb-1">
+                    Margin ({marginPersen}%)
+                  </p>
+                  <p className="text-lg font-bold text-gray-700">
+                    {formatCurrency(marginNilai)}
                   </p>
                 </div>
                 <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-200">
