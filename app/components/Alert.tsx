@@ -1,8 +1,3 @@
-// ==========================================
-// MODERN ALERT COMPONENT
-// Design System v3.0 - Minimalist with #00A69F
-// ==========================================
-
 import { ReactNode } from 'react';
 import { MdCheckCircle, MdWarning, MdError, MdInfo, MdClose } from 'react-icons/md';
 
@@ -41,7 +36,7 @@ export function Alert({ children, variant = 'info', title, onClose, className = 
   const currentVariant = variants[variant];
 
   return (
-    <div 
+    <div
       className={`
         ${currentVariant.container}
         border rounded-lg p-4
@@ -53,7 +48,7 @@ export function Alert({ children, variant = 'info', title, onClose, className = 
       <div className="flex-shrink-0 mt-0.5">
         {currentVariant.icon}
       </div>
-      
+
       <div className="flex-1">
         {title && (
           <h4 className="text-sm font-semibold mb-1">

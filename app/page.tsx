@@ -24,7 +24,7 @@ export default function Dashboard() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch('/api/dashboard');
       const data = await response.json();
 
@@ -51,7 +51,7 @@ export default function Dashboard() {
       setLoadingActivities(true);
       const response = await fetch('/api/dashboard/activities');
       const data = await response.json();
-      
+
       if (response.ok) {
         setStockActivities(data.stockActivities || []);
         setRecentTransactions(data.recentTransactions || []);
@@ -72,7 +72,7 @@ export default function Dashboard() {
     {
       title: 'Total Users',
       value: stats.totalUsers,
-      icon: <FaUsers className="w-6 h-6" />, 
+      icon: <FaUsers className="w-6 h-6" />,
       gradient: 'from-[#00A69F] to-[#0D9488]',
       bgColor: 'bg-gradient-to-br from-teal-50 to-white',
       iconColor: 'text-[#00A69F]',
@@ -112,36 +112,36 @@ export default function Dashboard() {
   ];
 
   const quickActions = [
-    { 
-      title: 'Add User', 
-      href: '/user/add', 
-      icon: <FaUserPlus className="w-5 h-5" />, 
-      color: 'bg-teal-50 hover:bg-teal-100 border-[#00A69F] text-[#0D9488]' 
+    {
+      title: 'Add User',
+      href: '/user/add',
+      icon: <FaUserPlus className="w-5 h-5" />,
+      color: 'bg-teal-50 hover:bg-teal-100 border-[#00A69F] text-[#0D9488]'
     },
-    { 
-      title: 'Add Barang', 
-      href: '/barang/add', 
-      icon: <FaBoxOpen className="w-5 h-5" />, 
-      color: 'bg-cyan-50 hover:bg-cyan-100 border-[#06B6D4] text-[#0891B2]' 
+    {
+      title: 'Add Barang',
+      href: '/barang/add',
+      icon: <FaBoxOpen className="w-5 h-5" />,
+      color: 'bg-cyan-50 hover:bg-cyan-100 border-[#06B6D4] text-[#0891B2]'
     },
-    { 
-      title: 'Add Vendor', 
-      href: '/vendor/add', 
-      icon: <FaPlusSquare className="w-5 h-5" />, 
-      color: 'bg-teal-50 hover:bg-teal-100 border-[#0D9488] text-[#115E59]' 
+    {
+      title: 'Add Vendor',
+      href: '/vendor/add',
+      icon: <FaPlusSquare className="w-5 h-5" />,
+      color: 'bg-teal-50 hover:bg-teal-100 border-[#0D9488] text-[#115E59]'
     },
-    { 
-      title: 'Add Margin', 
-      href: '/margin/add', 
-      icon: <FaPercentage className="w-5 h-5" />, 
-      color: 'bg-teal-50 hover:bg-teal-100 border-[#14B8A6] text-[#0D9488]' 
+    {
+      title: 'Add Margin',
+      href: '/margin/add',
+      icon: <FaPercentage className="w-5 h-5" />,
+      color: 'bg-teal-50 hover:bg-teal-100 border-[#14B8A6] text-[#0D9488]'
     }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/20">
       <div className="max-w-7xl mx-auto space-y-8 p-6">
-        {/* Welcome Header with Gradient */}
+
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#00A69F] via-[#0D9488] to-[#06B6D4] p-8 shadow-xl">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="relative z-10 flex items-center justify-between">
@@ -165,28 +165,26 @@ export default function Dashboard() {
               <span className="hidden sm:inline">Refresh Data</span>
             </button>
           </div>
-          {/* Decorative Elements */}
+
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-400/10 rounded-full blur-2xl"></div>
         </div>
 
-        {/* Error Alert */}
         {error && (
           <Alert variant="danger" title="Error" onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
 
-        {/* Stats Cards with Enhanced Design */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {statCards.map((card, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="group relative bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
             >
-              {/* Gradient Background on Hover */}
+
               <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-              
+
               <div className="relative z-10">
                 <div className="flex items-start justify-between mb-5">
                   <div className={`relative w-14 h-14 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
@@ -194,8 +192,8 @@ export default function Dashboard() {
                     <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${card.gradient} blur-xl opacity-40 group-hover:opacity-60 transition-opacity`}></div>
                   </div>
                   <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${
-                    card.changeType === 'increase' 
-                      ? 'bg-teal-50 text-[#0D9488] border border-teal-100' 
+                    card.changeType === 'increase'
+                      ? 'bg-teal-50 text-[#0D9488] border border-teal-100'
                       : 'bg-red-50 text-red-700 border border-red-100'
                   }`}>
                     {card.changeType === 'increase' ? (
@@ -206,7 +204,7 @@ export default function Dashboard() {
                     {card.change}
                   </div>
                 </div>
-                
+
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{card.title}</p>
                   <p className="text-3xl font-bold text-gray-900">
@@ -220,7 +218,6 @@ export default function Dashboard() {
                   </p>
                 </div>
 
-                {/* Trend Indicator */}
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <MdTrendingUp className="w-4 h-4" />
@@ -232,7 +229,6 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Quick Actions */}
         <Card>
           <CardBody>
             <div className="flex items-center justify-between mb-6">
@@ -257,9 +253,8 @@ export default function Dashboard() {
           </CardBody>
         </Card>
 
-        {/* System Info & Activity Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Stock Activity Card */}
+
           <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#00A69F] to-[#0D9488] flex items-center justify-center text-white shadow-lg">
@@ -289,11 +284,11 @@ export default function Dashboard() {
                 stockActivities.map((activity, idx) => {
                   const isIncoming = activity.masuk > 0;
                   const amount = isIncoming ? activity.masuk : activity.keluar;
-                  
+
                   return (
                     <div key={idx} className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
-                      isIncoming 
-                        ? 'bg-gradient-to-r from-teal-50/50 to-transparent border-teal-100 hover:border-[#00A69F]' 
+                      isIncoming
+                        ? 'bg-gradient-to-r from-teal-50/50 to-transparent border-teal-100 hover:border-[#00A69F]'
                         : 'bg-gradient-to-r from-red-50/50 to-transparent border-red-100 hover:border-red-300'
                     }`}>
                       <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -327,7 +322,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Recent Transactions Card */}
           <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#06B6D4] to-[#0891B2] flex items-center justify-center text-white shadow-lg">
@@ -361,7 +355,7 @@ export default function Dashboard() {
                     'B': { bg: 'bg-red-100', text: 'text-red-700', label: 'Cancelled' }
                   };
                   const statusStyle = statusColors[trans.status] || statusColors['P'];
-                  
+
                   return (
                     <div key={idx} className="p-4 bg-gradient-to-r from-cyan-50/50 to-transparent rounded-xl border border-cyan-100 hover:border-[#06B6D4] transition-colors">
                       <div className="flex items-center justify-between mb-2">

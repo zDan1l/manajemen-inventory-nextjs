@@ -18,7 +18,6 @@ export async function GET(
       );
     }
 
-    // Get penerimaan header from view
     const penerimaanResult = await getPenerimaanById(Number(id));
     if (penerimaanResult.status !== 200 || !penerimaanResult.data) {
       return NextResponse.json(penerimaanResult, {
@@ -26,13 +25,11 @@ export async function GET(
       });
     }
 
-    // Get detail items from view
     const detailResult = await getDetailPenerimaan(Number(id));
     if (detailResult.status !== 200) {
       return NextResponse.json(detailResult, { status: detailResult.status });
     }
 
-    // Combine header with details
     return NextResponse.json(
       {
         status: 200,

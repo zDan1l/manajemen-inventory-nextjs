@@ -106,7 +106,6 @@ export default function EditVendor({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Edit Vendor</h1>
         <p className="text-white/90">Perbarui informasi vendor</p>

@@ -42,13 +42,13 @@ export const SelectInput: React.FC<SelectInputProps> = ({
           disabled={disabled}
           className={`
             w-full px-4 py-2.5 pr-10
-            border-2 rounded-xl 
+            border-2 rounded-xl
             text-sm text-gray-900
             appearance-none
             transition-all duration-200
             disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed
-            ${error 
-              ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 bg-red-50/30' 
+            ${error
+              ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 bg-red-50/30'
               : 'border-gray-200 focus:border-[#00A69F] focus:ring-4 focus:ring-[#00A69F]/10 hover:border-gray-300'
             }
             focus:outline-none

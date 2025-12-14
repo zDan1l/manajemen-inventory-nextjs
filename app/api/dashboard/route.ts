@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const db = await getDbConnection();
   try {
-    // Query semua statistik dalam satu kali koneksi database
+
     const [usersResult] = await db.execute('SELECT count_user() AS total');
     const [barangsResult] = await db.execute('SELECT count_barang() AS total');
     const [vendorsResult] = await db.execute('SELECT count_vendor() AS total');
@@ -18,18 +18,18 @@ export async function GET() {
     };
 
     return NextResponse.json(
-      { 
+      {
         ...stats,
-        message: 'Dashboard statistics retrieved successfully' 
-      }, 
+        message: 'Dashboard statistics retrieved successfully'
+      },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error fetching dashboard stats:', error);
     return NextResponse.json(
-      { 
-        error: `Failed to fetch dashboard statistics: ${error instanceof Error ? error.message : 'Unknown error'}` 
-      }, 
+      {
+        error: `Failed to fetch dashboard statistics: ${error instanceof Error ? error.message : 'Unknown error'}`
+      },
       { status: 500 }
     );
   } finally {

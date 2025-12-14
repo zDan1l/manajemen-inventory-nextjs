@@ -71,14 +71,14 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
       const res = await fetch('/api/margins', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           idmargin_penjualan: Number(id),
-          iduser: Number(iduser), 
-          persen: Number(persen), 
-          status: Number(status) 
+          iduser: Number(iduser),
+          persen: Number(persen),
+          status: Number(status)
         }),
       });
-      
+
       if (res.ok) {
         router.push('/margin');
       } else {
@@ -110,7 +110,7 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Edit Margin</h1>
         <p className="text-white/90">Perbarui informasi margin penjualan</p>
@@ -128,15 +128,15 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
             <CardTitle>Informasi Margin</CardTitle>
             <CardDescription>Masukkan detail untuk memperbarui margin</CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Persentase" 
-                type="number" 
-                value={persen} 
-                onChange={(e) => setPersen(e.target.value)} 
-                required 
+              <FormInput
+                label="Persentase"
+                type="number"
+                value={persen}
+                onChange={(e) => setPersen(e.target.value)}
+                required
                 placeholder="Masukkan persentase"
                 helper="Persentase margin (contoh: 10 untuk 10%)"
                 step="0.01"
@@ -165,7 +165,7 @@ export default function EditMargin({ params }: { params: Promise<{ id: string }>
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/margin" variant="outline" size="lg">Batal</LinkButton>

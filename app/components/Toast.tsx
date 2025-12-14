@@ -1,4 +1,3 @@
-// app/components/Toast.tsx
 'use client';
 
 import { useEffect } from 'react';
@@ -77,11 +76,10 @@ export function Toast({
             </svg>
           </button>
         </div>
-        
-        {/* Progress bar */}
+
         {duration > 0 && (
           <div className="h-1 bg-white/20">
-            <div 
+            <div
               className="h-full bg-white/50 transition-all ease-linear"
               style={{
                 animation: `shrink ${duration}ms linear forwards`

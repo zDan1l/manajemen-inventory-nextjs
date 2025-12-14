@@ -1,4 +1,3 @@
-// app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getDbConnection } from '@/app/lib/services/db';
 
@@ -19,7 +18,6 @@ export async function POST(request: NextRequest) {
     const body: LoginRequest = await request.json();
     const { username, password } = body;
 
-    // Validasi input
     if (!username || !password) {
       return NextResponse.json(
         { status: 400, error: 'Username dan password harus diisi' },
@@ -27,9 +25,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Query user dengan role
     const query = `
-      SELECT 
+      SELECT
         u.iduser,
         u.username,
         u.password,
@@ -43,14 +40,13 @@ export async function POST(request: NextRequest) {
 
     const connection = await getDbConnection();
     let result: any;
-    
+
     try {
       [result] = await connection.execute(query, [username]);
     } finally {
       connection.release();
     }
 
-    // Cek apakah user ditemukan
     if (!result || result.length === 0) {
       return NextResponse.json(
         { status: 401, error: 'Username atau password salah' },
@@ -60,8 +56,6 @@ export async function POST(request: NextRequest) {
 
     const user = result[0];
 
-    // Verifikasi password (plain text comparison - untuk development)
-    // CATATAN: Di production, gunakan bcrypt untuk hash password!
     if (user.password !== password) {
       return NextResponse.json(
         { status: 401, error: 'Username atau password salah' },
@@ -69,7 +63,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hapus password dari response
     const userData: UserData = {
       iduser: user.iduser,
       username: user.username,
@@ -77,7 +70,6 @@ export async function POST(request: NextRequest) {
       nama_role: user.nama_role,
     };
 
-    // Return success dengan user data (tanpa password)
     return NextResponse.json(
       {
         status: 200,

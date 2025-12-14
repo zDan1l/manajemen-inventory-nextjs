@@ -1,4 +1,3 @@
-// app/api/returs/breakdown/[id]/route.ts
 import { getDetailPenerimaanForRetur } from "@/app/lib/models/retur";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -8,7 +7,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const idpenerimaan = parseInt(id);
-  
+
   if (isNaN(idpenerimaan)) {
     return NextResponse.json(
       { status: 400, error: 'Invalid ID' },

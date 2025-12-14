@@ -1,8 +1,3 @@
-// ==========================================
-// API Route: GET /api/penjualans/margins
-// Fungsi: Ambil daftar margin aktif untuk penjualan
-// ==========================================
-
 import { getActiveMargins } from "@/app/lib/models/penjualan";
 import { NextResponse } from "next/server";
 

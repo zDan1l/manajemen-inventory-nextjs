@@ -1,4 +1,3 @@
-// app/retur/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -67,7 +66,7 @@ export default function ReturPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8">
         <div className="flex items-center gap-4">
           <div className="p-4 bg-white/20 backdrop-blur-sm rounded-xl">
@@ -94,14 +93,12 @@ export default function ReturPage() {
         </div>
       </div>
 
-      {/* Action Button */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <LinkButton href="/retur/add" variant="primary" size="lg">
           + Tambah Retur Baru
         </LinkButton>
       </div>
 
-      {/* Data Table */}
       <Table
         data={returs.map((retur) => ({
           ...retur,

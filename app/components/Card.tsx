@@ -1,8 +1,3 @@
-// ==========================================
-// MODERN CARD COMPONENT
-// Design System v3.0 - Minimalist with #00A69F
-// ==========================================
-
 import { ReactNode } from 'react';
 
 interface CardProps {
@@ -28,7 +23,6 @@ interface CardFooterProps {
   className?: string;
 }
 
-// Main Card Component
 export function Card({ children, className = '', padding = 'md', hover = false }: CardProps) {
   const paddingClasses = {
     none: '',
@@ -38,7 +32,7 @@ export function Card({ children, className = '', padding = 'md', hover = false }
   };
 
   return (
-    <div 
+    <div
       className={`
         bg-white rounded-xl shadow-sm border border-gray-200
         ${paddingClasses[padding]}
@@ -51,7 +45,6 @@ export function Card({ children, className = '', padding = 'md', hover = false }
   );
 }
 
-// Card Header
 export function CardHeader({ children, className = '', action }: CardHeaderProps) {
   return (
     <div className={`flex items-center justify-between mb-4 ${className}`}>
@@ -61,7 +54,6 @@ export function CardHeader({ children, className = '', action }: CardHeaderProps
   );
 }
 
-// Card Body
 export function CardBody({ children, className = '' }: CardBodyProps) {
   return (
     <div className={className}>
@@ -70,7 +62,6 @@ export function CardBody({ children, className = '' }: CardBodyProps) {
   );
 }
 
-// Card Footer
 export function CardFooter({ children, className = '' }: CardFooterProps) {
   return (
     <div className={`mt-6 pt-4 border-t border-gray-200 ${className}`}>
@@ -79,7 +70,6 @@ export function CardFooter({ children, className = '' }: CardFooterProps) {
   );
 }
 
-// Title Component for Card Header
 interface CardTitleProps {
   children: ReactNode;
   className?: string;
@@ -93,7 +83,6 @@ export function CardTitle({ children, className = '' }: CardTitleProps) {
   );
 }
 
-// Description Component for Card Header
 interface CardDescriptionProps {
   children: ReactNode;
   className?: string;

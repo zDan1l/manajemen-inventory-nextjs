@@ -1,4 +1,3 @@
-
 import { getMarginById } from "@/app/lib/models/margin";
 import { NextResponse } from "next/server";
 

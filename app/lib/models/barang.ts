@@ -3,11 +3,10 @@ import { ApiResponse, Barang } from "@/app/lib/type";
 import { barangSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
-
 export async function getBarang(): Promise<ApiResponse<Barang[]>> {
   const db = await getDbConnection();
   try {
-    // Menggunakan view_barang_all untuk menampilkan semua barang
+
     const [barangs] = await db.execute(
       'SELECT * FROM view_barang_all'
     );
@@ -23,11 +22,10 @@ export async function getBarang(): Promise<ApiResponse<Barang[]>> {
   }
 }
 
-// Fungsi baru: Mengambil hanya barang aktif
 export async function getBarangAktif(): Promise<ApiResponse<Barang[]>> {
   const db = await getDbConnection();
   try {
-    // Menggunakan view_barang_aktif untuk menampilkan barang aktif saja
+
     const [barangs] = await db.execute(
       'SELECT * FROM view_barang_aktif'
     );
@@ -61,7 +59,6 @@ export async function getBarangById(id: number): Promise<ApiResponse<Barang>> {
     db.release();
   }
 }
-
 
 export async function createBarang(data: Omit<Barang, 'idbarang'>): Promise<ApiResponse<{ message: string }>> {
   const parsed = barangSchema.safeParse({ jenis: data.jenis, nama : data.nama, status : data.status, idsatuan : data.idsatuan, harga: data.harga});

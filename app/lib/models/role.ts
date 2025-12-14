@@ -3,7 +3,6 @@ import { Role, ApiResponse } from "@/app/lib/type";
 import { roleSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
-
 export async function getRoles(): Promise<ApiResponse<Role[]>> {
   const db = await getDbConnection();
   try {
@@ -39,7 +38,6 @@ export async function getRoleById(id: number): Promise<ApiResponse<Role>> {
     db.release();
   }
 }
-
 
 export async function createRole(data: Omit<Role, 'idrole' | 'created_at'>): Promise<ApiResponse<{ message: string }>> {
   const parsed = roleSchema.safeParse({ nama_role: data.nama_role });

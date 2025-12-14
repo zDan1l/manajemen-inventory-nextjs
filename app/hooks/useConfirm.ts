@@ -1,4 +1,3 @@
-// app/hooks/useConfirm.ts
 'use client';
 
 import { useState, useCallback } from 'react';

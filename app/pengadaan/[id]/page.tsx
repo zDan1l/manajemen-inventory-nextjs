@@ -97,7 +97,7 @@ export default function DetailPengadaan({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -135,7 +135,6 @@ export default function DetailPengadaan({
         </div>
       </div>
 
-      {/* Info Card */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -204,7 +203,6 @@ export default function DetailPengadaan({
         </CardBody>
       </Card>
 
-      {/* Detail Items */}
       <Card>
         <CardHeader>
           <CardTitle>Detail Barang</CardTitle>
@@ -267,7 +265,6 @@ export default function DetailPengadaan({
             </table>
           </div>
 
-          {/* Summary */}
           <div className="mt-6 border-t-2 border-gray-200 pt-6">
             <div className="flex justify-end">
               <div className="w-full md:w-1/2 lg:w-1/3 space-y-3">
@@ -301,7 +298,6 @@ export default function DetailPengadaan({
         </CardBody>
       </Card>
 
-      {/* Actions */}
       <div className="flex gap-3 justify-end">
         <LinkButton href="/pengadaan" variant="outline" size="lg">
           Kembali ke Daftar

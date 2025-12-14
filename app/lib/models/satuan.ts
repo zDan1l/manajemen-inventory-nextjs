@@ -3,12 +3,10 @@ import { Role, ApiResponse, Satuan } from "@/app/lib/type";
 import { satuanSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
-
-
 export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
   const db = await getDbConnection();
   try {
-    // Menggunakan view_satuan_all untuk menampilkan semua satuan
+
     const [satuans] = await db.execute(
       'SELECT * FROM view_satuan_all'
     );
@@ -24,11 +22,10 @@ export async function getSatuan(): Promise<ApiResponse<Satuan[]>> {
   }
 }
 
-// Fungsi baru: Mengambil hanya satuan aktif
 export async function getSatuanAktif(): Promise<ApiResponse<Satuan[]>> {
   const db = await getDbConnection();
   try {
-    // Menggunakan view_satuan_aktif untuk menampilkan satuan aktif saja
+
     const [satuans] = await db.execute(
       'SELECT * FROM view_satuan_aktif'
     );
@@ -62,7 +59,6 @@ export async function getSatuanById(id: number): Promise<ApiResponse<Satuan>> {
     db.release();
   }
 }
-
 
 export async function createSatuan(data: Omit<Satuan, 'idsatuan'>): Promise<ApiResponse<{ message: string }>> {
   const parsed = satuanSchema.safeParse({ nama_satuan: data.nama_satuan, status : Number(data.status)});

@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  
+
   if (!id) {
     return NextResponse.json(
       { status: 400, error: 'Missing ID' },
@@ -16,7 +16,7 @@ export async function GET(
 
   try {
     const idpengadaan = parseInt(id);
-    
+
     if (isNaN(idpengadaan)) {
       return NextResponse.json(
         { status: 400, error: 'Invalid ID' },
@@ -24,9 +24,8 @@ export async function GET(
       );
     }
 
-    // Get pengadaan header
     const pengadaanResult = await getPengadaanById(idpengadaan);
-    
+
     if (pengadaanResult.error) {
       return NextResponse.json(
         { status: pengadaanResult.status, error: pengadaanResult.error },
@@ -34,9 +33,8 @@ export async function GET(
       );
     }
 
-    // Get detail pengadaan
     const detailResult = await getDetailPengadaan(idpengadaan);
-    
+
     if (detailResult.error) {
       return NextResponse.json(
         { status: detailResult.status, error: detailResult.error },
@@ -44,7 +42,6 @@ export async function GET(
       );
     }
 
-    // Combine header and details
     const response = {
       ...pengadaanResult.data,
       details: detailResult.data || []

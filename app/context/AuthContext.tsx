@@ -1,4 +1,3 @@
-// app/context/AuthContext.tsx
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -27,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Check if user is logged in (from localStorage)
+
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
@@ -41,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Redirect to login if not authenticated (except for login page)
+
     if (!isLoading && !user && pathname !== '/login') {
       router.push('/login');
     }
@@ -58,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Logout error:', error);
     }
-    
+
     setUser(null);
     localStorage.removeItem('user');
     router.push('/login');

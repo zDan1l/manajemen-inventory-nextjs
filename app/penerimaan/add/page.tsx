@@ -38,23 +38,19 @@ export default function AddPenerimaanPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // STEP 1 - Pilih Pengadaan
   const [pengadaans, setPengadaans] = useState<any[]>([]);
   const [filteredPengadaans, setFilteredPengadaans] = useState<any[]>([]);
   const [selectedPengadaan, setSelectedPengadaan] = useState<number | null>(
     null
   );
 
-  // Search & Filter
   const [searchId, setSearchId] = useState("");
   const [searchVendor, setSearchVendor] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
-  // STEP 2 - Input Detail Penerimaan
   const [breakdown, setBreakdown] = useState<DetailBreakdown[]>([]);
   const [details, setDetails] = useState<DetailInput[]>([]);
 
-  // Get iduser from logged in user
   const iduser = user?.iduser || null;
 
   useEffect(() => {
@@ -63,25 +59,21 @@ export default function AddPenerimaanPage() {
     }
   }, [step]);
 
-  // Filter pengadaan berdasarkan search dan filter
   useEffect(() => {
     let filtered = [...pengadaans];
 
-    // Filter by ID
     if (searchId.trim()) {
       filtered = filtered.filter((p) =>
         p.idpengadaan.toString().includes(searchId.trim())
       );
     }
 
-    // Filter by Vendor
     if (searchVendor.trim()) {
       filtered = filtered.filter((p) =>
         p.nama_vendor?.toLowerCase().includes(searchVendor.toLowerCase())
       );
     }
 
-    // Filter by Status
     if (filterStatus !== "all") {
       filtered = filtered.filter((p) => p.status === filterStatus);
     }
@@ -89,7 +81,6 @@ export default function AddPenerimaanPage() {
     setFilteredPengadaans(filtered);
   }, [pengadaans, searchId, searchVendor, filterStatus]);
 
-  // ===== STEP 1: Fetch Pengadaan yang belum lengkap =====
   const fetchPengadaanBelumLengkap = async () => {
     try {
       setLoading(true);
@@ -111,20 +102,17 @@ export default function AddPenerimaanPage() {
     }
   };
 
-  // Reset filters
   const handleResetFilters = () => {
     setSearchId("");
     setSearchVendor("");
     setFilterStatus("all");
   };
 
-  // ===== STEP 1 -> STEP 2: Ke halaman input detail =====
   const handleSelectPengadaan = async (idpengadaan: number) => {
     try {
       setLoading(true);
       setError(null);
 
-      // Fetch detail breakdown untuk pengadaan ini
       const res = await fetch(`/api/penerimaans/breakdown/${idpengadaan}`);
       const result: ApiResponse<DetailBreakdown[]> = await res.json();
 
@@ -132,7 +120,6 @@ export default function AddPenerimaanPage() {
         setSelectedPengadaan(idpengadaan);
         setBreakdown(result.data);
 
-        // Initialize details array
         const initialDetails = result.data.map((item: DetailBreakdown) => ({
           idbarang: item.idbarang,
           jumlah_terima: item.sisa_diterima,
@@ -153,25 +140,22 @@ export default function AddPenerimaanPage() {
     }
   };
 
-  // ===== STEP 2: Update jumlah terima =====
   const handleUpdateDetail = (idbarang: number, jumlah: number) => {
-    // Cari item di breakdown untuk mendapatkan sisa_diterima
+
     const item = breakdown.find((b) => b.idbarang === idbarang);
 
     if (!item) return;
 
-    // Validasi: jumlah tidak boleh negatif
     if (jumlah < 0) {
       warning("Jumlah tidak boleh negatif");
       return;
     }
 
-    // Validasi: jumlah tidak boleh melebihi sisa yang bisa diterima
     if (jumlah > item.sisa_diterima) {
       warning(
         `Jumlah melebihi sisa yang bisa diterima (${item.sisa_diterima})`
       );
-      // Set ke maksimal sisa_diterima
+
       setDetails(
         details.map((d) =>
           d.idbarang === idbarang
@@ -189,17 +173,14 @@ export default function AddPenerimaanPage() {
     );
   };
 
-  // ===== STEP 2: Submit penerimaan =====
   const handleSubmitPenerimaan = async () => {
     if (!selectedPengadaan || !iduser) {
       warning("Data tidak lengkap. Harap isi ID User dan pilih barang.");
       return;
     }
 
-    // Filter hanya barang yang diterima (jumlah_terima > 0)
     const filteredDetails = details.filter((d) => d.jumlah_terima > 0);
 
-    // Validasi minimal satu item diterima
     if (filteredDetails.length === 0) {
       warning("Minimal satu barang harus diterima");
       return;
@@ -242,7 +223,7 @@ export default function AddPenerimaanPage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -272,7 +253,7 @@ export default function AddPenerimaanPage() {
               </p>
             </div>
           </div>
-          {/* Progress Indicator */}
+
           <div className="hidden md:flex items-center gap-2">
             <div
               className={`flex items-center justify-center w-10 h-10 rounded-full ${
@@ -297,7 +278,6 @@ export default function AddPenerimaanPage() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Card className="bg-red-50 border-red-200">
           <div className="p-4 text-red-700 flex items-center gap-3">
@@ -317,10 +297,9 @@ export default function AddPenerimaanPage() {
         </Card>
       )}
 
-      {/* ===== STEP 1: Pilih Pengadaan ===== */}
       {step === 1 && (
         <>
-          {/* Search & Filter Section */}
+
           <Card className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <svg
@@ -342,7 +321,7 @@ export default function AddPenerimaanPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Search by ID */}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Cari berdasarkan ID
@@ -356,7 +335,6 @@ export default function AddPenerimaanPage() {
                 />
               </div>
 
-              {/* Search by Vendor */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Cari berdasarkan Vendor
@@ -370,7 +348,6 @@ export default function AddPenerimaanPage() {
                 />
               </div>
 
-              {/* Filter by Status */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Filter Status
@@ -387,7 +364,6 @@ export default function AddPenerimaanPage() {
               </div>
             </div>
 
-            {/* Reset & Info */}
             <div className="flex items-center justify-between mt-4 pt-4 border-t">
               <div className="text-sm text-gray-600">
                 Menampilkan{" "}
@@ -420,7 +396,6 @@ export default function AddPenerimaanPage() {
             </div>
           </Card>
 
-          {/* List Pengadaan */}
           <Card className="p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6">
               Daftar Pengadaan (Belum Lengkap)
@@ -469,7 +444,7 @@ export default function AddPenerimaanPage() {
                     className="group p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#00A69F] hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
                   >
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                      {/* ID Pengadaan */}
+
                       <div>
                         <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
                           ID Pengadaan
@@ -479,7 +454,6 @@ export default function AddPenerimaanPage() {
                         </p>
                       </div>
 
-                      {/* Vendor */}
                       <div>
                         <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
                           Vendor
@@ -489,7 +463,6 @@ export default function AddPenerimaanPage() {
                         </p>
                       </div>
 
-                      {/* Status */}
                       <div>
                         <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
                           Status
@@ -511,7 +484,6 @@ export default function AddPenerimaanPage() {
                         </span>
                       </div>
 
-                      {/* Progress */}
                       <div>
                         <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
                           Progress Penerimaan
@@ -533,7 +505,6 @@ export default function AddPenerimaanPage() {
                         </div>
                       </div>
 
-                      {/* Action */}
                       <div className="flex items-center justify-end">
                         <div className="flex items-center gap-2 text-[#00A69F] group-hover:text-[#0D9488] font-medium">
                           <span>Pilih</span>
@@ -571,10 +542,9 @@ export default function AddPenerimaanPage() {
         </>
       )}
 
-      {/* ===== STEP 2: Input Detail Penerimaan ===== */}
       {step === 2 && (
         <>
-          {/* User Input Section */}
+
           <Card className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <svg
@@ -600,7 +570,7 @@ export default function AddPenerimaanPage() {
                 label="Penerima Barang"
                 type="text"
                 value={user?.username || ""}
-                onChange={() => {}} // Readonly, tidak bisa diubah
+                onChange={() => {}}
                 placeholder="Otomatis terisi dari user login"
                 disabled={true}
                 helper={`${
@@ -636,7 +606,6 @@ export default function AddPenerimaanPage() {
             </div>
           </Card>
 
-          {/* Items Table Section */}
           <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -655,7 +624,6 @@ export default function AddPenerimaanPage() {
               </div>
             </div>
 
-            {/* Table */}
             <div className="overflow-x-auto rounded-lg border border-gray-200">
               <table className="w-full">
                 <thead>
@@ -766,7 +734,6 @@ export default function AddPenerimaanPage() {
             </div>
           </Card>
 
-          {/* Summary Section */}
           <Card className="bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 border-2 border-[#00A69F]/20">
             <div className="p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -787,7 +754,7 @@ export default function AddPenerimaanPage() {
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                {/* Total Item */}
+
                 <div className="bg-white rounded-xl p-4 shadow-sm">
                   <p className="text-sm text-gray-600 mb-1">
                     Total Item Dipilih
@@ -800,7 +767,6 @@ export default function AddPenerimaanPage() {
                   </p>
                 </div>
 
-                {/* Total Quantity */}
                 <div className="bg-white rounded-xl p-4 shadow-sm">
                   <p className="text-sm text-gray-600 mb-1">Total Kuantitas</p>
                   <p className="text-3xl font-bold text-gray-900">
@@ -812,7 +778,6 @@ export default function AddPenerimaanPage() {
                   <p className="text-xs text-gray-500 mt-1">unit barang</p>
                 </div>
 
-                {/* Estimasi Total Nilai */}
                 <div className="bg-white rounded-xl p-4 shadow-sm md:col-span-2">
                   <p className="text-sm text-gray-600 mb-1">
                     Estimasi Total Nilai
@@ -835,7 +800,6 @@ export default function AddPenerimaanPage() {
             </div>
           </Card>
 
-          {/* Action Buttons */}
           <Card className="p-6">
             <div className="flex gap-3">
               <Button
@@ -916,7 +880,6 @@ export default function AddPenerimaanPage() {
         </>
       )}
 
-      {/* Toast Notification */}
       <Toast
         isOpen={toast.isOpen}
         message={toast.message}

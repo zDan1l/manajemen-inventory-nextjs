@@ -6,9 +6,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import mysql from 'mysql2/promise';
 
-
 const SALT_ROUNDS = 10;
-
 
 export async function getUsers(): Promise<ApiResponse<User[]>> {
   const db = await getDbConnection();
@@ -39,7 +37,7 @@ export async function getUserById(id: number):Promise<ApiResponse<User>> {
   try {
     const [users] = await db.execute(
       'SELECT u.iduser, u.username, u.idrole, r.nama_role as role_name FROM `user` u JOIN role r ON u.idrole = r.idrole WHERE u.iduser = ?',
-      [id]  // ✅ gunakan parameter id
+      [id]
     );
 
     const userArray = users as User[];
@@ -63,8 +61,6 @@ export async function getUserById(id: number):Promise<ApiResponse<User>> {
     db.release();
   }
 }
-
-
 
 export async function createUser(data: Omit<User, 'iduser'>) : Promise<ApiResponse<{ message : string }>>{
     const parsed = userSchema.safeParse({...data, username : sanitizeInput(data.username)});
@@ -107,7 +103,7 @@ export async function createUser(data: Omit<User, 'iduser'>) : Promise<ApiRespon
 }
 
 export async function updateUser(data: User): Promise<ApiResponse<{ message: string }>> {
-    // Validasi dengan skema yang diperbarui
+
     const parsed = userSchema
         .omit({ password: true })
         .extend({
@@ -131,14 +127,13 @@ export async function updateUser(data: User): Promise<ApiResponse<{ message: str
 
     const { iduser, username, password, idrole } = parsed.data;
 
-    // Pastikan iduser adalah number
     if (typeof iduser !== 'number' || isNaN(iduser)) {
         return { status: 400, error: 'Invalid ID format' };
     }
 
     const db = await getDbConnection();
     try {
-        // Cek username unik dengan transaksi untuk konsistensi
+
         await db.beginTransaction();
         const [existing] = await db.execute(
             'SELECT iduser FROM user WHERE username = ? AND iduser != ?',
@@ -165,7 +160,7 @@ export async function updateUser(data: User): Promise<ApiResponse<{ message: str
         await db.commit();
         return { status: 200, data: { message: 'User updated' } };
     } catch (error) {
-        await db.rollback(); // Rollback jika ada error
+        await db.rollback();
         return {
             status: 500,
             error: `Failed to update user: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -174,7 +169,6 @@ export async function updateUser(data: User): Promise<ApiResponse<{ message: str
         db.release();
     }
 }
-
 
 export async function deleteUser(id: number): Promise<ApiResponse<{ message: string }>> {
     if (!id) {

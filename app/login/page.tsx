@@ -17,7 +17,6 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       router.push('/');
@@ -45,8 +44,7 @@ export default function LoginPage() {
 
       if (res.ok && result.status === 200) {
         success('Login berhasil! Mengalihkan...');
-        
-        // Update auth context
+
         if (result.data) {
           login(result.data);
         }
@@ -67,7 +65,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#00A69F] via-[#0D9488] to-[#0F766E] flex items-center justify-center p-4">
-      {/* Toast Notification */}
+
       {toast.isOpen && (
         <Toast
           isOpen={toast.isOpen}
@@ -78,7 +76,7 @@ export default function LoginPage() {
       )}
 
       <div className="w-full max-w-md">
-        {/* Logo/Brand Section */}
+
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl mb-4 shadow-lg">
             <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +86,6 @@ export default function LoginPage() {
           <p className="text-white/80 text-lg">Sistem Manajemen Penjualan</p>
         </div>
 
-        {/* Login Card */}
         <Card>
           <div className="p-8">
             <div className="mb-6">
@@ -139,7 +136,6 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            {/* Info/Help Text */}
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-center text-sm text-gray-600">
                 Belum punya akses? Hubungi administrator
@@ -148,7 +144,6 @@ export default function LoginPage() {
           </div>
         </Card>
 
-        {/* Footer */}
         <div className="mt-8 text-center text-white/70 text-sm">
           <p>&copy; 2025 Ziyaa Danil M. All rights reserved.</p>
         </div>

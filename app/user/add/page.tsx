@@ -1,4 +1,3 @@
-// app/users/add/page.tsx
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -86,7 +85,6 @@ export default function AddUser() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -101,7 +99,6 @@ export default function AddUser() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert
           variant="danger"
@@ -112,7 +109,6 @@ export default function AddUser() {
         </Alert>
       )}
 
-      {/* Form Card */}
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>

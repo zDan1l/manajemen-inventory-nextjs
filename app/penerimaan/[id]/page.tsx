@@ -98,7 +98,7 @@ export default function DetailPenerimaan({
   }
   return (
     <div className="container mx-auto p-6">
-      {/* Header dengan gradient */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
         <div className="flex justify-between items-center">
           <div>
@@ -113,7 +113,6 @@ export default function DetailPenerimaan({
         </div>
       </div>
 
-      {/* Info Card */}
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>Informasi Penerimaan</CardTitle>
@@ -182,7 +181,6 @@ export default function DetailPenerimaan({
         </CardBody>
       </Card>
 
-      {/* Detail Items Table */}
       <Card>
         <CardHeader>
           <CardTitle>Detail Barang yang Diterima</CardTitle>
@@ -265,7 +263,6 @@ export default function DetailPenerimaan({
             </table>
           </div>
 
-          {/* Summary */}
           <div className="mt-6 border-t pt-6">
             <div className="flex justify-end">
               <div className="w-full md:w-1/2 lg:w-1/3">
@@ -298,7 +295,6 @@ export default function DetailPenerimaan({
         </CardBody>
       </Card>
 
-      {/* Action Buttons */}
       <div className="mt-6 flex gap-4 justify-end">
         <LinkButton href="/penerimaan" variant="secondary">
           Kembali ke Daftar

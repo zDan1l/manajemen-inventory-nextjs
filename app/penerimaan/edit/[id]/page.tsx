@@ -29,7 +29,7 @@ export default function DetailPenerimaanPage({ params }: { params: Promise<{ id:
       setLoading(true);
       const res = await fetch(`/api/penerimaans/${id}`);
       const result: ApiResponse<Penerimaan> = await res.json();
-      
+
       if (result.status === 200 && result.data) {
         setPenerimaan(result.data);
       } else {
@@ -49,12 +49,11 @@ export default function DetailPenerimaanPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="space-y-6 max-w-2xl">
-      {/* Header */}
+
       <div className="bg-blue-200 border-2 border-black p-4">
         <h1 className="text-xl font-bold uppercase text-black">Detail Penerimaan</h1>
       </div>
 
-      {/* Detail */}
       <div className="bg-white border-2 border-black p-6 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -91,7 +90,6 @@ export default function DetailPenerimaanPage({ params }: { params: Promise<{ id:
           </div>
         </div>
 
-        {/* Buttons */}
         <div className="flex gap-3 pt-4">
           <Button
             type="button"

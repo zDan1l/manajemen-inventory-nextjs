@@ -1,8 +1,3 @@
-// ==========================================
-// MODERN TABLE COMPONENT
-// Design System v3.0 - Minimalist with #00A69F
-// ==========================================
-
 import Link from "next/link";
 import { MdVisibility, MdEdit, MdDelete } from "react-icons/md";
 

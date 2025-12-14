@@ -59,15 +59,15 @@ export default function AddBarang() {
       const res = await fetch('/api/barangs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          nama, 
-          idsatuan: Number(idsatuan), 
-          jenis, 
+        body: JSON.stringify({
+          nama,
+          idsatuan: Number(idsatuan),
+          jenis,
           status: Number(status),
           harga: Number(harga)
         }),
       });
-      
+
       if (res.ok) {
         router.push('/barang');
       } else {
@@ -88,7 +88,7 @@ export default function AddBarang() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
@@ -103,39 +103,37 @@ export default function AddBarang() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Form Card */}
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Informasi Barang</CardTitle>
             <CardDescription>Masukkan detail untuk item inventori baru</CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Nama Barang" 
-                type="text" 
-                value={nama} 
-                onChange={(e) => setNama(e.target.value)} 
-                required 
+              <FormInput
+                label="Nama Barang"
+                type="text"
+                value={nama}
+                onChange={(e) => setNama(e.target.value)}
+                required
                 placeholder="Masukkan nama barang"
                 helper="Nama deskriptif untuk barang"
               />
 
-              <FormInput 
-                label="Harga" 
-                type="number" 
-                value={harga} 
-                onChange={(e) => setHarga(e.target.value)} 
-                required 
+              <FormInput
+                label="Harga"
+                type="number"
+                value={harga}
+                onChange={(e) => setHarga(e.target.value)}
+                required
                 placeholder="Masukkan harga barang"
                 helper="Harga satuan barang dalam Rupiah"
                 min="0"
@@ -173,15 +171,15 @@ export default function AddBarang() {
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/barang" variant="outline">
                 Batal
               </LinkButton>
-              <Button 
-                type="submit" 
-                variant="primary" 
+              <Button
+                type="submit"
+                variant="primary"
                 loading={loading}
                 icon={
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -3,8 +3,7 @@ import { Satuan } from "@/app/lib/type";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-    // Ambil query parameter 'filter' dari URL
-    // Contoh: /api/satuans?filter=aktif
+
     const searchParams = request.nextUrl.searchParams;
     const filter = searchParams.get('filter');
     let result;

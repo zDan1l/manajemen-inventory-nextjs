@@ -1,9 +1,3 @@
-// ==========================================
-// Model: Dashboard Analytics
-// ==========================================
-// Fungsi: Mengambil data untuk dashboard widgets
-// ==========================================
-
 import { getDbConnection } from "@/app/lib/services/db";
 import { ApiResponse } from "@/app/lib/type";
 
@@ -29,15 +23,11 @@ export interface RecentTransaction {
   total_nilai: number;
 }
 
-/**
- * Get recent stock activities from kartu_stok (last 10 transactions)
- * Menampilkan aktivitas terakhir yang mempengaruhi stok
- */
 export async function getRecentStockActivities(): Promise<ApiResponse<RecentStockActivity[]>> {
   const db = await getDbConnection();
   try {
     const query = `
-      SELECT 
+      SELECT
         idkartu_stok,
         idbarang,
         nama_barang,
@@ -52,15 +42,15 @@ export async function getRecentStockActivities(): Promise<ApiResponse<RecentStoc
       ORDER BY created_at DESC
       LIMIT 10
     `;
-    
+
     const [activities] = await db.execute(query);
     return {
       status: 200,
       data: activities as RecentStockActivity[],
     };
   } catch (error) {
-    return { 
-      status: 500, 
+    return {
+      status: 500,
       error: 'Failed to fetch recent stock activities: ' + (error instanceof Error ? error.message : 'Unknown error')
     };
   } finally {
@@ -68,14 +58,11 @@ export async function getRecentStockActivities(): Promise<ApiResponse<RecentStoc
   }
 }
 
-/**
- * Get recent pengadaan transactions (last 5)
- */
 export async function getRecentTransactions(): Promise<ApiResponse<RecentTransaction[]>> {
   const db = await getDbConnection();
   try {
     const query = `
-      SELECT 
+      SELECT
         idpengadaan,
         timestamp,
         username,
@@ -86,15 +73,15 @@ export async function getRecentTransactions(): Promise<ApiResponse<RecentTransac
       ORDER BY timestamp DESC
       LIMIT 5
     `;
-    
+
     const [transactions] = await db.execute(query);
     return {
       status: 200,
       data: transactions as RecentTransaction[],
     };
   } catch (error) {
-    return { 
-      status: 500, 
+    return {
+      status: 500,
       error: 'Failed to fetch recent transactions: ' + (error instanceof Error ? error.message : 'Unknown error')
     };
   } finally {

@@ -1,18 +1,24 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/app/components/Button';
-import { LinkButton } from '@/app/components/LinkButton';
-import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '@/app/components/Card';
-import { SelectInput } from '@/app/components/SelectInput';
-import { FormInput } from '@/app/components/FormInput';
-import { Alert } from '@/app/components/Alert';
-import { Toast } from '@/app/components/Toast';
-import { ConfirmDialog } from '@/app/components/ConfirmDialog';
-import { useToast } from '@/app/hooks/useToast';
-import { useConfirm } from '@/app/hooks/useConfirm';
-import { Vendor, Barang } from '@/app/lib/type';
-import { formatCurrency } from '@/app/lib/utils/format';
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/app/components/Button";
+import { LinkButton } from "@/app/components/LinkButton";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardBody,
+} from "@/app/components/Card";
+import { SelectInput } from "@/app/components/SelectInput";
+import { FormInput } from "@/app/components/FormInput";
+import { Alert } from "@/app/components/Alert";
+import { Toast } from "@/app/components/Toast";
+import { ConfirmDialog } from "@/app/components/ConfirmDialog";
+import { useToast } from "@/app/hooks/useToast";
+import { useConfirm } from "@/app/hooks/useConfirm";
+import { Vendor, Barang } from "@/app/lib/type";
+import { formatCurrency } from "@/app/lib/utils/format";
 
 interface DetailItem {
   idbarang: number;
@@ -24,26 +30,30 @@ interface DetailItem {
 
 export default function TambahPengadaan() {
   const router = useRouter();
-  const { toast, showToast, hideToast, success, error: showError, warning } = useToast();
-  const { confirmState, showConfirm, hideConfirm, handleConfirm } = useConfirm();
-  
-  // State
+  const {
+    toast,
+    showToast,
+    hideToast,
+    success,
+    error: showError,
+    warning,
+  } = useToast();
+  const { confirmState, showConfirm, hideConfirm, handleConfirm } =
+    useConfirm();
+
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [barangs, setBarangs] = useState<Barang[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Form state
+
   const [selectedVendor, setSelectedVendor] = useState<number>(0);
-  const [ppnPersen, setPpnPersen] = useState<number>(10);  // Default 10%
+  const [ppnPersen, setPpnPersen] = useState<number>(10);
   const [details, setDetails] = useState<DetailItem[]>([]);
-  
-  // Item entry state
+
   const [selectedBarang, setSelectedBarang] = useState<number>(0);
   const [jumlah, setJumlah] = useState<number>(0);
   const [hargaSatuan, setHargaSatuan] = useState<number>(0);
 
-  // Fetch vendors dan barangs saat component mount
   useEffect(() => {
     fetchVendors();
     fetchBarangs();
@@ -51,50 +61,50 @@ export default function TambahPengadaan() {
 
   const fetchVendors = async () => {
     try {
-      const res = await fetch('/api/vendors?filter=aktif');
+      const res = await fetch("/api/vendors?filter=aktif");
       const data = await res.json();
       if (Array.isArray(data)) {
         setVendors(data);
       }
     } catch (error) {
-      showError('Gagal memuat data vendor');
+      showError("Gagal memuat data vendor");
     }
   };
 
   const fetchBarangs = async () => {
     try {
-      const res = await fetch('/api/barangs?filter=aktif');
+      const res = await fetch("/api/barangs?filter=aktif");
       const data = await res.json();
       if (Array.isArray(data)) {
         setBarangs(data);
       }
     } catch (error) {
-      showError('Gagal memuat data barang');
+      showError("Gagal memuat data barang");
     }
   };
 
-  // Add item to detail list
   const handleAddItem = () => {
     if (selectedBarang === 0) {
-      warning('Pilih barang terlebih dahulu');
+      warning("Pilih barang terlebih dahulu");
       return;
     }
     if (jumlah <= 0) {
-      warning('Jumlah harus lebih dari 0');
+      warning("Jumlah harus lebih dari 0");
       return;
     }
     if (hargaSatuan <= 0) {
-      warning('Harga satuan harus lebih dari 0');
+      warning("Harga satuan harus lebih dari 0");
       return;
     }
 
-    const barang = barangs.find(b => b.idbarang === selectedBarang);
+    const barang = barangs.find((b) => b.idbarang === selectedBarang);
     if (!barang) return;
 
-    // Cek apakah barang sudah ada di list
-    const exists = details.find(d => d.idbarang === selectedBarang);
+    const exists = details.find((d) => d.idbarang === selectedBarang);
     if (exists) {
-      warning('Barang sudah ada dalam daftar. Hapus terlebih dahulu jika ingin mengubah.');
+      warning(
+        "Barang sudah ada dalam daftar. Hapus terlebih dahulu jika ingin mengubah."
+      );
       return;
     }
 
@@ -103,80 +113,79 @@ export default function TambahPengadaan() {
       nama_barang: barang.nama,
       jumlah: jumlah,
       harga_satuan: hargaSatuan,
-      sub_total: jumlah * hargaSatuan
+      sub_total: jumlah * hargaSatuan,
     };
 
     setDetails([...details, newItem]);
-    success('Barang berhasil ditambahkan');
+    success("Barang berhasil ditambahkan");
 
-    // Reset form
     setSelectedBarang(0);
     setJumlah(0);
     setHargaSatuan(0);
   };
 
-  // Remove item from detail list
   const handleRemoveItem = (idbarang: number) => {
-    setDetails(details.filter(d => d.idbarang !== idbarang));
+    setDetails(details.filter((d) => d.idbarang !== idbarang));
   };
 
-  // Calculate totals (untuk display/preview saja, nilai final dihitung database!)
   const subtotalNilai = details.reduce((sum, item) => sum + item.sub_total, 0);
-  const ppnNilai = subtotalNilai * (ppnPersen / 100);  // Hitung PPN berdasarkan persen
+  const ppnNilai = subtotalNilai * (ppnPersen / 100);
   const totalNilai = subtotalNilai + ppnNilai;
 
-  // Submit pengadaan
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (selectedVendor === 0) {
-      warning('Pilih vendor terlebih dahulu');
+      warning("Pilih vendor terlebih dahulu");
       return;
     }
-    
+
     if (ppnPersen < 0) {
-      warning('PPN tidak boleh negatif');
+      warning("PPN tidak boleh negatif");
       return;
     }
 
     if (details.length === 0) {
-      warning('Tambahkan minimal 1 barang');
+      warning("Tambahkan minimal 1 barang");
       return;
     }
 
     setLoading(true);
 
     try {
-      const calculatedSubtotal = details.reduce((sum, item) => sum + item.sub_total, 0);
+      const calculatedSubtotal = details.reduce(
+        (sum, item) => sum + item.sub_total,
+        0
+      );
       const calculatedPpnNilai = calculatedSubtotal * (ppnPersen / 100);
-      
+
       const payload = {
         user_iduser: 1,
         vendor_idvendor: selectedVendor,
         ppn_nilai: calculatedPpnNilai,
-        details: details.map(d => ({
+        details: details.map((d) => ({
           idbarang: d.idbarang,
           jumlah: d.jumlah,
-          harga_satuan: d.harga_satuan
-        }))
+          harga_satuan: d.harga_satuan,
+        })),
       };
 
-      const response = await fetch('/api/pengadaans', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+      const response = await fetch("/api/pengadaans", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-      
+
       const result = await response.json();
       if (response.ok) {
-        success('Pengadaan berhasil dibuat!');
-        setTimeout(() => router.push('/pengadaan'), 1500);
+        success("Pengadaan berhasil dibuat!");
+        setTimeout(() => router.push("/pengadaan"), 1500);
       } else {
-        console.error('Error response:', result);
-        showError(result.error || 'Gagal membuat pengadaan');
+        console.error("Error response:", result);
+        showError(result.error || "Gagal membuat pengadaan");
       }
     } catch (error) {
-      showError('Terjadi kesalahan jaringan. Silakan coba lagi.');
+      showError("Terjadi kesalahan jaringan. Silakan coba lagi.");
     } finally {
       setLoading(false);
     }
@@ -184,7 +193,6 @@ export default function TambahPengadaan() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 mb-6">
         <div className="flex items-center gap-4">
           <div className="p-4 bg-white/20 backdrop-blur-sm rounded-xl">
@@ -211,7 +219,6 @@ export default function TambahPengadaan() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert
           variant="danger"
@@ -223,7 +230,6 @@ export default function TambahPengadaan() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Vendor Selection */}
         <Card>
           <CardHeader>
             <CardTitle>Informasi Pengadaan</CardTitle>
@@ -261,7 +267,6 @@ export default function TambahPengadaan() {
           </CardBody>
         </Card>
 
-        {/* Add Item Form */}
         <Card>
           <CardHeader>
             <CardTitle>Tambah Barang</CardTitle>
@@ -345,7 +350,6 @@ export default function TambahPengadaan() {
           </CardBody>
         </Card>
 
-        {/* Detail Items Table */}
         {details.length > 0 && (
           <Card>
             <CardHeader>
@@ -451,7 +455,6 @@ export default function TambahPengadaan() {
           </Card>
         )}
 
-        {/* Action Buttons */}
         <Card>
           <CardBody>
             <div className="flex gap-4 justify-end">
@@ -487,7 +490,6 @@ export default function TambahPengadaan() {
         </Card>
       </form>
 
-      {/* Toast Notification */}
       <Toast
         isOpen={toast.isOpen}
         message={toast.message}
@@ -495,7 +497,6 @@ export default function TambahPengadaan() {
         onClose={hideToast}
       />
 
-      {/* Confirm Dialog */}
       <ConfirmDialog
         isOpen={confirmState.isOpen}
         title={confirmState.title}

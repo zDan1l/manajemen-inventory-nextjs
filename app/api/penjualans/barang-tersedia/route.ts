@@ -1,9 +1,3 @@
-// ==========================================
-// API Route: GET /api/penjualans/barang-tersedia
-// Fungsi: Ambil daftar barang dengan stok > 0
-// View: view_barang_tersedia
-// ==========================================
-
 import { getBarangTersedia } from "@/app/lib/models/penjualan";
 import { NextResponse } from "next/server";
 

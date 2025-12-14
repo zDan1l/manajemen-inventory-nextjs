@@ -25,14 +25,12 @@ export default function AddPenjualanPage() {
     useConfirm();
   const [loading, setLoading] = useState(false);
 
-  // Form state
   const [barangList, setBarangList] = useState<BarangTersedia[]>([]);
   const [marginList, setMarginList] = useState<Margin[]>([]);
   const [selectedMargin, setSelectedMargin] = useState<number | null>(null);
-  const [ppn, setPpn] = useState<number>(10); // Input PPN dalam persen (default 10%)
-  const [iduser, setIduser] = useState<number>(1); // TODO: Get from auth
+  const [ppn, setPpn] = useState<number>(10);
+  const [iduser, setIduser] = useState<number>(1);
 
-  // Detail penjualan
   const [details, setDetails] = useState<DetailPenjualanInput[]>([
     { idbarang: 0, jumlah: 0, harga_jual: 0, sub_total: 0 },
   ]);
@@ -42,7 +40,6 @@ export default function AddPenjualanPage() {
     fetchMarginList();
   }, []);
 
-  // Fetch barang yang tersedia (stok > 0)
   const fetchBarangTersedia = async () => {
     try {
       setLoading(true);
@@ -63,7 +60,6 @@ export default function AddPenjualanPage() {
     }
   };
 
-  // Fetch margin list
   const fetchMarginList = async () => {
     try {
       const res = await fetch("/api/penjualans/margins");
@@ -72,7 +68,6 @@ export default function AddPenjualanPage() {
       if (Array.isArray(data)) {
         setMarginList(data);
 
-        // Set first margin as default
         if (data.length > 0) {
           setSelectedMargin(data[0].idmargin_penjualan);
         }
@@ -82,11 +77,9 @@ export default function AddPenjualanPage() {
     }
   };
 
-  // Handle change barang di row tertentu
   const handleBarangChange = (index: number, idbarang: number) => {
     const newDetails = [...details];
 
-    // Validasi: cek apakah barang sudah dipilih di row lain
     const isDuplicate = newDetails.some(
       (d, i) => i !== index && d.idbarang === idbarang && idbarang > 0
     );
@@ -100,16 +93,15 @@ export default function AddPenjualanPage() {
       (m) => m.idmargin_penjualan === selectedMargin
     );
 
-    // Hitung harga jual = harga beli + (harga beli * margin%)
     const hargaBeli = barang?.harga_beli || 0;
     const marginPersen = margin?.persen || 0;
     const hargaJual = hargaBeli + (hargaBeli * marginPersen) / 100;
 
     newDetails[index] = {
       idbarang,
-      jumlah: 1, // Default jumlah 1 saat barang dipilih
+      jumlah: 1,
       harga_jual: hargaJual,
-      sub_total: hargaJual, // Sub total = 1 * harga jual
+      sub_total: hargaJual,
       nama_barang: barang?.nama_barang,
       nama_satuan: barang?.nama_satuan,
       stok_tersedia: barang?.stok_tersedia,
@@ -119,18 +111,15 @@ export default function AddPenjualanPage() {
     setDetails(newDetails);
   };
 
-  // Handle change jumlah di row tertentu
   const handleJumlahChange = (index: number, jumlah: number) => {
     const newDetails = [...details];
     const stokTersedia = newDetails[index].stok_tersedia || 0;
 
-    // Validasi: jumlah tidak boleh negatif
     if (jumlah < 0) {
       warning("Jumlah tidak boleh negatif");
       return;
     }
 
-    // Validasi: jumlah tidak boleh > stok
     if (jumlah > stokTersedia) {
       warning(`Jumlah melebihi stok tersedia (${stokTersedia})`);
       return;
@@ -141,7 +130,6 @@ export default function AddPenjualanPage() {
     setDetails(newDetails);
   };
 
-  // Tambah row detail baru
   const addDetailRow = () => {
     setDetails([
       ...details,
@@ -149,7 +137,6 @@ export default function AddPenjualanPage() {
     ]);
   };
 
-  // Hapus row detail
   const removeDetailRow = (index: number) => {
     if (details.length > 1) {
       const newDetails = details.filter((_, i) => i !== index);
@@ -157,23 +144,19 @@ export default function AddPenjualanPage() {
     }
   };
 
-  // Submit penjualan
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validasi
     if (!selectedMargin) {
       warning("Pilih margin penjualan terlebih dahulu");
       return;
     }
 
-    // Validasi PPN (0-100%)
     if (ppn < 0 || ppn > 100) {
       warning("PPN harus antara 0% - 100%");
       return;
     }
 
-    // Filter details yang valid (idbarang > 0 dan jumlah > 0)
     const validDetails = details.filter((d) => d.idbarang > 0 && d.jumlah > 0);
 
     if (validDetails.length === 0) {
@@ -181,7 +164,6 @@ export default function AddPenjualanPage() {
       return;
     }
 
-    // Validasi: cek duplikasi barang
     const barangIds = validDetails.map((d) => d.idbarang);
     const hasDuplicate = barangIds.some(
       (id, index) => barangIds.indexOf(id) !== index
@@ -193,7 +175,6 @@ export default function AddPenjualanPage() {
       return;
     }
 
-    // Check stok untuk semua detail
     for (const detail of validDetails) {
       const barang = barangList.find((b) => b.idbarang === detail.idbarang);
       if (!barang) {
@@ -212,7 +193,6 @@ export default function AddPenjualanPage() {
       }
     }
 
-    // Show confirmation dialog
     showConfirm(
       "Konfirmasi Transaksi Penjualan",
       `Apakah Anda yakin ingin menyimpan transaksi penjualan ini?\n\n${validDetails.length} item akan dijual.\n\nTransaksi yang sudah disimpan TIDAK DAPAT DIEDIT atau DIHAPUS.`,
@@ -221,25 +201,23 @@ export default function AddPenjualanPage() {
     );
   };
 
-  // Actual submission after confirmation
   const confirmSubmit = async () => {
     const validDetails = details.filter((d) => d.idbarang > 0 && d.jumlah > 0);
 
     try {
       setLoading(true);
 
-      // Hitung subtotal dari semua detail
       const calculatedSubtotal = validDetails.reduce(
         (sum, d) => sum + d.sub_total,
         0
       );
-      // Hitung PPN dalam Rupiah
+
       const ppnNilai = calculatedSubtotal * (ppn / 100);
 
       const payload = {
         idmargin_penjualan: selectedMargin,
         iduser: iduser,
-        ppn: ppnNilai, // PPN dalam Rupiah (bukan persen!)
+        ppn: ppnNilai,
         details: validDetails.map((d) => ({
           idbarang: d.idbarang,
           jumlah: d.jumlah,
@@ -257,7 +235,6 @@ export default function AddPenjualanPage() {
       const result = await res.json();
       console.log("Response:", result);
 
-      // Check HTTP status dan response status
       if (res.ok && result.status === 201 && result.data) {
         success(`Penjualan berhasil dibuat! ID: ${result.data.idpenjualan}`);
         setTimeout(() => router.push("/penjualan"), 1500);
@@ -272,25 +249,23 @@ export default function AddPenjualanPage() {
     }
   };
 
-  // Calculate summary (preview harga)
   const validDetails = details.filter((d) => d.idbarang > 0 && d.jumlah > 0);
   const totalItems = validDetails.length;
   const totalQty = validDetails.reduce((sum, d) => sum + d.jumlah, 0);
   const subtotalNilai = validDetails.reduce((sum, d) => sum + d.sub_total, 0);
-  const ppnNilai = subtotalNilai * (ppn / 100); // PPN dalam Rupiah
+  const ppnNilai = subtotalNilai * (ppn / 100);
 
-  // Dapatkan margin persen dari margin yang dipilih
   const selectedMarginObj = marginList.find(
     (m) => m.idmargin_penjualan === selectedMargin
   );
   const marginPersen = selectedMarginObj?.persen || 0;
-  const marginNilai = subtotalNilai * (marginPersen / 100); // Margin dalam Rupiah
+  const marginNilai = subtotalNilai * (marginPersen / 100);
 
   const totalNilai = subtotalNilai + ppnNilai + marginNilai;
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Toast Notification */}
+
       {toast.isOpen && (
         <Toast
           isOpen={toast.isOpen}
@@ -300,7 +275,6 @@ export default function AddPenjualanPage() {
         />
       )}
 
-      {/* Loading State */}
       {loading && barangList.length === 0 && (
         <Card>
           <div className="p-6 text-center">
@@ -314,7 +288,6 @@ export default function AddPenjualanPage() {
         </Card>
       )}
 
-      {/* Warning: No Stock Available */}
       {!loading && barangList.length === 0 && (
         <Card>
           <div className="p-6 bg-yellow-50 border-l-4 border-yellow-400">
@@ -346,7 +319,6 @@ export default function AddPenjualanPage() {
         </Card>
       )}
 
-      {/* Warning: No Margin Active */}
       {!loading && marginList.length === 0 && (
         <Card>
           <div className="p-6 bg-yellow-50 border-l-4 border-yellow-400">
@@ -377,9 +349,8 @@ export default function AddPenjualanPage() {
         </Card>
       )}
 
-      {/* Main Form Card */}
       <Card>
-        {/* Header with Gradient */}
+
         <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] text-white p-6 rounded-t-lg">
           <div className="flex items-center gap-3">
             <svg
@@ -406,7 +377,7 @@ export default function AddPenjualanPage() {
 
         <form onSubmit={handleSubmit}>
           <div className="p-6 space-y-6">
-            {/* Informasi Penjualan */}
+
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <svg
@@ -460,10 +431,8 @@ export default function AddPenjualanPage() {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="border-t border-gray-200"></div>
 
-            {/* Detail Barang */}
             <div>
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
@@ -597,10 +566,8 @@ export default function AddPenjualanPage() {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="border-t border-gray-200"></div>
 
-            {/* Summary */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
               <h3 className="text-md font-semibold text-gray-800 mb-3">
                 Ringkasan Transaksi
@@ -668,7 +635,6 @@ export default function AddPenjualanPage() {
               )}
             </div>
 
-            {/* Action Buttons */}
             <div className="flex gap-3 pt-2">
               <Button
                 type="button"
@@ -699,7 +665,6 @@ export default function AddPenjualanPage() {
         </form>
       </Card>
 
-      {/* Confirmation Dialog */}
       <ConfirmDialog
         isOpen={confirmState.isOpen}
         title={confirmState.title}

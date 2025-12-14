@@ -1,9 +1,3 @@
-// ==========================================
-// API Route: GET /api/kartu-stok
-// Fungsi: Ambil daftar kartu stok (history)
-// View: view_kartu_stok_detail
-// ==========================================
-
 import { getKartuStok } from "@/app/lib/models/kartuStoks";
 import { NextResponse } from "next/server";
 
@@ -21,7 +15,5 @@ export async function GET(req: Request) {
     );
   }
 
-  // Return data array directly (simpler for frontend)
   return NextResponse.json(result.data, { status: 200 });
 }
-

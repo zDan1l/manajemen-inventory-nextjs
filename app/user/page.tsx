@@ -1,11 +1,16 @@
-// app/users/page.tsx
-'use client';
-import { useEffect, useState } from 'react';
-import { User} from '@/app/lib/type';
-import { Table } from '@/app/components/Table';
-import { LinkButton } from '../components/LinkButton';
-import { Alert } from '../components/Alert';
-import { Card, CardHeader, CardTitle, CardDescription, CardBody } from '../components/Card';
+"use client";
+import { useEffect, useState } from "react";
+import { User } from "@/app/lib/type";
+import { Table } from "@/app/components/Table";
+import { LinkButton } from "../components/LinkButton";
+import { Alert } from "../components/Alert";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardBody,
+} from "../components/Card";
 
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
@@ -15,37 +20,39 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/users');
+      const res = await fetch("/api/users");
       const data: User[] | { error: string } = await res.json();
       if (res.ok && Array.isArray(data)) {
         setUsers(data);
         setError(null);
       } else {
-        setError((data as { error: string }).error || 'Gagal memuat data pengguna');
+        setError(
+          (data as { error: string }).error || "Gagal memuat data pengguna"
+        );
       }
     } catch (err) {
-      setError('Gagal memuat data pengguna');
+      setError("Gagal memuat data pengguna");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+    if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
       try {
-        const res = await fetch('/api/users', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("/api/users", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ iduser: id }),
         });
         if (res.ok) {
           fetchUsers();
         } else {
           const data = await res.json();
-          setError(data.error || 'Gagal menghapus pengguna');
+          setError(data.error || "Gagal menghapus pengguna");
         }
       } catch (err) {
-        setError('Gagal menghapus pengguna');
+        setError("Gagal menghapus pengguna");
       }
     }
   };
@@ -55,14 +62,13 @@ export default function Users() {
   }, []);
 
   const columns = [
-    { key: 'iduser', label: 'ID' },
-    { key: 'username', label: 'Nama Pengguna' },
-    { key: 'role_name', label: 'Peran' },
+    { key: "iduser", label: "ID" },
+    { key: "username", label: "Nama Pengguna" },
+    { key: "role_name", label: "Peran" },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -73,31 +79,52 @@ export default function Users() {
             </div>
             <div>
               <h1 className="text-3xl font-bold">Manajemen Pengguna</h1>
-              <p className="text-teal-100 mt-1">Kelola pengguna sistem dan peran mereka</p>
+              <p className="text-teal-100 mt-1">
+                Kelola pengguna sistem dan peran mereka
+              </p>
             </div>
           </div>
-          <LinkButton href="/user/add" variant="secondary" size="lg" icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          }>
+          <LinkButton
+            href="/user/add"
+            variant="secondary"
+            size="lg"
+            icon={
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            }
+          >
             Tambah Pengguna
           </LinkButton>
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
-        <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
+        <Alert
+          variant="danger"
+          title="Kesalahan"
+          onClose={() => setError(null)}
+        >
           {error}
         </Alert>
       )}
 
-      {/* Table Card */}
       <Card padding="none">
         <CardHeader className="p-6">
           <CardTitle>All Users</CardTitle>
-          <CardDescription>A list of all users in the system including their name and role.</CardDescription>
+          <CardDescription>
+            A list of all users in the system including their name and role.
+          </CardDescription>
         </CardHeader>
         <CardBody>
           <Table

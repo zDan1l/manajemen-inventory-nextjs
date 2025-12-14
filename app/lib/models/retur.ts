@@ -5,8 +5,7 @@ export async function getRetur(): Promise<ApiResponse<Retur[]>> {
   let connection;
   try {
     connection = await getDbConnection();
-    
-    // Gunakan view yang sudah dibuat di database
+
     const [rows] = await connection.execute(`
       SELECT * FROM v_retur_lengkap
     `);
@@ -17,7 +16,7 @@ export async function getRetur(): Promise<ApiResponse<Retur[]>> {
     };
   } catch (error) {
     console.error('getRetur error:', error);
-    // Jika view belum ada atau tabel kosong, return empty array bukan error
+
     return {
       status: 200,
       data: [],
@@ -31,8 +30,7 @@ export async function getReturById(idretur: number): Promise<ApiResponse<any>> {
   let connection;
   try {
     connection = await getDbConnection();
-    
-    // Get retur header dari view
+
     const [returRows] = await connection.execute(`
       SELECT * FROM v_retur_lengkap
       WHERE idretur = ?
@@ -45,7 +43,6 @@ export async function getReturById(idretur: number): Promise<ApiResponse<any>> {
       };
     }
 
-    // Get detail retur dari view
     const [detailRows] = await connection.execute(`
       SELECT * FROM v_detail_retur_lengkap
       WHERE idretur = ?
@@ -78,7 +75,6 @@ export async function createRetur(data: {
   try {
     const { idpenerimaan, iduser, details } = data;
 
-    // Validasi input
     if (!idpenerimaan || !iduser || !details || !Array.isArray(details)) {
       return {
         status: 400,
@@ -95,14 +91,12 @@ export async function createRetur(data: {
 
     connection = await getDbConnection();
 
-    // Call stored procedure
     const detailsJson = JSON.stringify(details);
     const [result] = await connection.execute(
       'CALL sp_create_retur(?, ?, ?)',
       [idpenerimaan, iduser, detailsJson]
     ) as any;
 
-    // Get idretur from result
     const idretur = result[0]?.[0]?.idretur;
 
     if (!idretur) {
@@ -129,7 +123,7 @@ export async function getPenerimaanForRetur(): Promise<ApiResponse<any[]>> {
   let connection;
   try {
     connection = await getDbConnection();
-    
+
     const [rows] = await connection.execute(`
      SELECT * FROM v_list_penerimaan_selesai`);
 
@@ -152,7 +146,7 @@ export async function getDetailPenerimaanForRetur(idpenerimaan: number): Promise
   let connection;
   try {
     connection = await getDbConnection();
-    
+
     const [rows] = await connection.execute(
       'CALL sp_get_penerimaan_for_retur(?)',
       [idpenerimaan]

@@ -6,7 +6,7 @@ import mysql from "mysql2/promise";
 export async function getMargin(): Promise<ApiResponse<Margin[]>> {
   const db = await getDbConnection();
   try {
-    // Menggunakan view_margin_all untuk menampilkan semua margin
+
     const [margins] = await db.execute("SELECT * FROM view_margin_all");
 
     return {
@@ -25,11 +25,10 @@ export async function getMargin(): Promise<ApiResponse<Margin[]>> {
   }
 }
 
-// Fungsi baru: Mengambil hanya margin aktif
 export async function getmarginAktif(): Promise<ApiResponse<Margin[]>> {
   const db = await getDbConnection();
   try {
-    // Menggunakan view_margin_aktif untuk menampilkan margin aktif saja
+
     const [margins] = await db.execute("SELECT * FROM view_margin_aktif");
 
     return {
@@ -95,7 +94,7 @@ export async function createMargin(
   const { iduser, persen, status } = parsed.data;
   const db = await getDbConnection();
   try {
-    // Jika margin baru statusnya aktif (1), nonaktifkan semua margin lain
+
     if (status === 1) {
       await db.execute(
         "UPDATE margin_penjualan SET status = 0, updated_at = now() WHERE status = 1"
@@ -141,7 +140,7 @@ export async function updateMargin(
     parsed.data;
   const db = await getDbConnection();
   try {
-    // Jika margin diubah menjadi aktif (1), nonaktifkan semua margin lain
+
     if (status === 1) {
       await db.execute(
         "UPDATE margin_penjualan SET status = 0, updated_at = now() WHERE status = 1 AND idmargin_penjualan != ?",

@@ -16,15 +16,15 @@ export default function Barangs() {
   const fetchBarangs = async (filter: string = 'all') => {
     try {
       setLoading(true);
-      
+
       let endpoint = '/api/barangs';
       if (filter === 'aktif') {
         endpoint = '/api/barangs?filter=aktif';
       }
-      
+
       const res = await fetch(endpoint);
       const data: Barang[] | { error: string } = await res.json();
-      
+
       if (res.ok && Array.isArray(data)) {
         setBarangs(data);
         setError(null);
@@ -67,7 +67,6 @@ export default function Barangs() {
     fetchBarangs('aktif');
   }, []);
 
-  // Helper functions to map codes to readable strings
   const mapStatusToString = (status: number | string) => {
     const numStatus = typeof status === 'string' ? parseInt(status) : status;
     return numStatus === 1 ? 'Aktif' : 'Tidak Aktif';
@@ -101,7 +100,7 @@ export default function Barangs() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -125,14 +124,12 @@ export default function Barangs() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Filter Card */}
       <Card>
         <CardBody>
           <div className="flex items-center gap-3">
@@ -163,7 +160,6 @@ export default function Barangs() {
         </CardBody>
       </Card>
 
-      {/* Table Card */}
       <Card padding="none">
         <CardHeader className="p-6">
           <CardTitle>Semua Barang</CardTitle>

@@ -49,13 +49,13 @@ export default function AddMargin() {
       const res = await fetch('/api/margins', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          iduser: Number(iduser), 
-          persen: Number(persen), 
+        body: JSON.stringify({
+          iduser: Number(iduser),
+          persen: Number(persen),
           status: Number(status),
         }),
       });
-      
+
       if (res.ok) {
         router.push('/margin');
       } else {
@@ -76,7 +76,7 @@ export default function AddMargin() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
@@ -91,29 +91,27 @@ export default function AddMargin() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Form Card */}
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Informasi Margin</CardTitle>
             <CardDescription>Masukkan detail untuk konfigurasi margin baru</CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Persentase" 
-                type="number" 
-                value={persen} 
-                onChange={(e) => setPersen(e.target.value)} 
-                required 
+              <FormInput
+                label="Persentase"
+                type="number"
+                value={persen}
+                onChange={(e) => setPersen(e.target.value)}
+                required
                 placeholder="Masukkan persentase"
                 helper="Persentase margin (contoh: 10 untuk 10%)"
                 step="0.01"
@@ -142,15 +140,15 @@ export default function AddMargin() {
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/margin" variant="outline">
                 Batal
               </LinkButton>
-              <Button 
-                type="submit" 
-                variant="primary" 
+              <Button
+                type="submit"
+                variant="primary"
                 loading={loading}
                 icon={
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

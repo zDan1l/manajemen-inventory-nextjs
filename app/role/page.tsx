@@ -60,7 +60,7 @@ export default function Roles() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -84,14 +84,12 @@ export default function Roles() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Table Card */}
       <Card padding="none">
         <CardHeader className="p-6">
           <CardTitle>All Roles</CardTitle>

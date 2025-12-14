@@ -83,16 +83,16 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
       const res = await fetch('/api/barangs', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           idbarang: Number(id),
-          nama, 
-          idsatuan: Number(idsatuan), 
-          jenis, 
+          nama,
+          idsatuan: Number(idsatuan),
+          jenis,
           status: Number(status),
           harga: Number(harga)
         }),
       });
-      
+
       if (res.ok) {
         router.push('/barang');
       } else {
@@ -124,7 +124,7 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Edit Barang</h1>
         <p className="text-white/90">Perbarui informasi barang</p>
@@ -142,25 +142,25 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
             <CardTitle>Informasi Barang</CardTitle>
             <CardDescription>Masukkan detail untuk memperbarui barang</CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Nama Barang" 
-                type="text" 
-                value={nama} 
-                onChange={(e) => setNama(e.target.value)} 
-                required 
+              <FormInput
+                label="Nama Barang"
+                type="text"
+                value={nama}
+                onChange={(e) => setNama(e.target.value)}
+                required
                 placeholder="Masukkan nama barang"
                 helper="Nama deskriptif untuk barang"
               />
 
-              <FormInput 
-                label="Harga" 
-                type="number" 
-                value={harga} 
-                onChange={(e) => setHarga(e.target.value)} 
-                required 
+              <FormInput
+                label="Harga"
+                type="number"
+                value={harga}
+                onChange={(e) => setHarga(e.target.value)}
+                required
                 placeholder="Masukkan harga barang"
                 helper="Harga satuan barang dalam Rupiah"
                 min="0"
@@ -198,7 +198,7 @@ export default function EditBarang({ params }: { params: Promise<{ id: string }>
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/barang" variant="outline" size="lg">Batal</LinkButton>

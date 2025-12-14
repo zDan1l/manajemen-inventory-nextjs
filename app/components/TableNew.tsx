@@ -1,8 +1,3 @@
-// ==========================================
-// MODERN TABLE COMPONENT
-// Design System v2.0 - Minimalist
-// ==========================================
-
 import Link from 'next/link';
 
 interface TableProps<T> {

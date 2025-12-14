@@ -1,4 +1,3 @@
-// app/api/returs/penerimaan-for-retur/route.ts
 import { getPenerimaanForRetur } from "@/app/lib/models/retur";
 import { NextResponse } from "next/server";
 

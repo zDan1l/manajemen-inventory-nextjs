@@ -46,7 +46,7 @@ export default function EditRole({ params }: { params: Promise<{ id: string }> }
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idrole: Number(id), nama_role }),
       });
-      
+
       if (res.ok) {
         router.push('/role');
       } else {
@@ -73,49 +73,47 @@ export default function EditRole({ params }: { params: Promise<{ id: string }> }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Edit Peran</h1>
         <p className="text-white/90">Perbarui informasi peran</p>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Form Card */}
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Informasi Peran</CardTitle>
             <CardDescription>Masukkan detail untuk memperbarui peran</CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Nama Peran" 
-                type="text" 
-                value={nama_role} 
-                onChange={(e) => setNamaRole(e.target.value)} 
-                required 
+              <FormInput
+                label="Nama Peran"
+                type="text"
+                value={nama_role}
+                onChange={(e) => setNamaRole(e.target.value)}
+                required
                 placeholder="Masukkan nama peran"
                 helper="Nama deskriptif untuk peran ini"
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/role" variant="outline" size="lg">
                 Batal
               </LinkButton>
-              <Button 
-                type="submit" 
-                variant="primary" 
+              <Button
+                type="submit"
+                variant="primary"
                 size="lg"
                 loading={loading}
                 icon={

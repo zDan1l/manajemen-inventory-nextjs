@@ -1,13 +1,9 @@
-
-
 import { createMargin, deleteMargin, getMargin, getmarginAktif, updateMargin } from "@/app/lib/models/margin";
 import { Margin } from "@/app/lib/type";
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function GET(request: NextRequest) {
-    // Ambil query parameter 'filter' dari URL
-    // Contoh: /apiMargins?filter=aktif
+
     const searchParams = request.nextUrl.searchParams;
     const filter = searchParams.get('filter');
     let result;

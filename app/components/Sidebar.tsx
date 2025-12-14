@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { 
-  MdDashboard, 
-  MdPeople, 
-  MdSecurity, 
+import {
+  MdDashboard,
+  MdPeople,
+  MdSecurity,
   MdScale,
   MdStore,
   MdTrendingUp,
@@ -119,10 +119,9 @@ const Sidebar = () => {
       aria-label="Main sidebar"
     >
       <div className="flex flex-col h-full">
-        {/* Top accent */}
+
         <div className="h-1 bg-gradient-to-r from-[#00A69F] to-[#06B6D4]"></div>
 
-        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#0F172A] ring-1 ring-[#00A69F]/20">
@@ -146,7 +145,6 @@ const Sidebar = () => {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar" role="navigation">
           {menuSections.map((section, sIdx) => (
             <div key={sIdx} className="">
@@ -169,10 +167,10 @@ const Sidebar = () => {
                       aria-current={active ? 'page' : undefined}
                       title={isCollapsed ? item.title : undefined}
                     >
-                      {/* Active indicator */}
+
                       <span className={`inline-block w-1.5 h-8 rounded-r-full mr-1 ${active ? 'bg-[#00A69F]' : 'bg-transparent group-hover:bg-[#00A69F]/30'}`} aria-hidden />
 
-                      <div className={`flex items-center justify-center w-10 h-10 rounded-md ${active ? 'bg-[#00A69F]/10' : 'bg-transparent'} text-slate-200`}> 
+                      <div className={`flex items-center justify-center w-10 h-10 rounded-md ${active ? 'bg-[#00A69F]/10' : 'bg-transparent'} text-slate-200`}>
                         <Icon className={`w-5 h-5 ${active ? 'text-[#00A69F]' : 'text-slate-300 group-hover:text-white'}`} />
                       </div>
 
@@ -189,7 +187,6 @@ const Sidebar = () => {
           ))}
         </nav>
 
-        {/* Footer / Profile */}
         <div className="p-3 border-t border-slate-800">
           <div className={`flex items-center gap-3 p-2 rounded-lg hover:bg-slate-800/40 transition-colors ${isCollapsed ? 'justify-center' : ''}`}>
             <div className="w-9 h-9 rounded-full bg-[#0F172A] ring-1 ring-[#00A69F]/20 flex items-center justify-center text-white font-semibold">SA</div>

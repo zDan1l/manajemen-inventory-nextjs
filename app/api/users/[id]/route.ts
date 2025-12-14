@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getUserById } from "@/app/lib/models/users";
 
-
 export async function GET(request: Request, {params} : { params: Promise<{ id?: string[] }> }){
     const unwrappedParams = await params;
     const id = unwrappedParams.id?.[0];

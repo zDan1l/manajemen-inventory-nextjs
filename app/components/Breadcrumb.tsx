@@ -31,12 +31,12 @@ const Breadcrumb = () => {
             </span>
           </div>
         </Link>
-        
+
         {pathArray.map((path, index) => {
           const href = '/' + pathArray.slice(0, index + 1).join('/');
           const isLast = index === pathArray.length - 1;
           const displayName = breadcrumbMap[path] || path.charAt(0).toUpperCase() + path.slice(1);
-          
+
           return (
             <div key={href} className="flex items-center space-x-2">
               <span className="text-gray-400 font-medium">/</span>

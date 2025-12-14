@@ -1,17 +1,6 @@
-// ==========================================
-// Model: Penerimaan (Receiving)
-// ==========================================
-// Fungsi: Handle semua operasi penerimaan barang
-// Database: Calls stored procedures + views
-// ==========================================
-
 import { getDbConnection } from "@/app/lib/services/db";
 import { ApiResponse, Penerimaan, DetailPenerimaan } from "@/app/lib/type";
 import mysql from "mysql2/promise";
-
-// ========================================
-// TYPE DEFINITIONS
-// ========================================
 
 export interface DetailPenerimaanInput {
   idbarang: number;
@@ -33,14 +22,6 @@ export interface PenerimaanBreakdown {
   sub_total: number;
 }
 
-// ========================================
-// GET OPERATIONS (Read from Views & DB)
-// ========================================
-
-/**
- * Get daftar pengadaan yang belum lengkap (bisa diterima)
- * View: view_pengadaan_belum_lengkap
- */
 export async function getPengadaanBelumLengkap(): Promise<ApiResponse<any[]>> {
   const db = await getDbConnection();
   try {
@@ -63,11 +44,6 @@ export async function getPengadaanBelumLengkap(): Promise<ApiResponse<any[]>> {
   }
 }
 
-/**
- * Get breakdown detail pengadaan (untuk display saat input penerimaan)
- * View: view_detail_penerimaan_breakdown
- * Filter: hanya barang yang sisa_diterima > 0
- */
 export async function getDetailPenerimaanBreakdown(
   idpengadaan: number
 ): Promise<ApiResponse<PenerimaanBreakdown[]>> {
@@ -78,8 +54,8 @@ export async function getDetailPenerimaanBreakdown(
   const db = await getDbConnection();
   try {
     const [details] = await db.execute(
-      `SELECT * FROM view_detail_penerimaan_breakdown 
-       WHERE idpengadaan = ? 
+      `SELECT * FROM view_detail_penerimaan_breakdown
+       WHERE idpengadaan = ?
        AND sisa_diterima > 0`,
       [idpengadaan]
     );
@@ -99,9 +75,6 @@ export async function getDetailPenerimaanBreakdown(
   }
 }
 
-/**
- * Get semua penerimaan
- */
 export async function getPenerimaans(): Promise<ApiResponse<Penerimaan[]>> {
   const db = await getDbConnection();
   try {
@@ -122,9 +95,6 @@ export async function getPenerimaans(): Promise<ApiResponse<Penerimaan[]>> {
   }
 }
 
-/**
- * Get penerimaan by ID
- */
 export async function getPenerimaanById(
   idpenerimaan: number
 ): Promise<ApiResponse<Penerimaan>> {
@@ -157,9 +127,6 @@ export async function getPenerimaanById(
   }
 }
 
-/**
- * Get detail penerimaan by penerimaan ID
- */
 export async function getDetailPenerimaan(
   idpenerimaan: number
 ): Promise<ApiResponse<DetailPenerimaan[]>> {
@@ -187,26 +154,12 @@ export async function getDetailPenerimaan(
   }
 }
 
-// ========================================
-// CREATE OPERATIONS (Call Stored Procedures)
-// ========================================
-
-/**
- * Create penerimaan baru dengan details
- *
- * Flow:
- * 1. CALL sp_create_penerimaan (header + loop details di SQL)
- * 2. Trigger otomatis update status pengadaan
- *
- * @param data - { idpengadaan, iduser, details: [{idbarang, jumlah_terima, harga_satuan_terima}] }
- * @returns { idpenerimaan }
- */
 export async function createPenerimaan(data: {
   idpengadaan: number;
   iduser: number;
   details: DetailPenerimaanInput[];
 }): Promise<ApiResponse<{ idpenerimaan: number }>> {
-  // Validasi input
+
   if (!data.idpengadaan || !data.iduser) {
     return {
       status: 400,
@@ -218,7 +171,6 @@ export async function createPenerimaan(data: {
     return { status: 400, error: "At least one detail item is required" };
   }
 
-  // Validasi setiap detail
   for (const detail of data.details) {
     if (
       !detail.idbarang ||
@@ -245,20 +197,16 @@ export async function createPenerimaan(data: {
     console.log("=== CREATE PENERIMAAN START ===");
     console.log("Input data:", JSON.stringify(data, null, 2));
 
-    // Format details ke JSON
     const detailsJson = JSON.stringify(data.details);
     console.log("Details JSON:", detailsJson);
     console.log("Item count:", data.details.length);
 
-    // Call SP dengan JSON array dan item count
-    // Parameter: (idpengadaan, iduser, item_count, json_string, OUT idpenerimaan)
     try {
       const [result] = await db.execute(
         "CALL sp_create_penerimaan(?, ?, ?, ?, @new_penerimaan_id)",
         [data.idpengadaan, data.iduser, data.details.length, detailsJson]
       );
 
-      // Get ID penerimaan yang baru dibuat
       const [idResult] = await db.execute(
         "SELECT @new_penerimaan_id as idpenerimaan"
       );
@@ -299,9 +247,6 @@ export async function createPenerimaan(data: {
   }
 }
 
-/**
- * Update status penerimaan (manual if needed)
- */
 export async function updateStatusPenerimaan(
   idpenerimaan: number,
   status: string

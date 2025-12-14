@@ -1,8 +1,3 @@
-// ==========================================
-// MODERN BADGE COMPONENT
-// Design System v2.0 - Minimalist
-// ==========================================
-
 import { ReactNode } from 'react';
 
 interface BadgeProps {
@@ -29,7 +24,7 @@ export function Badge({ children, variant = 'gray', size = 'md', className = '' 
   };
 
   return (
-    <span 
+    <span
       className={`
         inline-flex items-center gap-1
         font-medium rounded-full border

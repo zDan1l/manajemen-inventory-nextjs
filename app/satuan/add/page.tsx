@@ -59,7 +59,7 @@ export default function AddSatuan() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
@@ -84,7 +84,6 @@ export default function AddSatuan() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert
           variant="danger"
@@ -95,7 +94,6 @@ export default function AddSatuan() {
         </Alert>
       )}
 
-      {/* Form Card */}
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>

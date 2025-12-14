@@ -16,7 +16,7 @@ export async function GET(
 
   const db = await getDbConnection();
   try {
-    // Get penjualan header
+
     const [penjualanRows] = await db.execute(
       "SELECT * FROM view_penjualan WHERE idpenjualan = ?",
       [id]
@@ -30,7 +30,6 @@ export async function GET(
       );
     }
 
-    // Get detail items
     const [detailRows] = await db.execute(
       "SELECT * FROM view_detail_penjualan WHERE idpenjualan = ?",
       [id]
@@ -38,7 +37,6 @@ export async function GET(
 
     const penjualan = penjualans[0];
     const details = detailRows as any[];
-    
 
     return NextResponse.json({
       status: 200,

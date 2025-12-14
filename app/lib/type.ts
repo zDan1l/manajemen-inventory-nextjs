@@ -50,20 +50,16 @@ export interface Margin {
   updated_at: string | Date;
 }
 
-// ========================================
-// TRANSACTION ENTITIES (with detailed fields)
-// ========================================
-
 export interface Pengadaan {
   idpengadaan: number;
   user_iduser: number;
   vendor_idvendor: number;
   timestamp: string | Date;
-  status: "P" | "S" | "L" | "B"; // P=Proses, S=Sebagian, L=Lengkap, B=Batal
+  status: "P" | "S" | "L" | "B";
   subtotal_nilai: number;
-  ppn: number; // Nilai PPN dalam rupiah (dari input user)
+  ppn: number;
   total_nilai: number;
-  // Relations for view
+
   username?: string;
   nama_vendor?: string;
 }
@@ -74,9 +70,9 @@ export interface DetailPengadaan {
   idbarang: number;
   harga_satuan: number;
   jumlah: number;
-  jumlah_diterima?: number; // Updated by trigger
+  jumlah_diterima?: number;
   sub_total: number;
-  // Relations
+
   nama_barang?: string;
   nama_satuan?: string;
   nama_vendor?: string;
@@ -97,10 +93,10 @@ export interface PengadaanDetail {
 export interface Penerimaan {
   idpenerimaan: number;
   created_at: string | Date;
-  status: "I" | "V" | "A"; // I=Input, V=Verified, A=Approved
+  status: "I" | "V" | "A";
   idpengadaan: number;
   iduser: number;
-  // Relations
+
   username?: string;
   nama_vendor?: string;
   vendor_idvendor?: number;
@@ -113,7 +109,7 @@ export interface DetailPenerimaan {
   jumlah_terima: number;
   harga_satuan_terima: number;
   sub_total_terima: number;
-  // Relations
+
   nama_barang?: string;
   nama_satuan?: string;
   nama_vendor?: string;
@@ -141,7 +137,7 @@ export interface Retur {
   created_at: string | Date;
   idpenerimaan: number;
   iduser: number;
-  // Relations
+
   username?: string;
 }
 
@@ -151,7 +147,7 @@ export interface DetailRetur {
   iddetail_penerimaan: number;
   jumlah: number;
   alasan: string;
-  // Relations
+
   nama_barang?: string;
 }
 
@@ -163,7 +159,7 @@ export interface Penjualan {
   total_nilai: number;
   iduser: number;
   idmargin_penjualan: number;
-  // Relations
+
   username?: string;
   margin_persen?: number;
 }
@@ -175,7 +171,7 @@ export interface DetailPenjualan {
   harga_satuan: number;
   jumlah: number;
   subtotal: number;
-  // Relations
+
   nama_barang?: string;
   nama_satuan?: string;
   tanggal_penjualan?: string | Date;
@@ -197,10 +193,6 @@ export interface PenjualanDetail {
   details: DetailPenjualan[];
 }
 
-// ========================================
-// FORM INPUT INTERFACES
-// ========================================
-
 export interface BarangTersedia {
   idbarang: number;
   nama_barang: string;
@@ -213,12 +205,12 @@ export interface BarangTersedia {
 export interface DetailPenjualanInput {
   idbarang: number;
   jumlah: number;
-  harga_jual: number; // Harga jual per unit (sudah + margin)
-  sub_total: number; // jumlah * harga_jual
+  harga_jual: number;
+  sub_total: number;
   nama_barang?: string;
   nama_satuan?: string;
   stok_tersedia?: number;
-  harga_beli?: number; // Untuk kalkulasi harga jual
+  harga_beli?: number;
 }
 
 export interface KartuStokDetail {
@@ -227,17 +219,13 @@ export interface KartuStokDetail {
   idbarang: number;
   nama_barang: string;
   nama_satuan: string;
-  jenis_transaksi: string; // M, K, R
-  jenis_text: string; // Penerimaan, Penjualan, Retur
+  jenis_transaksi: string;
+  jenis_text: string;
   masuk: number;
   keluar: number;
   current_stock: number;
   created_at: string | Date;
 }
-
-// ========================================
-// RETUR INTERFACES
-// ========================================
 
 export interface Retur {
   idretur: number;

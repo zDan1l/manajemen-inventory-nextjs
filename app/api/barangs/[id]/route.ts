@@ -1,4 +1,3 @@
-
 import { getBarangById } from "@/app/lib/models/barang";
 import { NextResponse } from "next/server";
 

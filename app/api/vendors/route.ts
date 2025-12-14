@@ -1,12 +1,9 @@
-
 import { createVendor, deleteVendor, getVendor, getVendorAktif, updateVendor } from "@/app/lib/models/vendor";
 import { Vendor } from "@/app/lib/type";
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function GET(request: NextRequest) {
-    // Ambil query parameter 'filter' dari URL
-    // Contoh: /apivendors?filter=aktif
+
     const searchParams = request.nextUrl.searchParams;
     const filter = searchParams.get('filter');
     let result;

@@ -72,7 +72,7 @@ export default function KartuStokPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 mb-6">
         <div className="flex items-center gap-4">
           <div className="p-4 bg-white/20 backdrop-blur-sm rounded-xl">
@@ -99,7 +99,6 @@ export default function KartuStokPage() {
         </div>
       </div>
 
-      {/* Info */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-[#00A69F]/10 rounded-lg">
@@ -126,7 +125,6 @@ export default function KartuStokPage() {
         </div>
       </div>
 
-      {/* Table */}
       <Table
         data={displayData}
         columns={columns}

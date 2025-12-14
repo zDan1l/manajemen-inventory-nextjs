@@ -1,8 +1,3 @@
-// ==========================================
-// MODERN LINK BUTTON COMPONENT
-// Design System v2.0
-// ==========================================
-
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
@@ -27,8 +22,7 @@ export function LinkButton({
   iconPosition = 'left',
   className = '',
 }: LinkButtonProps) {
-  
-  // Variant styles - Modern minimalist with #00A69F primary
+
   const variants = {
     primary: 'bg-gradient-to-r from-[#00A69F] to-[#0D9488] hover:from-[#0D9488] hover:to-[#00A69F] text-white shadow-sm hover:shadow-md',
     secondary: 'bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-white shadow-sm hover:shadow-md',
@@ -39,7 +33,6 @@ export function LinkButton({
     ghost: 'bg-transparent text-gray-700 hover:bg-[#00A69F]/10',
   };
 
-  // Size variants - match Button component
   const sizes = {
     xs: 'px-3 py-1.5 text-xs',
     sm: 'px-4 py-2 text-sm',

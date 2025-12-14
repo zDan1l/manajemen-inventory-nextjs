@@ -1,8 +1,3 @@
-// ==========================================
-// API Route: /api/penjualans
-// Fungsi: GET list penjualan, POST create penjualan
-// ==========================================
-
 import { getPenjualan, createPenjualan } from '@/app/lib/models/penjualan';
 import { NextResponse } from "next/server";
 
@@ -18,7 +13,6 @@ export async function POST(request: Request) {
 
     console.log('Received POST /api/penjualans:', JSON.stringify(body, null, 2));
 
-    // Validasi input
     if (!idmargin_penjualan) {
       return NextResponse.json(
         { status: 400, error: "Missing idmargin_penjualan" },
@@ -47,7 +41,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validasi setiap detail item
     for (const detail of details) {
       if (!detail.idbarang || isNaN(Number(detail.idbarang))) {
         return NextResponse.json(
@@ -63,7 +56,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // Create penjualan
     const result = await createPenjualan({
       idmargin_penjualan: Number(idmargin_penjualan),
       iduser: Number(iduser),

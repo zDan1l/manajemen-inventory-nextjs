@@ -72,7 +72,7 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
           idrole: idrole ? parseInt(idrole) : null,
         }),
       });
-      
+
       if (res.ok) {
         router.push('/user');
       } else {
@@ -104,39 +104,37 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-lg shadow-lg p-6 mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Edit Pengguna</h1>
         <p className="text-white/90">Perbarui informasi pengguna</p>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Form Card */}
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Informasi Pengguna</CardTitle>
             <CardDescription>Masukkan detail untuk memperbarui pengguna</CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Nama Pengguna" 
-                type="text" 
-                value={username} 
-                onChange={(e) => setUsername(e.target.value)} 
-                required 
+              <FormInput
+                label="Nama Pengguna"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
                 placeholder="Masukkan nama pengguna"
                 helper="Nama pengguna harus unik"
               />
-              
+
               <FormInput
                 label="Kata Sandi Baru"
                 type="password"
@@ -145,7 +143,7 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
                 placeholder="Biarkan kosong untuk tetap menggunakan kata sandi saat ini"
                 helper="Isi hanya jika ingin mengubah kata sandi"
               />
-              
+
               <SelectInput
                 label="Peran"
                 value={idrole}
@@ -156,15 +154,15 @@ export default function EditUser({ params }: { params: Promise<{ id: string }> }
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/user" variant="outline" size="lg">
                 Batal
               </LinkButton>
-              <Button 
-                type="submit" 
-                variant="primary" 
+              <Button
+                type="submit"
+                variant="primary"
                 size="lg"
                 loading={loading}
                 icon={

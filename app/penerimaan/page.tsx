@@ -90,7 +90,7 @@ export default function PenerimaanPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8">
         <div className="flex items-center gap-4">
           <div className="p-4 bg-white/20 backdrop-blur-sm rounded-xl">
@@ -119,14 +119,12 @@ export default function PenerimaanPage() {
         </div>
       </div>
 
-      {/* Action Button */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <LinkButton href="/penerimaan/add" variant="primary" size="lg">
           + Tambah Penerimaan Baru
         </LinkButton>
       </div>
 
-      {/* Data Table */}
       <Table
         data={penerimaans.map((penerimaan) => {
           const statusInfo = mapStatusToString(penerimaan.status);
@@ -142,7 +140,7 @@ export default function PenerimaanPage() {
               ? formatCurrency(penerimaan.total_nilai)
               : "Rp 0",
             status: statusInfo.label,
-            _statusColor: statusInfo.color, // For styling
+            _statusColor: statusInfo.color,
           };
         })}
         columns={columns}

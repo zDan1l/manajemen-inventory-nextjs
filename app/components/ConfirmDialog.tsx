@@ -1,4 +1,3 @@
-// app/components/ConfirmDialog.tsx
 'use client';
 
 import { useState } from 'react';
@@ -54,7 +53,7 @@ export function ConfirmDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
-        {/* Header with Icon */}
+
         <div className={`${variantStyles[variant]} p-5 flex items-center gap-3`}>
           <div className="flex-shrink-0">
             {iconMap[variant]}
@@ -62,12 +61,10 @@ export function ConfirmDialog({
           <h3 className="text-lg font-bold text-white">{title}</h3>
         </div>
 
-        {/* Content */}
         <div className="p-6">
           <p className="text-gray-700 leading-relaxed">{message}</p>
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3 p-5 border-t border-gray-200 bg-gray-50">
           <Button
             type="button"

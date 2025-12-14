@@ -3,11 +3,10 @@ import { ApiResponse, Vendor } from "@/app/lib/type";
 import { vendorSchema } from "@/app/lib/utils/validation";
 import mysql from 'mysql2/promise';
 
-
 export async function getVendor(): Promise<ApiResponse<Vendor[]>> {
   const db = await getDbConnection();
     try {
-    // Menggunakan view_vendor_all untuk menampilkan semua vendor
+
     const [vendors] = await db.execute(
       'SELECT * FROM view_vendor_all'
     );
@@ -23,11 +22,10 @@ export async function getVendor(): Promise<ApiResponse<Vendor[]>> {
   }
 }
 
-// Fungsi baru: Mengambil hanya vendor aktif
 export async function getVendorAktif(): Promise<ApiResponse<Vendor[]>> {
   const db = await getDbConnection();
   try {
-    // Menggunakan view_vendor_aktif untuk menampilkan vendor aktif saja
+
     const [vendors] = await db.execute(
       'SELECT * FROM view_vendor_aktif'
     );
@@ -61,7 +59,6 @@ export async function getVendorById(id: number): Promise<ApiResponse<Vendor>> {
     db.release();
   }
 }
-
 
 export async function createVendor(data: Omit<Vendor, 'idvendor'>): Promise<ApiResponse<{ message: string }>> {
   const parsed = vendorSchema.safeParse({ nama_vendor: data.nama_vendor, badan_hukum : data.badan_hukum, status : data.status, });

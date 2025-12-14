@@ -63,7 +63,6 @@ export default function Margins() {
     fetchMargins('aktif');
   }, []);
 
-  // Helper function to map status to readable string
   const mapStatusToString = (status: number | string) => {
     const numStatus = typeof status === 'string' ? parseInt(status) : status;
     return numStatus === 1 ? 'Aktif' : 'Tidak Aktif';
@@ -78,7 +77,7 @@ export default function Margins() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-8 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -102,14 +101,12 @@ export default function Margins() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Filter Card */}
       <Card>
         <CardBody>
           <div className="flex items-center gap-3">
@@ -140,7 +137,6 @@ export default function Margins() {
         </CardBody>
       </Card>
 
-      {/* Table Card */}
       <Card padding="none">
         <CardHeader className="p-6">
           <CardTitle>Semua Margin</CardTitle>

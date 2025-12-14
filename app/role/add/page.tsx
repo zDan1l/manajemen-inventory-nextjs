@@ -24,7 +24,7 @@ export default function AddRole() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nama_role }),
       });
-      
+
       if (res.ok) {
         router.push('/role');
       } else {
@@ -40,7 +40,7 @@ export default function AddRole() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="bg-gradient-to-r from-[#00A69F] to-[#0D9488] rounded-2xl shadow-lg p-6 text-white">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -55,42 +55,40 @@ export default function AddRole() {
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
         <Alert variant="danger" title="Kesalahan" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Form Card */}
       <Card>
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Informasi Peran</CardTitle>
             <CardDescription>Masukkan detail untuk peran baru</CardDescription>
           </CardHeader>
-          
+
           <CardBody>
             <div className="space-y-6">
-              <FormInput 
-                label="Nama Peran" 
-                type="text" 
-                value={nama_role} 
-                onChange={(e) => setNamaRole(e.target.value)} 
-                required 
+              <FormInput
+                label="Nama Peran"
+                type="text"
+                value={nama_role}
+                onChange={(e) => setNamaRole(e.target.value)}
+                required
                 placeholder="Masukkan nama peran"
                 helper="Pilih nama yang deskriptif untuk peran ini"
               />
             </div>
           </CardBody>
-          
+
           <CardFooter>
             <div className="flex gap-3">
               <LinkButton href="/role" variant="outline" size="lg">
                 Batal
               </LinkButton>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 variant="primary"
                 size="lg"
                 loading={loading}
